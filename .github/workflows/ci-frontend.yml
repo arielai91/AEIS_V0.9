@@ -63,6 +63,7 @@ jobs:
         run: |
           cd Frontend/Angular
           xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" npm test --watch=false --code-coverage
+          pkill Xvfb
 
       # 8. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
