@@ -19,9 +19,9 @@ module.exports = function (config) {
     reporters: ["progress", "kjhtml"],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_INFO, // Para información básica sin demasiados detalles
+    logLevel: config.LOG_INFO, // Solo información básica
     autoWatch: false, // No observar cambios en los archivos
-    browsers: ["ChromeHeadless"], // Solo ChromeHeadless para evitar dependencias innecesarias
+    browsers: ["ChromeHeadless"], // Solo ChromeHeadless
     customLaunchers: {
       ChromeHeadless: {
         base: "Chrome",
@@ -33,7 +33,11 @@ module.exports = function (config) {
         ],
       },
     },
-    singleRun: true, // Ejecutar pruebas una sola vez y terminar
-    restartOnFileChange: false, // No reiniciar procesos si se detectan cambios
+    singleRun: true, // Ejecutar pruebas una sola vez
+    restartOnFileChange: false, // No reiniciar el proceso si se detectan cambios
+    captureTimeout: 60000, // 60 segundos de espera máxima para capturar el navegador
+    browserNoActivityTimeout: 10000, // Desconectar navegador si no hay actividad por 10 segundos
+    browserDisconnectTimeout: 10000, // 10 segundos de espera para desconectar el navegador
+    timeout: 60000, // Máximo 60 segundos para que las pruebas terminen
   });
 };

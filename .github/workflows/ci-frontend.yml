@@ -66,17 +66,15 @@ jobs:
           # Asegurarse de que los procesos de Xvfb y ChromeHeadless se cierren después de las pruebas
           pkill Xvfb || true
           pkill chrome || true
+          # Mensaje explícito de que las pruebas han terminado
+          echo "Tests completed, moving to next step."
 
-      # 8. Verificar procesos en ejecución
-      - name: List running processes
-        run: |
-          ps aux  # Listar todos los procesos en ejecución
-
-      # 9. Subir informe de cobertura como artefacto
+      # 8. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report-frontend-angular
           path: Frontend/Angular/coverage/
+
 
 
