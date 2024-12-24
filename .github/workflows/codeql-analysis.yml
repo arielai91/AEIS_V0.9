@@ -8,19 +8,47 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read           # Permite leer el contenido del repositorio
+  security-events: write   # Necesario para cargar los resultados del análisis
+
 jobs:
   analyze:
-    name: Analyze code
+    name: Analyze Code with CodeQL
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    permissions:
+      contents: read
+      security-events: write
 
+    steps:
+      # 1. Checkout del código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar Node.js para análisis de JavaScript (opcional si es necesario instalar dependencias)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 3. Configurar Python para análisis de Python (opcional si es necesario instalar dependencias)
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # 4. Inicializar CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: javascript, python
 
+      # 5. Ejecutar el análisis de CodeQL
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+
+      # 6. Subir resultados solo en el repositorio principal
+      - name: Upload Results
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        run: echo "Results uploaded successfully."

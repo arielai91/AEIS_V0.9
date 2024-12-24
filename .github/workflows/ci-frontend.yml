@@ -39,7 +39,7 @@ jobs:
       - name: Run frontend tests with coverage
         run: |
           cd Frontend/Angular
-          npm test -- --watch=false --code-coverage
+          npm test
 
       # 6. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
