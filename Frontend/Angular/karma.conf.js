@@ -21,7 +21,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ["ChromeHeadless"], // Configuración para usar ChromeHeadless
+    browsers: ["ChromeHeadless"], // Asegúrate de que solo ChromeHeadless esté listado aquí
     customLaunchers: {
       ChromeHeadless: {
         base: "Chrome",
