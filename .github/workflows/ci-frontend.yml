@@ -1,0 +1,49 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    paths:
+      - 'Frontend/Angular/**'
+  pull_request:
+    paths:
+      - 'Frontend/Angular/**'
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 3. Instalar dependencias del frontend
+      - name: Install dependencies
+        run: |
+          cd Frontend/Angular
+          npm install
+
+      # 4. Ejecutar linters (ESLint)
+      - name: Run ESLint
+        run: |
+          cd Frontend/Angular
+          npm run lint
+
+      # 5. Ejecutar pruebas unitarias con cobertura
+      - name: Run frontend tests with coverage
+        run: |
+          cd Frontend/Angular
+          npm test -- --watch=false --code-coverage
+
+      # 6. Subir informe de cobertura como artefacto
+      - name: Upload Angular coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-frontend-angular
+          path: Frontend/Angular/coverage/

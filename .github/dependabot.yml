@@ -1,0 +1,37 @@
+version: 2
+updates:
+  # Configuración para el frontend en Angular
+  - package-ecosystem: "npm"
+    directory: "/Frontend/Angular" # Directorio del proyecto Angular
+    schedule:
+      interval: "weekly" # Verificar actualizaciones semanalmente
+    ignore:
+      - dependency-name: "@angular/*" # Opcional: Ignorar dependencias específicas
+        versions:
+          - "<12.0.0" # Ejemplo: Ignorar actualizaciones mayores
+
+  # Configuración para el backend en Express
+  - package-ecosystem: "npm"
+    directory: "/Backend/Backend-Express" # Directorio del proyecto Express
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "typescript" # Ignorar actualizaciones de TypeScript
+        versions:
+          - "<4.0.0"
+
+  # Configuración para el backend en Flask
+  - package-ecosystem: "pip"
+    directory: "/Backend/Backend-Flask" # Directorio del proyecto Flask
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "Flask"
+        versions:
+          - "<2.0.0"
+
+  # Configuración general (opcional)
+  - package-ecosystem: "github-actions"
+    directory: "/" # Verifica las dependencias de acciones en el repositorio
+    schedule:
+      interval: "daily" # Actualiza las acciones diariamente

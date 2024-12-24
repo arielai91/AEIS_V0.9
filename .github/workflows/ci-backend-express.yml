@@ -1,0 +1,55 @@
+name: Backend-Express CI/CD
+
+on:
+  push:
+    paths:
+      - 'Backend/Backend-Express/**'
+  pull_request:
+    paths:
+      - 'Backend/Backend-Express/**'
+
+jobs:
+  backend-express:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 3. Instalar dependencias del backend Express
+      - name: Install dependencies
+        run: |
+          cd Backend/Backend-Express
+          npm install
+
+      # 4. Ejecutar linters (ESLint)
+      - name: Run ESLint
+        run: |
+          cd Backend/Backend-Express
+          npm run lint
+
+      # 5. Ejecutar pruebas unitarias con cobertura
+      - name: Run backend tests with coverage
+        run: |
+          cd Backend/Backend-Express
+          npm test
+
+      # 6. Build del proyecto TypeScript
+      - name: Build TypeScript project
+        run: |
+          cd Backend/Backend-Express
+          npm run build
+
+      # 7. Subir informe de cobertura como artefacto
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-backend-express
+          path: Backend/Backend-Express/coverage/
