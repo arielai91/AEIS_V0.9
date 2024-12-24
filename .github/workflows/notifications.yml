@@ -13,10 +13,25 @@ jobs:
   notify:
     runs-on: ubuntu-latest
 
+    env:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      GITHUB_WORKFLOW: ${{ github.workflow }}
+      JOB_STATUS: ${{ job.status }}
+
     steps:
+      # Paso de validación para verificar si el secreto está configurado
+      - name: Validate Slack Webhook Secret
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "ERROR: Slack webhook secret is not set. Skipping Slack notification."
+            exit 1
+          fi
+
+      # Paso para enviar la notificación a Slack
       - name: Send Slack Notification
         if: always()
         run: |
+          echo "Sending Slack notification..."
           curl -X POST -H 'Content-type: application/json' \
-            --data '{"text": "Workflow ${{ github.workflow }} completed with status: ${{ job.status }}"}' \
-            ${{ secrets.SLACK_WEBHOOK }}
+            --data '{"text": "Workflow '${GITHUB_WORKFLOW}' completed with status: '${JOB_STATUS}'"}' \
+            "$SLACK_WEBHOOK"

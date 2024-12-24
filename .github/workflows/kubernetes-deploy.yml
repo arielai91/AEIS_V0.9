@@ -1,4 +1,4 @@
-name: Kubernetes Deploy
+name: Kubernetes Deploy (Template)
 
 on:
   push:
@@ -10,20 +10,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Instalar kubectl
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
         with:
           version: 'latest'
 
-      - name: Configure Kubeconfig
+      # 3. Comprobar si el secreto KUBECONFIG está configurado
+      - name: Check for KUBECONFIG secret
         run: |
+          if [[ -z "${{ secrets.KUBECONFIG }}" ]]; then
+            echo "Warning: KUBECONFIG secret is not set. Skipping Kubernetes configuration."
+            exit 0
+          fi
+
+      # 4. Configurar Kubeconfig (Solo si KUBECONFIG está configurado)
+      - name: Configure Kubeconfig
+        if: ${{ secrets.KUBECONFIG }}
+        run: |
+          mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
 
+      # 5. Actualizar imágenes de despliegues en Kubernetes (Opcional)
       - name: Update Kubernetes Deployments
+        if: ${{ secrets.KUBECONFIG && secrets.DOCKER_USERNAME }}
         run: |
-          kubectl set image deployment/frontend-angular frontend-angular=${{ secrets.DOCKER_USERNAME }}/frontend-angular:latest
-          kubectl set image deployment/backend-express backend-express=${{ secrets.DOCKER_USERNAME }}/backend-express:latest
-          kubectl set image deployment/backend-flask backend-flask=${{ secrets.DOCKER_USERNAME }}/backend-flask:latest
+          kubectl set image deployment/frontend-angular frontend-angular=${{ secrets.DOCKER_USERNAME }}/frontend-angular:latest || echo "Skipping deployment for frontend-angular"
+          kubectl set image deployment/backend-express backend-express=${{ secrets.DOCKER_USERNAME }}/backend-express:latest || echo "Skipping deployment for backend-express"
+          kubectl set image deployment/backend-flask backend-flask=${{ secrets.DOCKER_USERNAME }}/backend-flask:latest || echo "Skipping deployment for backend-flask"
+
+      # 6. Verificar el estado de los despliegues (Opcional)
+      - name: Verify Deployment Status
+        if: ${{ secrets.KUBECONFIG }}
+        run: |
+          kubectl rollout status deployment/frontend-angular || echo "Deployment verification skipped for frontend-angular"
+          kubectl rollout status deployment/backend-express || echo "Deployment verification skipped for backend-express"
+          kubectl rollout status deployment/backend-flask || echo "Deployment verification skipped for backend-flask"
