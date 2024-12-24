@@ -1,0 +1,70 @@
+name: Docker Build and Push # Nombre del workflow. Indica que este workflow construye y sube imágenes Docker.
+
+on:
+  push: # Define que el workflow se ejecutará cuando ocurra un evento de tipo push.
+    branches:
+      - main # Solo se activará cuando el push sea a la rama 'main'.
+
+jobs:
+  docker: # Define un job llamado "docker".
+    runs-on: ubuntu-latest # Usa una máquina virtual de Ubuntu como entorno de ejecución.
+
+    env: # Sección para definir variables de entorno compartidas por los pasos.
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} # Nombre de usuario para Docker Hub (almacenado como secreto en GitHub).
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} # Contraseña o token para Docker Hub (almacenado como secreto en GitHub).
+      SERVICES:
+        | # Lista de servicios con sus directorios y nombres de imágenes Docker.
+        Frontend/Angular=my-frontend
+        Backend/Backend-Express=my-backend-express
+        Backend/Backend-Flask=my-backend-flask
+
+    steps:
+      # Paso 1: Clonar el repositorio
+      - name: Checkout code # Nombre descriptivo del paso.
+        uses: actions/checkout@v4 # Usa la acción oficial para clonar el código del repositorio.
+        # Comentario: Esto es necesario para acceder a los archivos necesarios para construir las imágenes Docker.
+
+      # Paso 2: Validar que los secretos de Docker estén configurados
+      - name: Validate Docker secrets # Nombre descriptivo del paso.
+        run: | # Bloque de comandos que se ejecutará en la máquina virtual.
+          if [ -z "$DOCKER_USERNAME" ] || [ -z "$DOCKER_PASSWORD" ]; then # Comprueba si las variables de entorno están vacías.
+            echo "ERROR: Docker secrets (DOCKER_USERNAME or DOCKER_PASSWORD) are not configured." # Imprime un mensaje de error.
+            echo "Skipping Docker login and image push steps." # Indica que los pasos posteriores no se ejecutarán.
+            exit 1 # Termina el workflow con un error.
+        # Comentario: Este paso asegura que las credenciales de Docker Hub estén configuradas antes de proceder.
+
+      # Paso 3: Iniciar sesión en DockerHub
+      - name: Login to DockerHub # Nombre descriptivo del paso.
+        uses: docker/login-action@v3 # Usa la acción oficial de Docker para iniciar sesión en Docker Hub.
+        with:
+          username: ${{ env.DOCKER_USERNAME }} # Proporciona el nombre de usuario desde las variables de entorno.
+          password: ${{ env.DOCKER_PASSWORD }} # Proporciona la contraseña desde las variables de entorno.
+        # Comentario: Este paso autentica al usuario en Docker Hub para permitir la subida de imágenes.
+
+      # Paso 4: Construir y etiquetar imágenes Docker
+      - name: Build and Tag Docker Images # Nombre descriptivo del paso.
+        run: | # Bloque de comandos que se ejecutará en la máquina virtual.
+          echo "Building Docker images..." # Mensaje inicial del paso.
+          while IFS== read -r dir image; do # Itera sobre cada servicio definido en la variable SERVICES.
+            if [ -d "./$dir" ]; then # Comprueba si el directorio del servicio existe.
+              echo "Building image for $dir..." # Mensaje informativo.
+              docker build -t "$DOCKER_USERNAME/$image:latest" "./$dir" || echo "ERROR: Failed to build $dir." # Construye la imagen Docker o imprime un error si falla.
+            else
+              echo "WARNING: Directory $dir not found. Skipping build for $dir." # Mensaje si el directorio no existe.
+            fi
+          done <<< "$SERVICES" # Lee y procesa la variable SERVICES línea por línea.
+        # Comentario: Este paso construye imágenes Docker para todos los servicios definidos en SERVICES.
+
+      # Paso 5: Subir las imágenes Docker
+      - name: Push Docker Images # Nombre descriptivo del paso.
+        run: | # Bloque de comandos que se ejecutará en la máquina virtual.
+          echo "Pushing Docker images..." # Mensaje inicial del paso.
+          while IFS== read -r dir image; do # Itera sobre cada servicio definido en la variable SERVICES.
+            if docker images | grep -q "$image"; then # Comprueba si la imagen Docker fue construida.
+              echo "Pushing image $DOCKER_USERNAME/$image:latest..." # Mensaje informativo.
+              docker push "$DOCKER_USERNAME/$image:latest" || echo "ERROR: Failed to push $image." # Sube la imagen Docker o imprime un error si falla.
+            else
+              echo "WARNING: Image $DOCKER_USERNAME/$image:latest not found. Skipping push for $dir." # Mensaje si la imagen no existe.
+            fi
+          done <<< "$SERVICES" # Lee y procesa la variable SERVICES línea por línea.
+        # Comentario: Este paso sube las imágenes Docker a Docker Hub si fueron construidas correctamente.
