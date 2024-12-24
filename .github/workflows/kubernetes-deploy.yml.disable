@@ -1,0 +1,90 @@
+name: Kubernetes Deploy (Template) # Nombre del workflow para facilitar la identificación.
+
+on:
+  push:
+    branches:
+      - main # Este workflow se ejecuta automáticamente cuando hay un push a la rama 'main'.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # Usa una máquina virtual de Ubuntu como entorno de ejecución.
+
+    env:
+      KUBECONFIG: ${{ secrets.KUBECONFIG }} # Archivo kubeconfig para interactuar con el clúster de Kubernetes.
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} # Nombre de usuario de Docker Hub (secreto configurado en GitHub).
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} # Contraseña o token de Docker Hub (secreto configurado en GitHub).
+      SERVICES:
+        | # Lista de servicios con sus directorios y nombres de imágenes Docker.
+        Frontend/Angular=dummy-frontend
+        Backend/Backend-Express=dummy-backend-express
+        Backend/Backend-Flask=dummy-backend-flask
+
+    steps:
+      # Paso 1: Clonar el repositorio
+      - name: Clonar el código
+        uses: actions/checkout@v4 # Clona el código del repositorio en la máquina virtual.
+        # Comentario: Esto es necesario para acceder a los archivos y directorios requeridos por el workflow.
+
+      # Paso 2: Instalar kubectl
+      - name: Configurar kubectl
+        uses: azure/setup-kubectl@v4 # Configura kubectl, una herramienta de línea de comandos para interactuar con Kubernetes.
+        with:
+          version: "latest" # Asegura que se utilice la versión más reciente.
+        # Comentario: Este paso es fundamental si el clúster de Kubernetes requiere configuraciones dinámicas.
+
+      # Paso 3: Configurar Kubeconfig
+      - name: Configurar Kubeconfig
+        run: |
+          mkdir -p ~/.kube # Crea el directorio de configuración de Kubernetes si no existe.
+          echo "$KUBECONFIG" > ~/.kube/config # Escribe el contenido del archivo kubeconfig en la máquina virtual.
+          echo "Kubeconfig configurado correctamente."
+        # Comentario: Este paso permite que kubectl se conecte al clúster de Kubernetes.
+
+      # Paso 4: Iniciar sesión en DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v3 # Usa una acción oficial para iniciar sesión en Docker Hub.
+        with:
+          username: ${{ env.DOCKER_USERNAME }} # Usa la variable de entorno configurada anteriormente.
+          password: ${{ env.DOCKER_PASSWORD }} # Usa la contraseña o token configurado.
+        # Comentario: Este paso es necesario para subir imágenes Docker a Docker Hub.
+
+      # Paso 5: Construir imágenes Docker
+      - name: Build Docker Images
+        run: |
+          echo "Construyendo imágenes Docker..."
+          while IFS== read -r dir image; do
+            if [ -d "./$dir" ]; then
+              echo "Construyendo imagen para $dir..."
+              docker build -t "$DOCKER_USERNAME/$image:latest" "./$dir" || echo "ERROR: Fallo al construir $dir."
+            else
+              echo "WARNING: Directorio $dir no encontrado. Omitiendo construcción para $dir."
+            fi
+          done <<< "$SERVICES"
+        # Comentario: Construye imágenes Docker para cada servicio definido en SERVICES.
+        # En el futuro, asegúrate de que los directorios existen y contienen archivos Dockerfile válidos.
+
+      # Paso 6: Subir imágenes Docker
+      - name: Push Docker Images
+        run: |
+          echo "Subiendo imágenes Docker..."
+          while IFS== read -r dir image; do
+            if docker images | grep -q "$image"; then
+              echo "Subiendo imagen $DOCKER_USERNAME/$image:latest..."
+              docker push "$DOCKER_USERNAME/$image:latest" || echo "ERROR: Fallo al subir $image."
+            else
+              echo "WARNING: Imagen $DOCKER_USERNAME/$image:latest no encontrada. Omitiendo subida para $dir."
+            fi
+          done <<< "$SERVICES"
+        # Comentario: Este paso sube las imágenes Docker a Docker Hub.
+        # En el futuro, verifica que el usuario tenga permisos en el repositorio de Docker Hub.
+
+      # Paso 7: Actualizar despliegues en Kubernetes
+      - name: Deploy to Kubernetes
+        run: |
+          echo "Actualizando despliegues en Kubernetes..."
+          while IFS== read -r dir image; do
+            echo "Actualizando despliegue para $image..."
+            kubectl set image deployment/${image//dummy-/} $image=$DOCKER_USERNAME/$image:latest || echo "ERROR: Fallo al actualizar $image."
+          done <<< "$SERVICES"
+        # Comentario: Actualiza los despliegues en Kubernetes con las nuevas imágenes.
+        # En el futuro, asegúrate de que los despliegues existen y tienen los mismos nombres que las imágenes.
