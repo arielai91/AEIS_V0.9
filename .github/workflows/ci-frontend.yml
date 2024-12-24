@@ -63,12 +63,20 @@ jobs:
         run: |
           cd Frontend/Angular
           xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" npm test --watch=false --code-coverage
-          pkill Xvfb
+          # Asegurarse de que los procesos de Xvfb y ChromeHeadless se cierren después de las pruebas
+          pkill Xvfb || true
+          pkill chrome || true
 
-      # 8. Subir informe de cobertura como artefacto
+      # 8. Verificar procesos en ejecución
+      - name: List running processes
+        run: |
+          ps aux  # Listar todos los procesos en ejecución
+
+      # 9. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report-frontend-angular
           path: Frontend/Angular/coverage/
+
 

@@ -19,9 +19,9 @@ module.exports = function (config) {
     reporters: ["progress", "kjhtml"],
     port: 9876,
     colors: true,
-    logLevel: config.LOG_DEBUG, // Para obtener más detalles de los errores
-    autoWatch: false, // Cambiado a `false` para evitar que Karma quede esperando
-    browsers: ["ChromeHeadless"], // Asegúrate de que solo ChromeHeadless esté listado aquí
+    logLevel: config.LOG_INFO, // Para información básica sin demasiados detalles
+    autoWatch: false, // No observar cambios en los archivos
+    browsers: ["ChromeHeadless"], // Solo ChromeHeadless para evitar dependencias innecesarias
     customLaunchers: {
       ChromeHeadless: {
         base: "Chrome",
@@ -33,8 +33,7 @@ module.exports = function (config) {
         ],
       },
     },
-    singleRun: true, // Esto asegura que Karma ejecute las pruebas solo una vez y luego termine
-    restartOnFileChange: false, // Evita reiniciar el proceso si se detectan cambios
-    captureTimeout: 60000, // Añadido para evitar tiempos de espera largos
+    singleRun: true, // Ejecutar pruebas una sola vez y terminar
+    restartOnFileChange: false, // No reiniciar procesos si se detectan cambios
   });
 };
