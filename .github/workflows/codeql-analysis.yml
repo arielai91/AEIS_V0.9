@@ -28,7 +28,7 @@ jobs:
 
       # 2. Configurar Node.js para análisis de JavaScript (opcional si es necesario instalar dependencias)
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22
 
