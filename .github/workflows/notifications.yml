@@ -15,8 +15,9 @@ jobs:
 
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      GITHUB_WORKFLOW: ${{ github.workflow }}
-      JOB_STATUS: ${{ job.status }}
+      WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+      REPOSITORY: ${{ github.repository }}
+      WORKFLOW_STATUS: ${{ github.event.workflow_run.conclusion }}
 
     steps:
       # Paso de validación para verificar si el secreto está configurado
@@ -33,5 +34,5 @@ jobs:
         run: |
           echo "Sending Slack notification..."
           curl -X POST -H 'Content-type: application/json' \
-            --data '{"text": "Workflow '${GITHUB_WORKFLOW}' completed with status: '${JOB_STATUS}'"}' \
+            --data "{\"text\": \"Workflow '$WORKFLOW_NAME' in repository '$REPOSITORY' completed with status: '$WORKFLOW_STATUS'\"}" \
             "$SLACK_WEBHOOK"
