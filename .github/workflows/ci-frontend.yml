@@ -62,7 +62,7 @@ jobs:
       - name: Run frontend tests with coverage using Xvfb
         run: |
           cd Frontend/Angular
-          npm run test-actions
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" npm test --watch=false --code-coverage
 
       # 8. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
