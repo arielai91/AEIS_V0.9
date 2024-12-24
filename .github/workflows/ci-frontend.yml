@@ -29,19 +29,35 @@ jobs:
           cd Frontend/Angular
           npm install
 
-      # 4. Ejecutar linters (ESLint)
+      # 4. Instalar dependencias para ChromeHeadless
+      - name: Install dependencies for ChromeHeadless
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-dev \
+            libgdk-pixbuf2.0-0 \
+            libnss3 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libcups2 \
+            fonts-liberation \
+            libappindicator3-1 \
+            libxss1 \
+            libasound2
+
+      # 5. Ejecutar linters (ESLint)
       - name: Run ESLint
         run: |
           cd Frontend/Angular
           npm run lint
 
-      # 5. Ejecutar pruebas unitarias con cobertura
+      # 6. Ejecutar pruebas unitarias con cobertura
       - name: Run frontend tests with coverage
         run: |
           cd Frontend/Angular
           npm test
 
-      # 6. Subir informe de cobertura como artefacto
+      # 7. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
         uses: actions/upload-artifact@v3
         with:
