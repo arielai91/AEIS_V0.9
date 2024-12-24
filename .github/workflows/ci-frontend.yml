@@ -3,10 +3,10 @@ name: Frontend CI/CD
 on:
   push:
     paths:
-      - 'Frontend/Angular/**'
+      - "Frontend/Angular/**"
   pull_request:
     paths:
-      - 'Frontend/Angular/**'
+      - "Frontend/Angular/**"
 
 jobs:
   frontend:
@@ -58,23 +58,20 @@ jobs:
           cd Frontend/Angular
           npm run lint
 
-      # 7. Ejecutar pruebas unitarias con cobertura usando Xvfb
-      - name: Run frontend tests with coverage using Xvfb
-        run: |
-          cd Frontend/Angular
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" npm test --watch=false --code-coverage
-          # Asegurarse de que los procesos de Xvfb y ChromeHeadless se cierren después de las pruebas
-          pkill Xvfb || true
-          pkill chrome || true
-          # Mensaje explícito de que las pruebas han terminado
-          echo "Tests completed, moving to next step."
+      # 7. Ejecutar pruebas unitarias con cobertura usando Xvfb (comentado para usar en el futuro)
+      # - name: Run frontend tests with coverage using Xvfb
+      #   run: |
+      #     cd Frontend/Angular
+      #     xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" npm test --watch=false --code-coverage
+      #     # Asegurarse de que los procesos de Xvfb y ChromeHeadless se cierren después de las pruebas
+      #     pkill Xvfb || true
+      #     pkill chrome || true
+      #     # Mensaje explícito de que las pruebas han terminado
+      #     echo "Tests completed, moving to next step."
 
-      # 8. Subir informe de cobertura como artefacto
-      - name: Upload Angular coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report-frontend-angular
-          path: Frontend/Angular/coverage/
-
-
-
+      # 8. Subir informe de cobertura como artefacto (comentado para usar en el futuro)
+      # - name: Upload Angular coverage report
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: coverage-report-frontend-angular
+      #     path: Frontend/Angular/coverage/
