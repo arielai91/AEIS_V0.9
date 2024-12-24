@@ -1,0 +1,22 @@
+name: Notifications Workflow
+
+on:
+  workflow_run:
+    workflows:
+      - Frontend CI/CD
+      - Backend-Express CI/CD
+      - Backend-Flask CI/CD
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Slack Notification
+        if: always()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text": "Workflow ${{ github.workflow }} completed with status: ${{ job.status }}"}' \
+            ${{ secrets.SLACK_WEBHOOK }}
