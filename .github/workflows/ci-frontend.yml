@@ -29,8 +29,8 @@ jobs:
           cd Frontend/Angular
           npm install
 
-      # 4. Instalar dependencias para ChromeHeadless
-      - name: Install dependencies for ChromeHeadless
+      # 4. Instalar dependencias para ChromeHeadless y Xvfb
+      - name: Install dependencies for ChromeHeadless and Xvfb
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -44,21 +44,27 @@ jobs:
             libappindicator3-1 \
             libxss1 \
             libasound2 \
-            google-chrome-stable
+            google-chrome-stable \
+            xvfb
 
-      # 5. Ejecutar linters (ESLint)
+      # 5. Verificar instalación de Google Chrome
+      - name: Verify google-chrome-stable installation
+        run: |
+          google-chrome-stable --version
+
+      # 6. Ejecutar linters (ESLint)
       - name: Run ESLint
         run: |
           cd Frontend/Angular
           npm run lint
 
-      # 6. Ejecutar pruebas unitarias con cobertura
-      - name: Run frontend tests with coverage
+      # 7. Ejecutar pruebas unitarias con cobertura usando Xvfb
+      - name: Run frontend tests with coverage using Xvfb
         run: |
           cd Frontend/Angular
-          npm test
+          npm run test-actions
 
-      # 7. Subir informe de cobertura como artefacto
+      # 8. Subir informe de cobertura como artefacto
       - name: Upload Angular coverage report
         uses: actions/upload-artifact@v3
         with:
