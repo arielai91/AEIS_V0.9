@@ -24,7 +24,7 @@ jobs:
     steps:
       # 1. Checkout del código del repositorio
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # 2. Configurar Node.js para análisis de JavaScript (opcional si es necesario instalar dependencias)
       - name: Setup Node.js
