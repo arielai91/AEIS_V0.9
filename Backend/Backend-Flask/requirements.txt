@@ -1,7 +1,7 @@
 Flask==3.1.0
 Flask-Mail==0.10.0
 flake8==6.1.0
-coverage==7.6.9
+coverage==7.6.10
 Flask-Cors==5.0.0
 python-dotenv==1.0.1
 gunicorn==23.0.0
