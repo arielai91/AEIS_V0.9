@@ -1,1 +1,8 @@
+# Excluir otros archivos y directorios innecesarios
 .env
+database.db
+# Excluir archivos __pycache__
+__pycache__/
+# Excluir archivos compilados de Python
+*.pyc
+*.pyo

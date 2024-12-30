@@ -1,7 +1,14 @@
-Flask==3.1.0
-Flask-Mail==0.10.0
-flake8==6.1.0
-coverage==7.6.9
-Flask-Cors==5.0.0
-python-dotenv==1.0.1
-gunicorn==23.0.0
+Flask==3.1.0  # Framework web ligero para crear aplicaciones web en Python
+Flask-Mail==0.10.0  # Extensión para enviar correos electrónicos desde Flask
+Flask-Cors==5.0.0  # Extensión para habilitar CORS (Cross-Origin Resource Sharing) en Flask
+Flask-WTF==1.2.2  # Extensión para integrar WTForms en Flask, incluyendo protección CSRF
+Flask-SQLAlchemy==3.1.1  # Extensión para integrar SQLAlchemy con Flask (ORM para bases de datos)
+python-dotenv==1.0.1  # Biblioteca para cargar variables de entorno desde un archivo .env
+APScheduler==3.11.0  # Biblioteca para programar tareas en aplicaciones Python
+gunicorn==23.0.0  # Servidor WSGI para implementar aplicaciones web Python en producción
+flake8==7.1.1  # Herramienta para analizar el estilo y la calidad del código Python
+coverage==7.6.10  # Herramienta para medir la cobertura de pruebas en código Python
+psycopg2-binary==2.9.10  # Controlador para conectar aplicaciones Python con bases de datos PostgreSQL
+email-validator==2.2.0  # Biblioteca para validar direcciones de correo electrónico
+pyflakes==3.2.0  # Herramienta para detectar errores en el código Python (parte de Flake8)
+pycodestyle==2.12.1  # Herramienta para verificar que el código Python cumpla con PEP 8 (parte de Flake8)
