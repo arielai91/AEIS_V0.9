@@ -16,3 +16,5 @@ class Config:
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     SCHEDULER_API_ENABLED = os.getenv(
         'SCHEDULER_API_ENABLED', 'true').lower() in ['true', 'on', '1']
+    DEBUG = os.getenv(
+        'FLASK_DEBUG', 'false').lower() in ['true', 'on', '1']
