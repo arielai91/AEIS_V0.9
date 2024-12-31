@@ -3,10 +3,10 @@ name: Backend-Flask CI/CD
 on:
   push:
     paths:
-      - 'Backend/Backend-Flask/**'
+      - "Backend/Backend-Flask/**"
   pull_request:
     paths:
-      - 'Backend/Backend-Flask/**'
+      - "Backend/Backend-Flask/**"
 
 jobs:
   backend-flask:
