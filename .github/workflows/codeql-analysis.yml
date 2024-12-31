@@ -9,8 +9,8 @@ on:
       - main
 
 permissions:
-  contents: read           # Permite leer el contenido del repositorio
-  security-events: write   # Necesario para cargar los resultados del análisis
+  contents: read # Permite leer el contenido del repositorio
+  security-events: write # Necesario para cargar los resultados del análisis
 
 jobs:
   analyze:
