@@ -1,10 +1,10 @@
 import AppError from '@errors/app-error';
 import { HttpStatusCode } from '@utils/http-status-codes';
 
-class HttpError extends AppError {
+class ConnectionError extends AppError {
   constructor(message: string) {
-    super(message, HttpStatusCode.BAD_REQUEST);
+    super(message, HttpStatusCode.INTERNAL_SERVER_ERROR);
   }
 }
 
-export default HttpError;
+export default ConnectionError;
