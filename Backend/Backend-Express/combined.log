@@ -1,0 +1,160 @@
+2025-01-07T21:38:25.896Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:38:25.901Z info: Environment variables validated successfully.
+2025-01-07T21:38:25.902Z info: CORS origins updated.
+2025-01-07T21:38:25.971Z info: Conectado a MongoDB
+2025-01-07T21:38:25.975Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:40:08.875Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:40:08.880Z info: Environment variables validated successfully.
+2025-01-07T21:40:08.882Z info: CORS origins updated.
+2025-01-07T21:40:08.963Z info: Conectado a MongoDB
+2025-01-07T21:40:08.969Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:45:59.051Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:45:59.054Z info: Environment variables validated successfully.
+2025-01-07T21:45:59.056Z info: CORS origins updated.
+2025-01-07T21:45:59.114Z info: Conectado a MongoDB
+2025-01-07T21:45:59.118Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:46:08.414Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:46:08.417Z info: Environment variables validated successfully.
+2025-01-07T21:46:08.419Z info: CORS origins updated.
+2025-01-07T21:46:08.467Z info: Conectado a MongoDB
+2025-01-07T21:46:08.472Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:46:59.958Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:46:59.962Z info: Environment variables validated successfully.
+2025-01-07T21:46:59.964Z info: CORS origins updated.
+2025-01-07T21:47:00.022Z info: Conectado a MongoDB
+2025-01-07T21:47:00.028Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:47:18.283Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:47:18.287Z info: Environment variables validated successfully.
+2025-01-07T21:47:18.289Z info: CORS origins updated.
+2025-01-07T21:47:18.338Z info: Conectado a MongoDB
+2025-01-07T21:47:18.341Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:48:25.597Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:48:25.600Z info: Environment variables validated successfully.
+2025-01-07T21:48:25.603Z info: CORS origins updated.
+2025-01-07T21:48:25.660Z info: Conectado a MongoDB
+2025-01-07T21:48:25.666Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:48:37.140Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:48:37.143Z info: Environment variables validated successfully.
+2025-01-07T21:48:37.144Z info: CORS origins updated.
+2025-01-07T21:48:37.196Z info: Conectado a MongoDB
+2025-01-07T21:48:37.199Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:49:26.536Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:49:26.540Z info: Environment variables validated successfully.
+2025-01-07T21:49:26.542Z info: CORS origins updated.
+2025-01-07T21:49:26.593Z info: Conectado a MongoDB
+2025-01-07T21:49:26.596Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:49:47.480Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:49:47.486Z info: Environment variables validated successfully.
+2025-01-07T21:49:47.488Z info: CORS origins updated.
+2025-01-07T21:49:58.628Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:49:58.631Z info: Environment variables validated successfully.
+2025-01-07T21:49:58.633Z info: CORS origins updated.
+2025-01-07T21:49:58.682Z info: Conectado a MongoDB
+2025-01-07T21:49:58.687Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:50:05.806Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:50:05.810Z info: Environment variables validated successfully.
+2025-01-07T21:50:05.812Z info: CORS origins updated.
+2025-01-07T21:50:05.868Z info: Conectado a MongoDB
+2025-01-07T21:50:05.872Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:52:46.230Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:52:46.234Z info: Environment variables validated successfully.
+2025-01-07T21:52:46.235Z info: CORS origins updated.
+2025-01-07T21:52:46.285Z info: Conectado a MongoDB
+2025-01-07T21:52:46.288Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:55:10.454Z info: Mongoose desconectado de MongoDB
+2025-01-07T21:55:26.100Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:55:26.104Z info: Environment variables validated successfully.
+2025-01-07T21:55:26.105Z info: CORS origins updated.
+2025-01-07T21:55:26.152Z info: Conectado a MongoDB
+2025-01-07T21:55:26.156Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:55:47.215Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:55:47.219Z info: Environment variables validated successfully.
+2025-01-07T21:55:47.221Z info: CORS origins updated.
+2025-01-07T21:55:47.285Z info: Conectado a MongoDB
+2025-01-07T21:55:47.289Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:57:29.221Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:57:29.224Z info: Environment variables validated successfully.
+2025-01-07T21:57:29.225Z info: CORS origins updated.
+2025-01-07T21:57:29.276Z info: Conectado a MongoDB
+2025-01-07T21:57:29.281Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T21:59:55.031Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T21:59:55.033Z info: Environment variables validated successfully.
+2025-01-07T21:59:55.035Z info: CORS origins updated.
+2025-01-07T21:59:55.088Z info: Conectado a MongoDB
+2025-01-07T21:59:55.092Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:06:10.476Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:06:10.480Z info: Environment variables validated successfully.
+2025-01-07T22:06:10.481Z info: CORS origins updated.
+2025-01-07T22:06:10.538Z info: Conectado a MongoDB
+2025-01-07T22:06:10.543Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:07:09.172Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:07:09.177Z info: Environment variables validated successfully.
+2025-01-07T22:07:09.180Z info: CORS origins updated.
+2025-01-07T22:07:09.255Z info: Conectado a MongoDB
+2025-01-07T22:07:09.261Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:08:59.282Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:08:59.285Z info: Environment variables validated successfully.
+2025-01-07T22:08:59.287Z info: CORS origins updated.
+2025-01-07T22:08:59.331Z info: Conectado a MongoDB
+2025-01-07T22:08:59.334Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:09:14.463Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:09:14.469Z info: Environment variables validated successfully.
+2025-01-07T22:09:14.472Z info: CORS origins updated.
+2025-01-07T22:09:14.543Z info: Conectado a MongoDB
+2025-01-07T22:09:14.549Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:09:48.863Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:09:48.868Z info: Environment variables validated successfully.
+2025-01-07T22:09:48.871Z info: CORS origins updated.
+2025-01-07T22:09:48.934Z info: Conectado a MongoDB
+2025-01-07T22:09:48.938Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:10:36.512Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:10:36.517Z info: Environment variables validated successfully.
+2025-01-07T22:10:36.520Z info: CORS origins updated.
+2025-01-07T22:10:36.575Z info: Conectado a MongoDB
+2025-01-07T22:10:36.580Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:11:29.619Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:11:29.623Z info: Environment variables validated successfully.
+2025-01-07T22:11:29.625Z info: CORS origins updated.
+2025-01-07T22:11:29.691Z info: Conectado a MongoDB
+2025-01-07T22:11:29.696Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:11:47.397Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:11:47.400Z info: Environment variables validated successfully.
+2025-01-07T22:11:47.402Z info: CORS origins updated.
+2025-01-07T22:11:47.453Z info: Conectado a MongoDB
+2025-01-07T22:11:47.457Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:12:44.672Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:12:44.677Z info: Environment variables validated successfully.
+2025-01-07T22:12:44.679Z info: CORS origins updated.
+2025-01-07T22:12:44.751Z info: Conectado a MongoDB
+2025-01-07T22:12:44.755Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:13:12.673Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:13:12.678Z info: Environment variables validated successfully.
+2025-01-07T22:13:12.685Z info: CORS origins updated.
+2025-01-07T22:13:12.772Z info: Conectado a MongoDB
+2025-01-07T22:13:12.780Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:14:01.120Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:14:01.124Z info: Environment variables validated successfully.
+2025-01-07T22:14:01.126Z info: CORS origins updated.
+2025-01-07T22:14:01.175Z info: Conectado a MongoDB
+2025-01-07T22:14:01.179Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:14:52.946Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:14:52.950Z info: Environment variables validated successfully.
+2025-01-07T22:14:52.952Z info: CORS origins updated.
+2025-01-07T22:14:52.999Z info: Conectado a MongoDB
+2025-01-07T22:14:53.003Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:16:56.002Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:16:56.007Z info: Environment variables validated successfully.
+2025-01-07T22:16:56.010Z info: CORS origins updated.
+2025-01-07T22:16:56.084Z info: Conectado a MongoDB
+2025-01-07T22:16:56.089Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:42:16.732Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:42:16.737Z info: Environment variables validated successfully.
+2025-01-07T22:42:16.739Z info: CORS origins updated.
+2025-01-07T22:42:16.805Z info: Conectado a MongoDB
+2025-01-07T22:42:16.809Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:42:37.067Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-07T22:42:37.073Z info: Environment variables validated successfully.
+2025-01-07T22:42:37.076Z info: CORS origins updated.
+2025-01-07T22:42:37.136Z info: Conectado a MongoDB
+2025-01-07T22:42:37.140Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-07T22:43:14.740Z info: Mongoose desconectado de MongoDB

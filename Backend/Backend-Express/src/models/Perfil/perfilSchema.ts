@@ -21,6 +21,7 @@ const perfilSchema = new Schema({
     unique: true,
     match: /^[\w.-]+@epn\.edu\.ec$/,
     immutable: true,
+    index: true,
   },
   cedula: {
     type: String,
@@ -28,6 +29,7 @@ const perfilSchema = new Schema({
     unique: true,
     match: /^\d{10}$/,
     immutable: true,
+    index: true,
   },
   contraseña: {
     type: String,
@@ -52,8 +54,5 @@ const perfilSchema = new Schema({
     },
   },
 }, { timestamps: true });
-
-perfilSchema.index({ email: 1 }, { unique: true, background: true });
-perfilSchema.index({ cedula: 1 }, { unique: true, background: true });
 
 export default perfilSchema;

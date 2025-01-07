@@ -6,6 +6,7 @@ const planSchema = new Schema({
     required: true,
     unique: true,
     enum: ['Sin Plan', 'Pantera Junior', 'Pantera Senior'],
+    index: true,
   },
   precio: {
     type: Number,
@@ -25,9 +26,8 @@ const planSchema = new Schema({
     default: false,
   },
 }, {
-  timestamps: true, // Habilitar timestamps
+  timestamps: true,
 });
 
-planSchema.index({ nombre: 1 }, { unique: true, background: true });
 
 export default planSchema;

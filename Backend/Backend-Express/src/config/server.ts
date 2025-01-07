@@ -39,6 +39,7 @@ class ServerConfig {
         validateEnvVariables({
             JWT_SECRET: true,
             CORS_ALLOWED_ORIGINS: { required: false, default: 'http://localhost:3000' },
+            MONGODB_URI: true,
         });
         this.app = express();
         this.updateSanitizedOrigins(); // Initial cache population

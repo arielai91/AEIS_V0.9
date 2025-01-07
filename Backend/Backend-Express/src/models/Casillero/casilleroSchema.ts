@@ -5,6 +5,7 @@ const casilleroSchema = new Schema({
     type: Number,
     required: true,
     unique: true,
+    index: true,
   },
   estado: {
     type: String,
@@ -14,10 +15,9 @@ const casilleroSchema = new Schema({
   perfil: {
     type: Schema.Types.ObjectId,
     ref: 'perfils',
+    unique: true,
+    index: true,
   },
 }, { timestamps: true });
-
-casilleroSchema.index({ numero: 1 }, { unique: true, background: true });
-casilleroSchema.index({ perfil: 1 }, { background: true });
 
 export default casilleroSchema;
