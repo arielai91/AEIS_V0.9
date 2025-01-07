@@ -32,4 +32,5 @@ export const API_ROUTES = {
   CASILLEROS: '/casilleros',
   PLANES: '/planes',
   S3: '/bucket',
+  CSRF: '/csrf',
 };

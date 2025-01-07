@@ -2,10 +2,10 @@ import express, { Application } from 'express';
 import compression from 'compression';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import rateLimit from 'express-rate-limit';
 import xss from 'xss-clean';
 import mongoSanitize from 'express-mongo-sanitize';
 import csurf from 'csurf';
+import { validateEnvVariables } from '@validations/validate-env';
 
 // Middlewares
 import errorHandler from '@middlewares/error-handler.middleware';
@@ -24,6 +24,7 @@ import perfilRoutes from '@routes/perfil.routes';
 import casilleroRoutes from '@routes/casillero.routes';
 import planRoutes from '@routes/plan.routes';
 import S3Routes from '@routes/S3.routes';
+import csrfRoutes from '@routes/csrf.routes';
 
 // Load environment variables
 dotenv.config();
@@ -31,8 +32,14 @@ dotenv.config();
 class ServerConfig {
     public app: Application;
     private sanitizedOrigins: string[] = [];
+    private corsCacheLastUpdated: number = 0;
+    private cacheExpirationMs: number = 10 * 60 * 1000; // 10 minutos
 
     constructor() {
+        validateEnvVariables({
+            JWT_SECRET: true,
+            CORS_ALLOWED_ORIGINS: { required: false, default: 'http://localhost:3000' },
+        });
         this.app = express();
         this.updateSanitizedOrigins(); // Initial cache population
         this.loadMiddlewares();
@@ -41,28 +48,30 @@ class ServerConfig {
     }
 
     private updateSanitizedOrigins(): void {
-        const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',');
+        const now = Date.now();
+        if (now - this.corsCacheLastUpdated < this.cacheExpirationMs) {
+            Logger.info('Using cached CORS origins.');
+            return; // Evita actualizar si la caché es válida
+        }
 
+        const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',');
         if (!allowedOrigins || allowedOrigins.length === 0) {
             Logger.error('CORS_ALLOWED_ORIGINS is undefined or empty. Defaulting to localhost.');
             this.sanitizedOrigins = ['http://localhost:3000'];
-            return;
+        } else {
+            this.sanitizedOrigins = allowedOrigins.map((origin) => {
+                try {
+                    const url = new URL(origin);
+                    return url.origin; // Ensure valid and sanitized origin
+                } catch {
+                    Logger.warn(`Invalid CORS origin: ${origin}`);
+                    return null; // Discard invalid origins
+                }
+            }).filter(Boolean) as string[];
         }
 
-        this.sanitizedOrigins = allowedOrigins.map((origin) => {
-            try {
-                const url = new URL(origin);
-                return url.origin; // Ensure valid and sanitized origin
-            } catch {
-                Logger.warn(`Invalid CORS origin: ${origin}`);
-                return null; // Discard invalid origins
-            }
-        }).filter(Boolean) as string[]; // Remove null values
-
-        if (this.sanitizedOrigins.length === 0) {
-            Logger.error('No valid CORS origins found. Defaulting to localhost.');
-            this.sanitizedOrigins = ['http://localhost:3000'];
-        }
+        this.corsCacheLastUpdated = now;
+        Logger.info('CORS origins updated.');
     }
 
     private loadMiddlewares(): void {
@@ -77,7 +86,7 @@ class ServerConfig {
         this.configureSecurityMiddlewares();
         this.app.use(configureCors(this.sanitizedOrigins));
         // 
-        this.configureCsrfProtection();
+        this.app.use(csurf({ cookie: true }));
         this.configureRateLimiting();
     }
 
@@ -106,21 +115,6 @@ class ServerConfig {
         this.app.use(jwtMiddleware);
     }
 
-    // TODO: Revisar configuración de CSRF
-    private configureCsrfProtection(): void {
-        const csrfProtection = csurf({ cookie: true });
-        this.app.use(csrfProtection);
-
-        // CSRF token route
-        this.app.get('/csrf-token', jwtMiddleware, rateLimit({
-            windowMs: 15 * 60 * 1000, // 15 minutes
-            max: 10, // Limit to 10 requests per 15 minutes per IP
-            message: 'Too many requests for CSRF token, please try again later.',
-        }), (req, res) => {
-            res.json({ csrfToken: req.csrfToken() });
-        });
-    }
-
     private configureRateLimiting(): void {
         this.app.use(configureRateLimiting());
     }
@@ -130,6 +124,7 @@ class ServerConfig {
         this.app.use(API_ROUTES.CASILLEROS, casilleroRoutes);
         this.app.use(API_ROUTES.PLANES, planRoutes);
         this.app.use(API_ROUTES.S3, S3Routes);
+        this.app.use(API_ROUTES.CSRF, csrfRoutes);
     }
 
     private loadErrorHandlers(): void {
