@@ -43,7 +43,7 @@ jobs:
             fonts-liberation \
             libappindicator3-1 \
             libxss1 \
-            libasound2 \
+            libasound2-data \
             google-chrome-stable \
             xvfb
 
