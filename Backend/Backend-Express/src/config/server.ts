@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+//import session from 'express-session'; // manejar sesiones en aplicaciones web
 import compression from 'compression';
 import dotenv from 'dotenv';
 //import cookieParser from 'cookie-parser';

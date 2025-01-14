@@ -12,6 +12,7 @@ const planSchema = new Schema({
     type: Number,
     required: true,
     min: 0,
+    index: true,
   },
   duracion: {
     type: Number,
@@ -25,6 +26,9 @@ const planSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  usuarios: [
+    { type: Schema.Types.ObjectId, ref: 'perfiles' }
+  ],
 }, {
   timestamps: true,
 });

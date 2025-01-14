@@ -11,7 +11,6 @@ const perfilSchema = new Schema({
   nombreCompleto: {
     type: String,
     required: true,
-    unique: false,
     maxlength: 30,
     immutable: true,
   },
@@ -40,11 +39,9 @@ const perfilSchema = new Schema({
     type: String,
     default: null,
   },
-  casillero: {
-    type: Schema.Types.ObjectId,
-    ref: 'casilleros',
-    immutable: true,
-  },
+  casilleros: [
+    { type: Schema.Types.ObjectId, ref: 'casilleros' }
+  ],
   plan: {
     type: Schema.Types.ObjectId,
     ref: 'plans',
@@ -53,6 +50,9 @@ const perfilSchema = new Schema({
       return planPorDefecto ? planPorDefecto._id : null;
     },
   },
+  solicitudes: [
+    { type: Schema.Types.ObjectId, ref: 'solicitudes' }
+  ],
 }, { timestamps: true });
 
 export default perfilSchema;

@@ -8,8 +8,9 @@ export interface IPerfil extends Document {
   cedula: string;
   contraseña: string;
   imagen?: string;
-  casillero: Schema.Types.ObjectId;
+  casilleros: Schema.Types.ObjectId[];
   plan: Schema.Types.ObjectId;
+  solicitudes: Schema.Types.ObjectId[];
 }
 
 const PerfilModel = model<IPerfil>('Perfil', perfilSchema);

@@ -7,8 +7,9 @@ export interface IPerfil {
   cedula: string;
   contraseña: string;
   imagen?: string;
-  casillero: Schema.Types.ObjectId;
+  casilleros: Schema.Types.ObjectId[];
   plan: Schema.Types.ObjectId;
+  solicitudes: Schema.Types.ObjectId[];
 }
 
 export interface IPlan {
@@ -17,10 +18,22 @@ export interface IPlan {
   duracion: number;
   beneficios: string[];
   esPorDefecto: boolean;
+  usuarios: Schema.Types.ObjectId[];
 }
 
 export interface ICasillero {
   numero: number;
   estado: 'disponible' | 'ocupado';
   perfil: Schema.Types.ObjectId;
+}
+
+export interface ISolicitud {
+  perfil: Schema.Types.ObjectId;
+  tipo: 'Plan' | 'Casillero';
+  plan?: Schema.Types.ObjectId;
+  casillero?: Schema.Types.ObjectId;
+  fechaEnvio: Date;
+  fechaAprobacion?: Date;
+  imagen?: string;
+  estado: 'Aprobado' | 'Rechazado' | 'Por verificar';
 }
