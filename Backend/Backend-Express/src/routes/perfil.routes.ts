@@ -13,8 +13,9 @@ class PerfilRoutes {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', validatePerfilExists, validateRequest(CreatePerfilDto) , PerfilController.createPerfil);
+    this.router.get('/', validatePerfilExists, validateRequest(CreatePerfilDto), PerfilController.createPerfil);
     this.router.post('/login', PerfilController.logout);
+    this.router.get('/prueba', PerfilController.prueba);
   }
 }
 

@@ -1,0 +1,12 @@
+2025-01-14T19:09:43.718Z error: No se pudo conectar a MongoDB (Intento 1/5) - connect ECONNREFUSED 127.0.0.1:27017
+2025-01-14T19:09:50.748Z error: No se pudo conectar a MongoDB (Intento 2/5) - connect ECONNREFUSED 127.0.0.1:27017
+2025-01-14T19:09:57.767Z error: No se pudo conectar a MongoDB (Intento 3/5) - connect ECONNREFUSED 127.0.0.1:27017
+2025-01-14T19:10:04.791Z error: No se pudo conectar a MongoDB (Intento 4/5) - connect ECONNREFUSED 127.0.0.1:27017
+2025-01-14T19:10:11.814Z error: No se pudo conectar a MongoDB (Intento 5/5) - connect ECONNREFUSED 127.0.0.1:27017
+2025-01-14T19:18:05.947Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
+2025-01-14T19:18:07.710Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
+2025-01-14T19:18:18.082Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
+2025-01-14T19:19:48.200Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
+2025-01-14T19:19:50.102Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
+2025-01-14T19:19:50.938Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
+2025-01-14T19:29:21.283Z error: Error caught by errorHandler: undefined - undefined

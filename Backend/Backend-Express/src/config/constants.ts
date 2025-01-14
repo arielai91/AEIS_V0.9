@@ -33,4 +33,5 @@ export const API_ROUTES = {
   PLANES: '/planes',
   S3: '/bucket',
   CSRF: '/csrf',
+  SOLICITUDES: '/solicitudes',
 };

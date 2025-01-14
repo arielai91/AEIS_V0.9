@@ -55,6 +55,10 @@ class PerfilController {
     });
     res.status(200).json({ message: 'Logged out successfully' });
   }
+
+  public async prueba(_req: Request, res: Response): Promise<void> {
+    res.status(200).json({ message: 'Prueba' });
+  }
 }
 
 export default new PerfilController();
