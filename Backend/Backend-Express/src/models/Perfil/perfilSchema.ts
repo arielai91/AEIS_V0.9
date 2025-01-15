@@ -40,18 +40,18 @@ const perfilSchema = new Schema({
     default: null,
   },
   casilleros: [
-    { type: Schema.Types.ObjectId, ref: 'casilleros' }
+    { type: Schema.Types.ObjectId, ref: 'Casillero' }
   ],
   plan: {
     type: Schema.Types.ObjectId,
-    ref: 'plans',
+    ref: 'Plan',
     default: async function () {
       const planPorDefecto = await Plan.findOne({ esPorDefecto: true });
       return planPorDefecto ? planPorDefecto._id : null;
     },
   },
   solicitudes: [
-    { type: Schema.Types.ObjectId, ref: 'solicitudes' }
+    { type: Schema.Types.ObjectId, ref: 'Solicitud' }
   ],
 }, { timestamps: true });
 

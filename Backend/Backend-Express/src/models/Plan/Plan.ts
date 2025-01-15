@@ -10,5 +10,5 @@ export interface IPlan extends Document {
   usuarios: Schema.Types.ObjectId[];
 }
 
-const PlanModel = model<IPlan>('Plan', planSchema);
+const PlanModel = model<IPlan>('Plan', planSchema, 'planes');
 export default PlanModel;

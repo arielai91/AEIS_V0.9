@@ -425,3 +425,4 @@
 2025-01-14T23:00:37.978Z info: Environment variables validated successfully.
 2025-01-14T23:00:38.028Z info: Conectado a MongoDB
 2025-01-14T23:00:38.032Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-14T23:02:06.493Z info: Mongoose desconectado de MongoDB

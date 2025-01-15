@@ -27,7 +27,7 @@ const planSchema = new Schema({
     default: false,
   },
   usuarios: [
-    { type: Schema.Types.ObjectId, ref: 'perfiles' }
+    { type: Schema.Types.ObjectId, ref: 'Perfil' }
   ],
 }, {
   timestamps: true,

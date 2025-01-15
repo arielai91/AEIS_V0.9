@@ -3,22 +3,22 @@ import { Schema } from 'mongoose';
 const solicitudSchema = new Schema({
     perfil: {
         type: Schema.Types.ObjectId,
-        ref: 'perfils', // Relación con el esquema Perfil
+        ref: 'Perfil',
         required: true,
         index: true,
     },
     tipo: {
         type: String,
-        enum: ['Plan', 'Casillero'], // Tipos permitidos
+        enum: ['Plan', 'Casillero'],
         required: true,
     },
     plan: {
         type: Schema.Types.ObjectId,
-        ref: 'plans', // Solo si el tipo es 'Plan'
+        ref: 'Plan',
     },
     casillero: {
         type: Schema.Types.ObjectId,
-        ref: 'casilleros', // Solo si el tipo es 'Casillero'
+        ref: 'Casillero',
     },
     fechaEnvio: {
         type: Date,

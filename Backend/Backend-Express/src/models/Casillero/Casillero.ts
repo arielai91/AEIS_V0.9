@@ -7,5 +7,5 @@ export interface ICasillero extends Document {
   perfil: Schema.Types.ObjectId;
 }
 
-const CasilleroModel = model<ICasillero>('Casillero', casilleroSchema);
+const CasilleroModel = model<ICasillero>('Casillero', casilleroSchema, 'casilleros');
 export default CasilleroModel;

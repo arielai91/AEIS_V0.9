@@ -13,5 +13,5 @@ export interface IPerfil extends Document {
   solicitudes: Schema.Types.ObjectId[];
 }
 
-const PerfilModel = model<IPerfil>('Perfil', perfilSchema);
+const PerfilModel = model<IPerfil>('Perfil', perfilSchema, 'perfiles');
 export default PerfilModel;

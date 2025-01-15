@@ -14,5 +14,5 @@ export interface ISolicitud extends Document {
 }
 
 // Define el modelo Solicitud usando el esquema y la interfaz
-const SolicitudModel = model<ISolicitud>('Solicitud', solicitudSchema);
+const SolicitudModel = model<ISolicitud>('Solicitud', solicitudSchema, 'solicitudes');
 export default SolicitudModel;

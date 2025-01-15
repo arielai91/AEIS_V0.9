@@ -14,7 +14,7 @@ const casilleroSchema = new Schema({
   },
   perfil: {
     type: Schema.Types.ObjectId,
-    ref: 'perfils',
+    ref: 'Perfil',
     unique: true,
     index: true,
   },
