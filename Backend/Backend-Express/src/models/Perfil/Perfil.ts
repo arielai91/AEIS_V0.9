@@ -2,6 +2,7 @@ import { Document, model, Schema } from 'mongoose';
 import perfilSchema from '@models/Perfil/perfilSchema';
 
 export interface IPerfil extends Document {
+  _id: Schema.Types.ObjectId;
   rol: 'Administrador' | 'Cliente';
   nombreCompleto: string;
   email: string;

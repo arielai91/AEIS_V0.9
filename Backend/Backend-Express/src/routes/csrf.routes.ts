@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
-import { jwtMiddleware } from '@middlewares/jwt.middleware';
 
 class CsrfRoutes {
     public router: Router;
@@ -11,7 +10,7 @@ class CsrfRoutes {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/csrf-token', jwtMiddleware, this.rateLimiter(), this.csrfTokenHandler);
+        this.router.get('/csrf-token', this.rateLimiter(), this.csrfTokenHandler);
     }
 
     private rateLimiter(): RateLimitRequestHandler {

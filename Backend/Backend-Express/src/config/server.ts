@@ -12,12 +12,14 @@ import { validateEnvVariables } from '@validations/validate-env';
 import errorHandler from '@middlewares/error-handler.middleware';
 //import { authErrorHandler } from '@middlewares/auth-error-handler.middleware';
 import requestLogger from '@middlewares/logger.middleware';
-//import { jwtMiddleware, configureJwtMiddleware } from '@middlewares/jwt.middleware';
 //import csrfErrorHandler from '@middlewares/csrf-error-handler.middleware';
 import configureHelmet from '@middlewares/helmet-config.middleware';
 //import Logger from '@logger/logger';
 //import configureRateLimiting from '@middlewares/rate-limit.middleware';
 //import configureCors from '@middlewares/cors.middleware';
+//import authMiddleware from '@middlewares/auth.middleware';
+//import jwtRenewalMiddleware from '@middlewares/jwt-renewal.middleware';
+//import configureJwtMiddleware from '@middlewares/jwt-validation.middleware';
 
 // Configs & Routes
 import { API_ROUTES } from '@config/constants';
@@ -25,6 +27,7 @@ import perfilRoutes from '@routes/perfil.routes';
 import casilleroRoutes from '@routes/casillero.routes';
 import planRoutes from '@routes/plan.routes';
 import S3Routes from '@routes/S3.routes';
+// import authRoutes from '@routes/auth.routes';
 //import csrfRoutes from '@routes/csrf.routes';
 
 // Load environment variables
@@ -112,8 +115,10 @@ class ServerConfig {
     }
 
     private loadAuthMiddlewares(): void {
-        //this.app.use(configureJwtMiddleware());
-        //this.app.use(jwtMiddleware);
+        // cosas relacionadas con jwt
+        //this.app.use(authMiddleware);
+        //this.app.use(jwtRenewalMiddleware);
+        //this.app.use(configureJwtMiddleware);
     }
 
     private configureRateLimiting(): void {
@@ -125,6 +130,7 @@ class ServerConfig {
         this.app.use(API_ROUTES.CASILLEROS, casilleroRoutes);
         this.app.use(API_ROUTES.PLANES, planRoutes);
         this.app.use(API_ROUTES.S3, S3Routes);
+        // this.app.use(API_ROUTES.AUTH, authRoutes);
         //this.app.use(API_ROUTES.CSRF, csrfRoutes);
     }
 
