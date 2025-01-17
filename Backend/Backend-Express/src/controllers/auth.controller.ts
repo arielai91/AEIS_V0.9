@@ -1,47 +1,90 @@
 import { Request, Response } from 'express';
-import { Types } from 'mongoose'; // Importar Types de mongoose
 import AuthService from '@services/auth.service';
-import PerfilService from '@services/perfil.service';
-import Logger from '@logger/logger'; // Importar Logger
+import logger from '@logger/logger';
+
+interface AuthenticatedRequest extends Request {
+    user?: { id: string };
+}
 
 class AuthController {
-    // Controlador para manejar el inicio de sesión
     public async login(req: Request, res: Response): Promise<void> {
-        const { email, password } = req.body;
         try {
-            const token = await AuthService.login(email, password);
-            res.json({ token });
-        } catch (error) {
-            if (error instanceof Error) {
-                Logger.error('Error en login', error);
-                res.status(401).json({ message: error.message });
+            const { email, password } = req.body;
+            const result = await AuthService.login(email, password);
+
+            if (!result) {
+                throw new Error('Login failed');
+            }
+
+            res.cookie('token', result.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 15 * 60 * 1000, // 15 minutos
+            });
+            res.json({ refreshToken: result.refreshToken, csrfToken: result.csrfToken });
+        } catch (err) {
+            if (err instanceof Error) {
+                logger.error('Error en login:', err);
+                res.status(401).json({ message: err.message });
             } else {
-                Logger.error('Error desconocido en login');
-                res.status(401).json({ message: 'Error desconocido' });
+                res.status(401).json({ message: 'Error desconocido en login' });
             }
         }
     }
 
-    // Controlador para obtener el perfil del usuario autenticado
-    public async getProfile(req: Request, res: Response): Promise<void> {
-        const token = req.headers.authorization?.split(' ')[1];
-        if (!token) {
-            res.status(401).json({ message: 'Token no proporcionado' });
-            return;
-        }
-
+    public async refresh(req: AuthenticatedRequest, res: Response): Promise<void> {
         try {
-            const decoded = AuthService.verifyToken(token);
-            // TODO: cambiar para obtener el perfil del usuario autenticado por cedula o correo
-            const perfil = await PerfilService.getPerfilById(new Types.ObjectId(decoded.id));
-            res.json(perfil);
-        } catch (error) {
-            if (error instanceof Error) {
-                Logger.error('Error en getProfile', error);
-            } else {
-                Logger.error('Error desconocido en getProfile');
+            const { refreshToken } = req.body;
+            const userId = req.user?.id;
+
+            if (!userId) {
+                throw new Error('User ID is missing');
             }
-            res.status(401).json({ message: 'Token inválido' });
+
+            const result = await AuthService.refresh(refreshToken, userId);
+
+            if (!result) {
+                throw new Error('Refresh failed');
+            }
+
+            res.cookie('token', result.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 15 * 60 * 1000, // 15 minutos
+            });
+            res.json({ csrfToken: result.csrfToken });
+        } catch (err) {
+            if (err instanceof Error) {
+                logger.error('Error en refresh:', err);
+                res.status(403).json({ message: err.message });
+            } else {
+                res.status(403).json({ message: 'Error desconocido en refresh' });
+            }
+        }
+    }
+
+    public async logout(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            const userId = req.user?.id;
+            const token = req.cookies.token;
+
+            if (!userId || !token) {
+                throw new Error('User ID or token is missing');
+            }
+
+            await AuthService.logout(userId, token);
+
+            res.clearCookie('token');
+            res.json({ message: 'Sesión cerrada exitosamente.' });
+        } catch (err) {
+            if (err instanceof Error) {
+                logger.error('Error en logout:', err);
+                res.status(400).json({ message: err.message });
+            } else {
+                res.status(400).json({ message: 'Error desconocido en logout' });
+            }
         }
     }
 }

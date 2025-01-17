@@ -11,3 +11,6 @@
 2025-01-14T19:19:50.938Z error: Token no encontrado en cookies desde IP: 127.0.0.1 - undefined
 2025-01-14T19:29:21.283Z error: Error caught by errorHandler: undefined - undefined
 2025-01-14T19:43:51.894Z error: Error caught by errorHandler: undefined - undefined
+2025-01-17T23:36:06.693Z error: Error caught by errorHandler: undefined - undefined
+2025-01-17T23:43:42.124Z error: Error en login: - Credenciales inválidas
+2025-01-17T23:43:45.023Z error: Error en login: - Credenciales inválidas

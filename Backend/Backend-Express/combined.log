@@ -433,3 +433,202 @@
 2025-01-17T21:14:02.692Z info: Cliente Redis conectado correctamente.
 2025-01-17T21:14:02.698Z info: Servidor escuchando en http://0.0.0.0:3000
 2025-01-17T21:15:09.466Z info: Cliente Redis desconectado correctamente.
+2025-01-17T23:12:49.337Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-17T23:12:49.339Z info: Environment variables validated successfully.
+2025-01-17T23:12:49.340Z info: CORS origins updated.
+2025-01-17T23:12:49.382Z info: Conectado a MongoDB
+2025-01-17T23:12:49.389Z info: Conexión exitosa a Redis
+2025-01-17T23:12:49.405Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:12:49.410Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:14:57.633Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-17T23:14:57.643Z info: Environment variables validated successfully.
+2025-01-17T23:14:57.645Z info: CORS origins updated.
+2025-01-17T23:14:57.695Z info: Conectado a MongoDB
+2025-01-17T23:14:57.706Z info: Conexión exitosa a Redis
+2025-01-17T23:14:57.717Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:14:57.721Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:16:53.640Z info: Environment variables validated successfully.
+2025-01-17T23:16:53.643Z info: CORS origins updated.
+2025-01-17T23:16:53.682Z info: Conectado a MongoDB
+2025-01-17T23:16:53.689Z info: Conexión exitosa a Redis
+2025-01-17T23:16:53.705Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:16:53.708Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:20:22.596Z info: Environment variables validated successfully.
+2025-01-17T23:20:22.599Z info: CORS origins updated.
+2025-01-17T23:20:22.647Z info: Conectado a MongoDB
+2025-01-17T23:20:22.655Z info: Conexión exitosa a Redis
+2025-01-17T23:20:22.662Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:20:22.666Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:20:38.408Z info: Environment variables validated successfully.
+2025-01-17T23:20:38.412Z info: CORS origins updated.
+2025-01-17T23:20:38.488Z info: Conectado a MongoDB
+2025-01-17T23:20:38.499Z info: Conexión exitosa a Redis
+2025-01-17T23:20:38.518Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:20:38.526Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:22:56.584Z info: Environment variables validated successfully.
+2025-01-17T23:22:56.587Z info: CORS origins updated.
+2025-01-17T23:22:56.640Z info: Conectado a MongoDB
+2025-01-17T23:22:56.653Z info: Conexión exitosa a Redis
+2025-01-17T23:22:56.703Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:22:56.712Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:24:25.144Z info: GET /health - Status: 200 - Duration: 13ms
+2025-01-17T23:24:30.036Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:31.062Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:31.900Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:32.683Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:33.379Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:34.184Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:34.777Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:35.552Z info: GET /health - Status: 200 - Duration: 3ms
+2025-01-17T23:24:36.300Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:36.979Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:37.695Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:40.615Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:41.288Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:42.061Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:42.687Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:43.285Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:44.004Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:44.616Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:45.354Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:45.850Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:46.600Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:47.222Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:47.955Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:48.671Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:49.308Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:49.919Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:50.584Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:24:51.256Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:52.087Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:52.867Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:53.455Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:24:54.075Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:54.757Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:55.356Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:55.907Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:24:56.553Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:57.207Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:57.704Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:58.358Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:58.990Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:24:59.571Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:00.122Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:00.766Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:01.270Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:01.852Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:02.468Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:02.973Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:03.519Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:04.049Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:04.570Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:05.092Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:25:05.605Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:06.088Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:06.682Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:07.159Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:25:07.671Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:08.133Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:08.674Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:09.092Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:09.606Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:10.056Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:10.600Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:11.983Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:12.515Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:12.964Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:13.525Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:25:14.137Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:14.664Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:15.136Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:15.650Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:16.092Z info: GET /health - Status: 200 - Duration: 2ms
+2025-01-17T23:25:16.607Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:17.204Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:17.750Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:18.221Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:19.370Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:19.949Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:20.534Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:21.050Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:21.565Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:22.313Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:23.537Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:24.242Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:24.865Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:25.351Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:36.204Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:36.989Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:38.550Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:39.261Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:39.833Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:40.391Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:40.894Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:41.478Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:42.008Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:42.474Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:42.938Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:43.472Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:44.393Z info: GET /health - Status: 200 - Duration: 1ms
+2025-01-17T23:25:44.904Z info: GET /health - Status: 200 - Duration: 0ms
+2025-01-17T23:25:45.500Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:45.502Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:46.161Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:46.162Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:47.223Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:47.224Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:48.060Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:48.061Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:48.842Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:48.843Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:49.583Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:49.584Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:50.390Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:50.390Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:51.080Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:51.082Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:51.779Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:51.780Z warn: CSRF token o usuario no válido.
+2025-01-17T23:25:52.525Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:25:52.526Z warn: CSRF token o usuario no válido.
+2025-01-17T23:26:30.530Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:26:30.531Z warn: CSRF token o usuario no válido.
+2025-01-17T23:26:31.530Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:26:31.531Z warn: CSRF token o usuario no válido.
+2025-01-17T23:26:32.379Z warn: Rate limit exceeded: 127.0.0.1, URL: /health
+2025-01-17T23:26:32.380Z warn: CSRF token o usuario no válido.
+2025-01-17T23:27:19.465Z info: Cliente Redis desconectado correctamente.
+2025-01-17T23:36:01.883Z info: Environment variables validated successfully.
+2025-01-17T23:36:01.886Z info: CORS origins updated.
+2025-01-17T23:36:01.935Z info: Conectado a MongoDB
+2025-01-17T23:36:01.941Z info: Conexión exitosa a Redis
+2025-01-17T23:36:01.956Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:36:01.961Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:36:06.693Z error: Error caught by errorHandler: undefined - undefined
+2025-01-17T23:36:06.716Z info: GET /auth/login - Status: 500 - Duration: 24ms
+2025-01-17T23:37:50.769Z info: Environment variables validated successfully.
+2025-01-17T23:37:50.772Z info: CORS origins updated.
+2025-01-17T23:37:50.821Z info: Conectado a MongoDB
+2025-01-17T23:37:50.830Z info: Conexión exitosa a Redis
+2025-01-17T23:37:50.839Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:37:50.843Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:37:53.255Z info: GET /auth/login - Status: 404 - Duration: 6ms
+2025-01-17T23:40:33.812Z info: Environment variables validated successfully.
+2025-01-17T23:40:33.816Z info: CORS origins updated.
+2025-01-17T23:40:33.875Z info: Conectado a MongoDB
+2025-01-17T23:40:33.884Z info: Conexión exitosa a Redis
+2025-01-17T23:40:33.897Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:40:33.904Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:40:41.915Z info: GET /auth/login - Status: 404 - Duration: 10ms
+2025-01-17T23:42:34.736Z info: GET /auth/login - Status: 404 - Duration: 3ms
+2025-01-17T23:43:41.512Z info: Environment variables validated successfully.
+2025-01-17T23:43:41.516Z info: CORS origins updated.
+2025-01-17T23:43:41.583Z info: Conectado a MongoDB
+2025-01-17T23:43:41.590Z info: Conexión exitosa a Redis
+2025-01-17T23:43:41.604Z info: Cliente Redis conectado correctamente.
+2025-01-17T23:43:41.610Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T23:43:42.124Z error: Error en login: - Credenciales inválidas
+2025-01-17T23:43:42.131Z info: POST /login - Status: 401 - Duration: 39ms
+2025-01-17T23:43:45.023Z error: Error en login: - Credenciales inválidas
+2025-01-17T23:43:45.026Z info: POST /login - Status: 401 - Duration: 7ms
+2025-01-17T23:44:49.010Z info: Cliente Redis desconectado correctamente.

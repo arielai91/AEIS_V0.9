@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
-import authMiddleware from '@middlewares/auth.middleware';
+import authenticateJWT from '@middlewares/auth.middleware';
+import validateCsrfToken from '@middlewares/csrf.middleware';
 
 class AuthRoutes {
     public router: Router;
@@ -11,11 +12,9 @@ class AuthRoutes {
     }
 
     private initializeRoutes(): void {
-        // Ruta para iniciar sesión
         this.router.post('/login', AuthController.login);
-
-        // Ruta para obtener el perfil del usuario autenticado
-        this.router.get('/profile', authMiddleware, AuthController.getProfile);
+        this.router.post('/refresh', authenticateJWT, validateCsrfToken, AuthController.refresh);
+        this.router.post('/logout', authenticateJWT, validateCsrfToken, AuthController.logout);
     }
 }
 

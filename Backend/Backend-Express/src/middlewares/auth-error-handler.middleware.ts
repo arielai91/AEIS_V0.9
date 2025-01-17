@@ -1,16 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
-import { UnauthorizedError } from 'express-jwt';
+import logger from '@logger/logger';
 import AuthenticationError from '@errors/AuthenticationError';
 
-export const authErrorHandler = (
-    err: Error,
-    _req: Request,
-    _res: Response,
-    next: NextFunction
-): void => {
-    if (err instanceof UnauthorizedError) {
-        next(new AuthenticationError('Token inválido o no proporcionado.'));
-    } else {
-        next(err); // Pasa al siguiente middleware si no es un error de autenticación JWT
+const authErrorHandler = (err: AuthenticationError, _req: Request, res: Response, _next: NextFunction): void => {
+    if (err instanceof AuthenticationError) {
+        logger.warn(`Error de autenticación: ${err.message}`);
+        res.status(401).json({ message: err.message });
+        return;
     }
+    _next(err);
 };
+
+export default authErrorHandler;

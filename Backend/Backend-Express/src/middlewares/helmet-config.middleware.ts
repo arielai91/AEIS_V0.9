@@ -6,7 +6,16 @@ type HelmetConfigOptions = {
 
 const configureHelmet = (): ReturnType<typeof helmet> => {
     const options: HelmetConfigOptions = {
-        contentSecurityPolicy: process.env.NODE_ENV === 'production' ? true : false,
+        contentSecurityPolicy: process.env.NODE_ENV === 'production'
+            ? {
+                directives: {
+                    defaultSrc: ['self'],
+                    scriptSrc: ['self'],
+                    objectSrc: ['none'],
+                    upgradeInsecureRequests: [],
+                },
+            }
+            : false,
     };
 
     return helmet({
@@ -19,7 +28,6 @@ const configureHelmet = (): ReturnType<typeof helmet> => {
         dnsPrefetchControl: { allow: false },
         ieNoOpen: true,
         noSniff: true,
-        xssFilter: true,
         hidePoweredBy: true,
     });
 };

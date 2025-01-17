@@ -1,25 +1,42 @@
 import { Request, Response, NextFunction } from 'express';
-import AuthService from '@services/auth.service';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import RedisService from '@services/redis.service';
+import logger from '@logger/logger';
 
-// Extender la interfaz Request para incluir la propiedad user
 interface AuthenticatedRequest extends Request {
-    user?: { id: string };
+    user?: JwtPayload;
 }
 
-const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-    const token = req.headers.authorization?.split(' ')[1];
+/**
+ * Middleware para verificar el Access Token (JWT) y validarlo contra Redis.
+ */
+const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    const token = req.cookies.token; // Obtener el token de las cookies
+
     if (!token) {
-        res.status(401).json({ message: 'Token no proporcionado' });
+        logger.warn('No autorizado: token faltante.');
+        res.status(401).json({ message: 'No autorizado: token faltante.' });
         return;
     }
 
     try {
-        const decoded = AuthService.verifyToken(token);
-        req.user = decoded; // Agrega el usuario decodificado a la solicitud
+        // Verificar token con JWT
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+        req.user = decoded;
+
+        // Validar que el token no esté en la lista negra (Redis)
+        const isBlacklisted = await RedisService.getKey(`blacklist:${token}`);
+        if (isBlacklisted) {
+            logger.warn('No autorizado: token inválido o expirado.');
+            res.status(403).json({ message: 'No autorizado: token inválido o expirado.' });
+            return;
+        }
+
         next();
-    } catch {
-        res.status(401).json({ message: 'Token inválido' });
+    } catch (err) {
+        logger.error('No autorizado: token inválido o expirado.', err as Error);
+        res.status(403).json({ message: 'No autorizado: token inválido o expirado.' });
     }
 };
 
-export default authMiddleware;
+export default authenticateJWT;

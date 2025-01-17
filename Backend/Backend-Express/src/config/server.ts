@@ -1,25 +1,20 @@
 import express, { Application } from 'express';
-//import session from 'express-session'; // manejar sesiones en aplicaciones web
 import compression from 'compression';
 import dotenv from 'dotenv';
-//import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import xss from 'xss-clean';
 import mongoSanitize from 'express-mongo-sanitize';
-//import csurf from 'csurf';
 import { validateEnvVariables } from '@validations/validate-env';
 
 // Middlewares
 import errorHandler from '@middlewares/error-handler.middleware';
-//import { authErrorHandler } from '@middlewares/auth-error-handler.middleware';
+import authErrorHandler from '@middlewares/auth-error-handler.middleware';
 import requestLogger from '@middlewares/logger.middleware';
-//import csrfErrorHandler from '@middlewares/csrf-error-handler.middleware';
+import csrfErrorHandler from '@middlewares/csrf-error-handler.middleware';
 import configureHelmet from '@middlewares/helmet-config.middleware';
-//import Logger from '@logger/logger';
-//import configureRateLimiting from '@middlewares/rate-limit.middleware';
-//import configureCors from '@middlewares/cors.middleware';
-//import authMiddleware from '@middlewares/auth.middleware';
-//import jwtRenewalMiddleware from '@middlewares/jwt-renewal.middleware';
-//import configureJwtMiddleware from '@middlewares/jwt-validation.middleware';
+import Logger from '@logger/logger';
+import configureRateLimiting from '@middlewares/rate-limit.middleware';
+import configureCors from '@middlewares/cors.middleware';
 
 // Configs & Routes
 import { API_ROUTES } from '@config/constants';
@@ -27,115 +22,134 @@ import perfilRoutes from '@routes/perfil.routes';
 import casilleroRoutes from '@routes/casillero.routes';
 import planRoutes from '@routes/plan.routes';
 import S3Routes from '@routes/S3.routes';
-// import authRoutes from '@routes/auth.routes';
+import authRoutes from '@routes/auth.routes';
 
 // Load environment variables
 dotenv.config();
 
 class ServerConfig {
     public app: Application;
-    //private sanitizedOrigins: string[] = [];
-    //private corsCacheLastUpdated: number = 0;
-    //private cacheExpirationMs: number = 10 * 60 * 1000; // 10 minutos
+    private sanitizedOrigins: string[] = [];
+    private corsCacheLastUpdated: number = 0;
+    private cacheExpirationMs: number = 10 * 60 * 1000; // 10 minutos
 
     constructor() {
         validateEnvVariables({
-            JWT_SECRET: true,
-            CORS_ALLOWED_ORIGINS: { required: false, default: 'http://localhost:3000' },
-            MONGODB_URI: true,
+            // AWS Config
+            AWS_ACCESS_KEY_ID: { required: true },
+            AWS_SECRET_ACCESS_KEY: { required: true },
+            AWS_REGION: { required: true },
+            AWS_BUCKET_NAME: { required: true },
+
+            // Server Config
+            PORT: { required: false, default: 3000, type: 'number' },
+            NODE_ENV: { required: false, default: 'development', type: 'string' },
+
+            // MongoDB Config
+            MONGODB_URI: { required: true },
+
+            // JWT Config
+            JWT_SECRET: { required: true },
+            JWT_ACCESS_TOKEN_TTL: { required: false, default: '15m', type: 'string' },
+            JWT_REFRESH_TOKEN_TTL: { required: false, default: 604800, type: 'number' },
+
+            // CSRF Config
+            CSRF_TOKEN_TTL: { required: false, default: 900, type: 'number' },
+
+            // Redis Config
+            REDIS_URL: { required: true },
+
+            // CORS Config
+            CORS_ALLOWED_ORIGINS: { required: false, default: 'http://localhost:3000', type: 'string' },
+
+            // Rate Limit Config
+            RATE_LIMIT_WINDOW_MS: { required: false, default: 15 * 60 * 1000, type: 'number' },
+            RATE_LIMIT_MAX: { required: false, default: 100, type: 'number' },
+            RATE_LIMIT_MESSAGE: { required: false, default: 'Too many requests, please try again later.', type: 'string' },
         });
         this.app = express();
-        //this.updateSanitizedOrigins(); // Initial cache population
+        this.updateSanitizedOrigins(); // Initial cache population
         this.loadMiddlewares();
         this.loadRoutes();
         this.loadErrorHandlers();
     }
 
-    // private updateSanitizedOrigins(): void {
-    //     const now = Date.now();
-    //     if (now - this.corsCacheLastUpdated < this.cacheExpirationMs) {
-    //         Logger.info('Using cached CORS origins.');
-    //         return; // Evita actualizar si la caché es válida
-    //     }
+    private updateSanitizedOrigins(): void {
+        const now = Date.now();
+        if (now - this.corsCacheLastUpdated < this.cacheExpirationMs) {
+            Logger.info('Using cached CORS origins.');
+            return; // Evita actualizar si la caché es válida
+        }
 
-    //     const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',');
-    //     if (!allowedOrigins || allowedOrigins.length === 0) {
-    //         Logger.error('CORS_ALLOWED_ORIGINS is undefined or empty. Defaulting to localhost.');
-    //         this.sanitizedOrigins = ['http://localhost:3000'];
-    //     } else {
-    //         this.sanitizedOrigins = allowedOrigins.map((origin) => {
-    //             try {
-    //                 const url = new URL(origin);
-    //                 return url.origin; // Ensure valid and sanitized origin
-    //             } catch {
-    //                 Logger.warn(`Invalid CORS origin: ${origin}`);
-    //                 return null; // Discard invalid origins
-    //             }
-    //         }).filter(Boolean) as string[];
-    //     }
+        const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(',');
+        if (!allowedOrigins || allowedOrigins.length === 0) {
+            Logger.error('CORS_ALLOWED_ORIGINS is undefined or empty. Defaulting to localhost.');
+            this.sanitizedOrigins = ['http://localhost:3000'];
+        } else {
+            this.sanitizedOrigins = allowedOrigins.map((origin) => {
+                try {
+                    const url = new URL(origin);
+                    return url.origin; // Ensure valid and sanitized origin
+                } catch {
+                    Logger.warn(`Invalid CORS origin: ${origin}`);
+                    return null; // Discard invalid origins
+                }
+            }).filter(Boolean) as string[];
+        }
 
-    //     this.corsCacheLastUpdated = now;
-    //     Logger.info('CORS origins updated.');
-    // }
+        this.corsCacheLastUpdated = now;
+        Logger.info('CORS origins updated.');
+    }
 
     private loadMiddlewares(): void {
-        this.loadSecurityMiddlewares();
-        this.loadPerformanceMiddlewares();
-        this.loadRequestParsingMiddlewares();
-        this.loadLoggingMiddlewares();
-        this.loadAuthMiddlewares();
+        this.loadPerformanceMiddlewares(); // Middlewares de rendimiento
+        this.loadSecurityMiddlewares();   // Middlewares de seguridad (CORS, Helmet, etc.)
+        this.configureRateLimiting();    // Middlewares de Rate Limiting
+        this.loadRequestParsingMiddlewares(); // Parsing de solicitudes (JSON, URL Encoded)
+        this.loadLoggingMiddlewares();   // Registro de solicitudes
     }
 
     private loadSecurityMiddlewares(): void {
-        this.configureSecurityMiddlewares();
-        //this.app.use(configureCors(this.sanitizedOrigins));
-        //this.app.use(cookieParser());
-        //this.app.use(csurf({ cookie: true }));
-        this.configureRateLimiting();
+        this.configureSecurityMiddlewares(); // Helmet, xss-clean, mongo-sanitize
+        this.app.use(configureCors(this.sanitizedOrigins)); // Configuración de CORS
+        this.app.use(cookieParser()); // Parser de cookies
     }
 
     private configureSecurityMiddlewares(): void {
-        this.app.use(configureHelmet());
-        this.app.use(xss());
-        this.app.use(mongoSanitize());
+        this.app.use(configureHelmet()); // Configuración de encabezados de seguridad
+        this.app.use(xss());             // Protección contra ataques XSS
+        this.app.use(mongoSanitize());   // Protección contra inyecciones de MongoDB
     }
 
     private loadPerformanceMiddlewares(): void {
-        this.app.use(compression());
-    }
-
-    private loadRequestParsingMiddlewares(): void {
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
-    }
-
-    private loadLoggingMiddlewares(): void {
-        this.app.use(requestLogger);
-    }
-
-    private loadAuthMiddlewares(): void {
-        // cosas relacionadas con jwt
-        //this.app.use(authMiddleware);
-        //this.app.use(jwtRenewalMiddleware);
-        //this.app.use(configureJwtMiddleware);
+        this.app.use(compression()); // Middleware de compresión
     }
 
     private configureRateLimiting(): void {
-        //this.app.use(configureRateLimiting());
+        this.app.use(configureRateLimiting()); // Middleware de Rate Limiting
+    }
+
+    private loadRequestParsingMiddlewares(): void {
+        this.app.use(express.json()); // Middleware para parsear JSON
+        this.app.use(express.urlencoded({ extended: true })); // Middleware para datos codificados en URL
+    }
+
+    private loadLoggingMiddlewares(): void {
+        this.app.use(requestLogger); // Middleware para registrar solicitudes
     }
 
     private loadRoutes(): void {
-        this.app.use(API_ROUTES.PERFILES, perfilRoutes);
-        this.app.use(API_ROUTES.CASILLEROS, casilleroRoutes);
-        this.app.use(API_ROUTES.PLANES, planRoutes);
-        this.app.use(API_ROUTES.S3, S3Routes);
-        // this.app.use(API_ROUTES.AUTH, authRoutes);
+        this.app.use(API_ROUTES.PERFILES, perfilRoutes);     // Rutas de perfiles
+        this.app.use(API_ROUTES.CASILLEROS, casilleroRoutes); // Rutas de casilleros
+        this.app.use(API_ROUTES.PLANES, planRoutes);         // Rutas de planes
+        this.app.use(API_ROUTES.S3, S3Routes);               // Rutas de S3
+        this.app.use(API_ROUTES.AUTH, authRoutes);           // Rutas de autenticación
     }
 
     private loadErrorHandlers(): void {
-        //this.app.use(authErrorHandler); // Usa el handler ya definido para errores de autenticación
-        //this.app.use(csrfErrorHandler); // Usa el handler ya definido para errores de CSRF
-        this.app.use(errorHandler); // Middleware global para errores restantes
+        this.app.use(authErrorHandler); // Middleware para manejar errores de autenticación
+        this.app.use(csrfErrorHandler); // Middleware para manejar errores de CSRF
+        this.app.use(errorHandler);     // Middleware global para otros errores
     }
 }
 
