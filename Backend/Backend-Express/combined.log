@@ -426,3 +426,10 @@
 2025-01-14T23:00:38.028Z info: Conectado a MongoDB
 2025-01-14T23:00:38.032Z info: Servidor escuchando en http://0.0.0.0:3000
 2025-01-14T23:02:06.493Z info: Mongoose desconectado de MongoDB
+2025-01-17T21:14:02.585Z info: Environment variable CORS_ALLOWED_ORIGINS is missing. Using default value: http://localhost:3000
+2025-01-17T21:14:02.589Z info: Environment variables validated successfully.
+2025-01-17T21:14:02.677Z info: Conectado a MongoDB
+2025-01-17T21:14:02.681Z info: Conexión exitosa a Redis
+2025-01-17T21:14:02.692Z info: Cliente Redis conectado correctamente.
+2025-01-17T21:14:02.698Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-17T21:15:09.466Z info: Cliente Redis desconectado correctamente.

@@ -1,6 +1,7 @@
 import ServerConfig from '@config/server';
 import databaseConnection from '@database/connection';
 import logger from '@logger/logger';
+import redisConnection from '@database/redis.connection';
 
 class AppServer {
   private serverConfig: ServerConfig;
@@ -12,6 +13,7 @@ class AppServer {
   public async start(): Promise<void> {
     try {
       await databaseConnection.connect();
+      await redisConnection.connect();
       const port = parseInt(process.env.PORT || '3000', 10);
 
       this.serverConfig.app.listen(port, '0.0.0.0', () => {

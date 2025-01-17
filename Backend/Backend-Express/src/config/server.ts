@@ -28,7 +28,6 @@ import casilleroRoutes from '@routes/casillero.routes';
 import planRoutes from '@routes/plan.routes';
 import S3Routes from '@routes/S3.routes';
 // import authRoutes from '@routes/auth.routes';
-//import csrfRoutes from '@routes/csrf.routes';
 
 // Load environment variables
 dotenv.config();
@@ -131,7 +130,6 @@ class ServerConfig {
         this.app.use(API_ROUTES.PLANES, planRoutes);
         this.app.use(API_ROUTES.S3, S3Routes);
         // this.app.use(API_ROUTES.AUTH, authRoutes);
-        //this.app.use(API_ROUTES.CSRF, csrfRoutes);
     }
 
     private loadErrorHandlers(): void {

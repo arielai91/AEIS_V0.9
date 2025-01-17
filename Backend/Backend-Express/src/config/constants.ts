@@ -2,9 +2,6 @@
 export const APP_NAME = 'MyApp';
 export const APP_VERSION = '1.0.0';
 
-export const AUTH0_AUDIENCE = 'your-auth0-audience';
-export const AUTH0_DOMAIN = 'your-auth0-domain';
-
 // Mensajes de Error
 export const ERROR_MESSAGES = {
   DATABASE_CONNECTION: 'Error al conectar a la base de datos',
@@ -32,6 +29,6 @@ export const API_ROUTES = {
   CASILLEROS: '/casilleros',
   PLANES: '/planes',
   S3: '/bucket',
-  CSRF: '/csrf',
   SOLICITUDES: '/solicitudes',
+  AUTH: '/auth',
 };
