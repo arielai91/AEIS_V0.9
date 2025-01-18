@@ -632,3 +632,174 @@
 2025-01-17T23:43:45.023Z error: Error en login: - Credenciales inválidas
 2025-01-17T23:43:45.026Z info: POST /login - Status: 401 - Duration: 7ms
 2025-01-17T23:44:49.010Z info: Cliente Redis desconectado correctamente.
+2025-01-18T01:10:39.096Z info: Environment variables validated successfully.
+2025-01-18T01:10:39.099Z info: CORS origins updated.
+2025-01-18T01:10:39.155Z info: Conectado a MongoDB
+2025-01-18T01:10:39.165Z info: Conexión exitosa a Redis
+2025-01-18T01:10:39.198Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:10:39.203Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:11:22.956Z info: Environment variables validated successfully.
+2025-01-18T01:11:22.970Z info: CORS origins updated.
+2025-01-18T01:11:23.181Z info: Conectado a MongoDB
+2025-01-18T01:11:23.199Z info: Conexión exitosa a Redis
+2025-01-18T01:11:23.309Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:11:23.333Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:12:55.316Z info: GET /s3/static/logo.png - Status: 404 - Duration: 4ms
+2025-01-18T01:14:01.691Z info: GET /s3/static/logo.png - Status: 404 - Duration: 1ms
+2025-01-18T01:15:52.878Z info: Environment variables validated successfully.
+2025-01-18T01:15:52.882Z info: CORS origins updated.
+2025-01-18T01:15:52.939Z info: Conectado a MongoDB
+2025-01-18T01:15:52.949Z info: Conexión exitosa a Redis
+2025-01-18T01:15:52.961Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:15:52.965Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:15:56.452Z info: GET /s3/test - Status: 404 - Duration: 12ms
+2025-01-18T01:16:01.737Z info: GET /s3/test - Status: 404 - Duration: 1ms
+2025-01-18T01:16:33.941Z info: GET /s3/test - Status: 404 - Duration: 2ms
+2025-01-18T01:19:11.851Z info: GET /s3/test - Status: 404 - Duration: 1ms
+2025-01-18T01:20:50.882Z info: GET /bucket/test - Status: 404 - Duration: 2ms
+2025-01-18T01:20:52.329Z info: GET /bucket/test - Status: 404 - Duration: 2ms
+2025-01-18T01:21:21.567Z info: Environment variables validated successfully.
+2025-01-18T01:21:21.596Z info: CORS origins updated.
+2025-01-18T01:21:21.953Z info: Conectado a MongoDB
+2025-01-18T01:21:22.010Z info: Conexión exitosa a Redis
+2025-01-18T01:21:22.169Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:21:22.189Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:21:25.277Z info: GET /s3/test - Status: 404 - Duration: 4ms
+2025-01-18T01:21:49.175Z info: Environment variables validated successfully.
+2025-01-18T01:21:49.188Z info: CORS origins updated.
+2025-01-18T01:21:49.411Z info: Conectado a MongoDB
+2025-01-18T01:21:49.441Z info: Conexión exitosa a Redis
+2025-01-18T01:21:49.520Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:21:49.530Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:21:59.178Z info: GET /bucket/test - Status: 404 - Duration: 31ms
+2025-01-18T01:23:43.924Z info: GET /perfil/ - Status: 404 - Duration: 3ms
+2025-01-18T01:23:45.773Z info: GET /perfil/ - Status: 404 - Duration: 2ms
+2025-01-18T01:23:46.784Z info: GET /perfil/ - Status: 404 - Duration: 1ms
+2025-01-18T01:23:47.789Z info: GET /perfil/ - Status: 404 - Duration: 2ms
+2025-01-18T01:24:06.418Z info: GET / - Status: 200 - Duration: 3ms
+2025-01-18T01:24:46.342Z info: Environment variables validated successfully.
+2025-01-18T01:24:46.347Z info: CORS origins updated.
+2025-01-18T01:24:46.426Z info: Conectado a MongoDB
+2025-01-18T01:24:46.437Z info: Conexión exitosa a Redis
+2025-01-18T01:24:46.469Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:24:46.477Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:25:19.171Z info: GET /test - Status: 200 - Duration: 4ms
+2025-01-18T01:25:39.974Z info: Environment variables validated successfully.
+2025-01-18T01:25:39.980Z info: CORS origins updated.
+2025-01-18T01:25:40.083Z info: Conectado a MongoDB
+2025-01-18T01:25:40.101Z info: Conexión exitosa a Redis
+2025-01-18T01:25:40.119Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:25:40.128Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:25:42.045Z info: GET /static/logo.png - Status: 404 - Duration: 749ms
+2025-01-18T01:25:45.294Z info: GET /static/logo.png - Status: 404 - Duration: 257ms
+2025-01-18T01:26:14.437Z info: GET /static/logo.png - Status: 404 - Duration: 554ms
+2025-01-18T01:30:54.555Z info: Environment variables validated successfully.
+2025-01-18T01:30:54.573Z info: CORS origins updated.
+2025-01-18T01:30:55.093Z info: Conectado a MongoDB
+2025-01-18T01:30:55.136Z info: Conexión exitosa a Redis
+2025-01-18T01:30:55.247Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:30:55.256Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:32:20.985Z info: Environment variables validated successfully.
+2025-01-18T01:32:20.991Z info: CORS origins updated.
+2025-01-18T01:32:21.095Z info: Conectado a MongoDB
+2025-01-18T01:32:21.123Z info: Conexión exitosa a Redis
+2025-01-18T01:32:21.154Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:32:21.162Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:34:35.160Z info: GET /static/logo.png - Status: 404 - Duration: 795ms
+2025-01-18T01:34:50.012Z info: POST /bucket/perfil/ - Status: 404 - Duration: 3ms
+2025-01-18T01:35:11.285Z info: POST /perfil/1234 - Status: 400 - Duration: 1ms
+2025-01-18T01:39:10.807Z info: Environment variables validated successfully.
+2025-01-18T01:39:10.834Z info: CORS origins updated.
+2025-01-18T01:39:11.099Z info: Conectado a MongoDB
+2025-01-18T01:39:11.118Z info: Conexión exitosa a Redis
+2025-01-18T01:39:11.142Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:39:11.150Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:48:06.940Z info: Environment variables validated successfully.
+2025-01-18T01:48:06.948Z info: CORS origins updated.
+2025-01-18T01:48:07.034Z info: Conectado a MongoDB
+2025-01-18T01:48:07.046Z info: Conexión exitosa a Redis
+2025-01-18T01:48:07.068Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:48:07.078Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:50:49.448Z info: Environment variables validated successfully.
+2025-01-18T01:50:49.458Z info: CORS origins updated.
+2025-01-18T01:50:49.609Z info: Conectado a MongoDB
+2025-01-18T01:50:49.628Z info: Conexión exitosa a Redis
+2025-01-18T01:50:49.652Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:50:49.659Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:51:07.086Z info: Environment variables validated successfully.
+2025-01-18T01:51:07.090Z info: CORS origins updated.
+2025-01-18T01:51:07.139Z info: Conectado a MongoDB
+2025-01-18T01:51:07.147Z info: Conexión exitosa a Redis
+2025-01-18T01:51:07.174Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:51:07.178Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:51:41.328Z info: POST /bucket/perfil/ - Status: 404 - Duration: 7ms
+2025-01-18T01:51:57.791Z warn: No autorizado: token faltante.
+2025-01-18T01:51:57.794Z info: POST /perfil/upload - Status: 401 - Duration: 4ms
+2025-01-18T01:52:28.768Z info: POST /bucket/perfil/ - Status: 404 - Duration: 2ms
+2025-01-18T01:52:30.066Z info: POST /bucket/perfil/ - Status: 404 - Duration: 1ms
+2025-01-18T01:52:51.489Z info: Environment variables validated successfully.
+2025-01-18T01:52:51.494Z info: CORS origins updated.
+2025-01-18T01:52:51.560Z info: Conectado a MongoDB
+2025-01-18T01:52:51.570Z info: Conexión exitosa a Redis
+2025-01-18T01:52:51.594Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:52:51.600Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T01:53:11.441Z warn: No autorizado: token faltante.
+2025-01-18T01:53:11.445Z info: GET /perfil/ - Status: 401 - Duration: 5ms
+2025-01-18T01:53:34.914Z info: Environment variables validated successfully.
+2025-01-18T01:53:34.929Z info: CORS origins updated.
+2025-01-18T01:53:35.257Z info: Conectado a MongoDB
+2025-01-18T01:53:35.318Z info: Conexión exitosa a Redis
+2025-01-18T01:53:35.376Z info: Cliente Redis conectado correctamente.
+2025-01-18T01:53:35.406Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:18:07.116Z info: Environment variables validated successfully.
+2025-01-18T02:18:07.122Z info: CORS origins updated.
+2025-01-18T02:18:07.197Z info: Conectado a MongoDB
+2025-01-18T02:18:07.206Z info: Conexión exitosa a Redis
+2025-01-18T02:18:07.222Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:18:07.227Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:18:57.046Z info: Environment variables validated successfully.
+2025-01-18T02:18:57.072Z info: CORS origins updated.
+2025-01-18T02:18:57.443Z info: Conectado a MongoDB
+2025-01-18T02:18:57.481Z info: Conexión exitosa a Redis
+2025-01-18T02:18:57.565Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:18:57.582Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:19:35.260Z info: Environment variables validated successfully.
+2025-01-18T02:19:35.265Z info: CORS origins updated.
+2025-01-18T02:19:35.369Z info: Conectado a MongoDB
+2025-01-18T02:19:35.392Z info: Conexión exitosa a Redis
+2025-01-18T02:19:35.416Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:19:35.420Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:19:55.181Z info: Environment variables validated successfully.
+2025-01-18T02:19:55.185Z info: CORS origins updated.
+2025-01-18T02:19:55.240Z info: Conectado a MongoDB
+2025-01-18T02:19:55.252Z info: Conexión exitosa a Redis
+2025-01-18T02:19:55.280Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:19:55.287Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:34:25.899Z info: Environment variables validated successfully.
+2025-01-18T02:34:25.905Z info: CORS origins updated.
+2025-01-18T02:34:25.964Z info: Conectado a MongoDB
+2025-01-18T02:34:25.974Z info: Conexión exitosa a Redis
+2025-01-18T02:34:25.997Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:34:26.006Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:35:08.728Z info: Environment variables validated successfully.
+2025-01-18T02:35:08.741Z info: CORS origins updated.
+2025-01-18T02:35:08.963Z info: Conectado a MongoDB
+2025-01-18T02:35:08.993Z info: Conexión exitosa a Redis
+2025-01-18T02:35:09.080Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:35:09.099Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:45:04.966Z info: Environment variables validated successfully.
+2025-01-18T02:45:04.971Z info: CORS origins updated.
+2025-01-18T02:45:05.026Z info: Conectado a MongoDB
+2025-01-18T02:45:05.036Z info: Conexión exitosa a Redis
+2025-01-18T02:45:05.079Z info: Cliente Redis conectado correctamente.
+2025-01-18T02:45:05.086Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-18T02:49:16.267Z error: Error en login: - Credenciales inválidas
+2025-01-18T02:49:16.274Z info: POST /login - Status: 401 - Duration: 34ms
+2025-01-18T02:49:34.614Z warn: No autorizado: token faltante.
+2025-01-18T02:49:34.615Z info: POST /refresh - Status: 401 - Duration: 2ms
+2025-01-18T02:49:41.420Z warn: No autorizado: token faltante.
+2025-01-18T02:49:41.422Z info: POST /logout - Status: 401 - Duration: 3ms
+2025-01-18T02:50:08.169Z warn: No autorizado: token faltante.
+2025-01-18T02:50:08.170Z info: POST /perfil/ - Status: 401 - Duration: 1ms
+2025-01-18T02:50:18.164Z warn: No autorizado: token faltante.
+2025-01-18T02:50:18.165Z info: DELETE /perfil/ - Status: 401 - Duration: 1ms

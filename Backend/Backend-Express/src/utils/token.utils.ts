@@ -6,12 +6,16 @@ const accessTokenTTL = process.env.JWT_ACCESS_TOKEN_TTL || '15m';
 const refreshTokenTTL = process.env.JWT_REFRESH_TOKEN_TTL || '604800'; // 7 días en segundos
 const csrfTokenTTL = process.env.CSRF_TOKEN_TTL || '900'; // 15 minutos en segundos
 
+interface AccessTokenPayload {
+    userId: string;
+}
+
 /**
  * Genera un Access Token con un tiempo de vida corto (configurable).
  * @param payload Información a incluir en el token (e.g., { userId }).
  * @returns El Access Token generado.
  */
-export const generateAccessToken = (payload: object): string => {
+export const generateAccessToken = (payload: AccessTokenPayload): string => {
     return jwt.sign(payload, process.env.JWT_SECRET as string, {
         expiresIn: accessTokenTTL, // Tiempo de vida del Access Token
     });
