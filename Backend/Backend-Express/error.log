@@ -15,3 +15,12 @@
 2025-01-17T23:43:42.124Z error: Error en login: - Credenciales inválidas
 2025-01-17T23:43:45.023Z error: Error en login: - Credenciales inválidas
 2025-01-18T02:49:16.267Z error: Error en login: - Credenciales inválidas
+2025-01-18T18:56:59.692Z error: Error en el middleware de validación: - Reflect.getMetadata is not a function
+2025-01-18T18:57:13.913Z error: Error en el middleware de validación: - Reflect.getMetadata is not a function
+2025-01-18T18:57:19.371Z error: Error en el middleware de validación: - Reflect.getMetadata is not a function
+2025-01-18T18:58:35.202Z error: Error en el middleware de validación: - Reflect.getMetadata is not a function
+2025-01-18T19:05:48.556Z error: Error en el middleware de validación: - Reflect.getMetadata is not a function
+2025-01-18T19:05:49.567Z error: Error en el middleware de validación: - Reflect.getMetadata is not a function
+2025-01-18T19:06:47.813Z error: Error en login: - Credenciales inválidas
+2025-01-18T19:06:48.857Z error: Error en login: - Credenciales inválidas
+2025-01-18T19:07:06.907Z error: Error en login: - Credenciales inválidas

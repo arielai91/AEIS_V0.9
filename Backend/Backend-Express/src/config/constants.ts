@@ -31,4 +31,5 @@ export const API_ROUTES = {
   S3: '/bucket',
   SOLICITUDES: '/solicitudes',
   AUTH: '/auth',
+  DOCS: '/docs',
 };

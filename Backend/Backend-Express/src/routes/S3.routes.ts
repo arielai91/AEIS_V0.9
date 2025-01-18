@@ -20,7 +20,7 @@ class S3Routes {
     // Rutas para imágenes de perfil
     this.router.get('/perfil/', authenticateJWT, S3Controller.servePerfilImage);
     this.router.post('/perfil/', authenticateJWT, this.upload.single('image'), S3Controller.uploadPerfilImage);
-    this.router.post('/perfil/', authenticateJWT, this.upload.single('image'), S3Controller.uploadPerfilImage);
+    this.router.put('/perfil/', authenticateJWT, this.upload.single('image'), S3Controller.updatePerfilImage);
     this.router.delete('/perfil/', authenticateJWT, S3Controller.deletePerfilImage);
   }
 }

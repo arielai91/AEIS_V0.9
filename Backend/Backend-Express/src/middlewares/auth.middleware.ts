@@ -4,35 +4,44 @@ import RedisService from '@services/redis.service';
 import logger from '@logger/logger';
 
 interface AuthenticatedRequest extends Request {
-    user?: JwtPayload;
+    user?: { id: string }; // Limita el tipo del payload a lo que realmente necesitas
 }
 
 /**
- * Middleware para verificar el Access Token (JWT) y validarlo contra Redis.
+ * Middleware para verificar el Access Token (JWT).
  */
 const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-    const token = req.cookies.token; // Obtener el token de las cookies
-
-    if (!token) {
-        logger.warn('No autorizado: token faltante.');
-        res.status(401).json({ message: 'No autorizado: token faltante.' });
-        return;
-    }
-
     try {
+        // Obtener el token de las cookies
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
+            logger.warn('No autorizado: token faltante.');
+            res.status(401).json({ message: 'No autorizado: token faltante.' });
+            return;
+        }
+
         // Verificar token con JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-        req.user = decoded;
 
-        // Validar que el token no esté en la lista negra (Redis)
+        // Extraer el `id` del payload y guardarlo en `req.user`
+        const userId = decoded.id as string;
+        if (!userId) {
+            logger.warn('No autorizado: ID de usuario faltante en el token.');
+            res.status(403).json({ message: 'No autorizado: ID de usuario faltante en el token.' });
+            return;
+        }
+        req.user = { id: userId };
+
+        // Validar que el token no esté en la lista negra
         const isBlacklisted = await RedisService.getKey(`blacklist:${token}`);
         if (isBlacklisted) {
-            logger.warn('No autorizado: token inválido o expirado.');
+            logger.warn(`No autorizado: token inválido o expirado. Token: ${token}`);
             res.status(403).json({ message: 'No autorizado: token inválido o expirado.' });
             return;
         }
 
-        next();
+        next(); // Pasar al siguiente middleware o controlador
     } catch (err) {
         logger.error('No autorizado: token inválido o expirado.', err as Error);
         res.status(403).json({ message: 'No autorizado: token inválido o expirado.' });

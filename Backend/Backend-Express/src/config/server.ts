@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express, { Application } from 'express';
 import compression from 'compression';
 import dotenv from 'dotenv';
@@ -23,6 +24,8 @@ import casilleroRoutes from '@routes/casillero.routes';
 import planRoutes from '@routes/plan.routes';
 import S3Routes from '@routes/S3.routes';
 import authRoutes from '@routes/auth.routes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '@config/swagger';
 
 // Load environment variables
 dotenv.config();
@@ -144,6 +147,7 @@ class ServerConfig {
         this.app.use(API_ROUTES.PLANES, planRoutes);         // Rutas de planes
         this.app.use(API_ROUTES.S3, S3Routes);               // Rutas de S3
         this.app.use(API_ROUTES.AUTH, authRoutes);           // Rutas de autenticación
+        this.app.use(API_ROUTES.DOCS, swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Rutas de documentación
     }
 
     private loadErrorHandlers(): void {
