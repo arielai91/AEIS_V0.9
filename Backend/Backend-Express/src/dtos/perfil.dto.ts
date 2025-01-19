@@ -20,3 +20,9 @@ export class CrearPerfilDto {
   @IsNotEmpty()
   contraseña!: string;
 }
+
+export class EliminarPerfilDto {
+  @IsString()
+  @IsNotEmpty()
+  public perfilId!: string;
+}

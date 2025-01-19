@@ -4,6 +4,7 @@ import validator from 'validator';
 import PerfilModel from '@models/Perfil/Perfil';
 import Plan from '@models/Plan/Plan';
 import { IPerfil } from '@type/global';
+import { CrearPerfilDto } from '@dtos/perfil.dto';
 
 class PerfilService {
     /**
@@ -11,7 +12,7 @@ class PerfilService {
      * @param datosPerfil Información del perfil a crear.
      * @returns El perfil creado.
      */
-    public async crearPerfil(datosPerfil: IPerfil): Promise<IPerfil> {
+    public async crearPerfil(datosPerfil: CrearPerfilDto): Promise<IPerfil> {
         // Validar y sanitizar los datos proporcionados
         if (!validator.isEmail(datosPerfil.email)) {
             throw new Error('El email proporcionado no es válido.');
@@ -43,26 +44,14 @@ class PerfilService {
         return await perfil.save();
     }
 
-    // Obtener un perfil por ID
-    public async getPerfilById(id: Types.ObjectId): Promise<IPerfil | null> {
-        return await PerfilModel.findById(id).populate('casilleros').populate('plan').populate('solicitudes').exec();
-    }
-
-    // Obtener todos los perfiles
-    public async getAllPerfiles(): Promise<IPerfil[]> {
-        return await PerfilModel.find().populate('casilleros').populate('plan').populate('solicitudes').exec();
-    }
-
-    // Actualizar un perfil por ID
-    public async updatePerfil(id: Types.ObjectId, data: Partial<IPerfil>): Promise<IPerfil | null> {
-        return await PerfilModel.findByIdAndUpdate(id, data, { new: true }).exec();
-    }
-
     /**
      * Eliminar perfil de la base de datos.
      * @param userId ID del usuario a eliminar.
      */
     public async eliminarPerfil(userId: string): Promise<void> {
+        if (!Types.ObjectId.isValid(userId)) {
+            throw new Error('ID no válido');
+        }
         await PerfilModel.findByIdAndDelete(userId);
     }
 }

@@ -12,11 +12,28 @@ class PerfilController {
    */
   public async crearPerfil(req: Request, res: Response): Promise<void> {
     try {
-      const perfilCreado = await PerfilService.crearPerfil(req.body);
+      const datosPerfil = req.body;
+      datosPerfil.rol = 'Cliente'; // Asignar rol de usuario
+      const perfilCreado = await PerfilService.crearPerfil(datosPerfil);
       res.status(201).json(perfilCreado);
     } catch (err) {
-      logger.error('Error al crear perfil:', err as Error);
-      res.status(400).json({ message: 'Error al crear perfil' });
+      logger.error('Error al crear Cliente:', err as Error);
+      res.status(400).json({ message: 'Error al crear Cliente' });
+    }
+  }
+
+  /**
+   * Crear un nuevo perfil por un administrador.
+   */
+  public async crearPerfilAdmin(req: Request, res: Response): Promise<void> {
+    try {
+      const datosPerfil = req.body;
+      datosPerfil.rol = 'Administrador'; // Asignar rol de administrador
+      const perfilCreado = await PerfilService.crearPerfil(datosPerfil);
+      res.status(201).json(perfilCreado);
+    } catch (err) {
+      logger.error('Error al crear Admin:', err as Error);
+      res.status(400).json({ message: 'Error al crear Admin' });
     }
   }
 
@@ -37,6 +54,26 @@ class PerfilController {
     } catch (err) {
       logger.error('Error al eliminar perfil:', err as Error);
       res.status(500).json({ message: 'Error al eliminar perfil' });
+    }
+  }
+
+  /**
+   * Eliminar perfil por un administrador.
+   */
+  public async eliminarPerfilAdmin(req: Request, res: Response): Promise<void> {
+    try {
+      const { perfilId } = req.body;
+
+      if (!perfilId) {
+        res.status(400).json({ message: 'Falta el ID del perfil' });
+        return;
+      }
+
+      await PerfilService.eliminarPerfil(perfilId);
+      res.status(200).json({ message: 'Perfil eliminado exitosamente por admin' });
+    } catch (err) {
+      logger.error('Error al eliminar perfil por admin:', err as Error);
+      res.status(500).json({ message: 'Error al eliminar perfil por admin' });
     }
   }
 }

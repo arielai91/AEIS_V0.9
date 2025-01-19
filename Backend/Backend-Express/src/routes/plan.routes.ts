@@ -1,5 +1,10 @@
 import { Router } from 'express';
 import PlanController from '@controllers/plan.controller';
+import authenticateJWT from '@middlewares/auth.middleware';
+import validateRole from '@middlewares/rol-auth.middleware';
+import validateRequest from '@middlewares/validateRequest.middleware';
+import { CrearPlanDto, EliminarPlanDto } from '@dtos/plan.dto';
+import validateCsrfToken from '@middlewares/csrf.middleware';
 
 class PlanRoutes {
   public router: Router;
@@ -10,8 +15,11 @@ class PlanRoutes {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', PlanController.getPlan);
-    // Puedes agregar más rutas aquí
+    // Ruta para que los administradores creen planes
+    this.router.post('/', authenticateJWT, validateRole(['Administrador']), validateRequest(CrearPlanDto), validateCsrfToken, PlanController.crearPlan);
+
+    // Ruta para que los administradores eliminen planes
+    this.router.delete('/', authenticateJWT, validateRole(['Administrador']), validateRequest(EliminarPlanDto), validateCsrfToken, PlanController.eliminarPlan);
   }
 }
 
