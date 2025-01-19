@@ -3,7 +3,7 @@ import casilleroSchema from './casilleroSchema';
 
 export interface ICasillero extends Document {
   numero: number;
-  estado: 'disponible' | 'ocupado';
+  estado: 'disponible' | 'ocupado' | 'reservado' | 'mantenimiento';
   perfil: Schema.Types.ObjectId;
 }
 

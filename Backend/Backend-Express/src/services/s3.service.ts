@@ -1,12 +1,8 @@
-import {
-    PutObjectCommand,
-    DeleteObjectCommand,
-    ListObjectsV2Command,
-    GetObjectCommand,
-    ObjectCannedACL,
-} from '@aws-sdk/client-s3';
+// s3.service.ts
+import { PutObjectCommand, DeleteObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import s3 from '@config/aws.config';
+import logger from '@logger/logger';
 
 class S3Service {
     private bucketName: string;
@@ -15,78 +11,80 @@ class S3Service {
         this.bucketName = process.env.AWS_BUCKET_NAME!;
     }
 
-    /**
-     * Verifica si una carpeta (prefijo) existe en S3, si no, la crea.
-     * @param folder Nombre de la carpeta.
-     */
     async ensureFolderExists(folder: string): Promise<void> {
-        const command = new ListObjectsV2Command({
-            Bucket: this.bucketName,
-            Prefix: `${folder}/`,
-            MaxKeys: 1,
-        });
-
-        const result = await s3.send(command);
-
-        if (!result.Contents || result.Contents.length === 0) {
-            const createFolderCommand = new PutObjectCommand({
+        try {
+            const command = new ListObjectsV2Command({
                 Bucket: this.bucketName,
-                Key: `${folder}/`,
-                Body: '',
+                Prefix: `${folder}/`,
+                MaxKeys: 1,
             });
 
-            await s3.send(createFolderCommand);
+            const result = await s3.send(command);
+
+            if (!result.Contents || result.Contents.length === 0) {
+                const createFolderCommand = new PutObjectCommand({
+                    Bucket: this.bucketName,
+                    Key: `${folder}/`,
+                    Body: '',
+                });
+
+                await s3.send(createFolderCommand);
+                logger.info(`Carpeta creada en S3: ${folder}`);
+            }
+        } catch (err) {
+            logger.error('Error al verificar o crear carpeta en S3', err as Error);
+            throw err;
         }
     }
 
-    /**
-     * Sube un archivo a S3.
-     * @param folder Carpeta en el bucket.
-     * @param fileName Nombre del archivo.
-     * @param fileBuffer Contenido del archivo en Buffer.
-     * @param contentType Tipo MIME del archivo.
-     */
     async uploadFile(folder: string, fileName: string, fileBuffer: Buffer, contentType: string): Promise<void> {
-        await this.ensureFolderExists(folder);
+        try {
+            await this.ensureFolderExists(folder);
 
-        const key = `${folder}/${fileName}`;
-        const params = {
-            Bucket: this.bucketName,
-            Key: key,
-            Body: fileBuffer,
-            ContentType: contentType,
-            ACL: folder === 'static' ? 'public-read' as ObjectCannedACL : 'private' as ObjectCannedACL,
-        };
-        await s3.send(new PutObjectCommand(params));
+            const command = new PutObjectCommand({
+                Bucket: this.bucketName,
+                Key: `${folder}/${fileName}`,
+                Body: fileBuffer,
+                ContentType: contentType,
+            });
+
+            await s3.send(command);
+            logger.info(`Archivo subido a S3: ${folder}/${fileName}`);
+        } catch (err) {
+            logger.error('Error al subir archivo a S3', err as Error);
+            throw err;
+        }
     }
 
-    /**
-     * Obtiene una URL firmada para acceder a un archivo.
-     * @param folder Carpeta en el bucket.
-     * @param fileName Nombre del archivo.
-     */
-    async getSignedUrl(folder: string, fileName: string): Promise<string> {
-        const key = `${folder}/${fileName}`;
-        const params = {
-            Bucket: this.bucketName,
-            Key: key,
-        };
-        const command = new GetObjectCommand(params);
-        return getSignedUrl(s3, command, { expiresIn: 3600 });
-    }
-
-    /**
-     * Elimina un archivo de S3.
-     * @param folder Carpeta en el bucket.
-     * @param fileName Nombre del archivo.
-     */
     async deleteFile(folder: string, fileName: string): Promise<void> {
-        const key = `${folder}/${fileName}`;
-        const params = {
-            Bucket: this.bucketName,
-            Key: key,
-        };
-        await s3.send(new DeleteObjectCommand(params));
+        try {
+            const command = new DeleteObjectCommand({
+                Bucket: this.bucketName,
+                Key: `${folder}/${fileName}`,
+            });
+
+            await s3.send(command);
+            logger.info(`Archivo eliminado de S3: ${folder}/${fileName}`);
+        } catch (err) {
+            logger.error('Error al eliminar archivo de S3', err as Error);
+            throw err;
+        }
+    }
+
+    async getSignedUrl(folder: string, fileName: string): Promise<string> {
+        try {
+            const command = new GetObjectCommand({
+                Bucket: this.bucketName,
+                Key: `${folder}/${fileName}`,
+            });
+
+            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            logger.info(`URL firmada generada para S3: ${folder}/${fileName}`);
+            return url;
+        } catch (err) {
+            logger.error('Error al generar URL firmada para S3', err as Error);
+            throw err;
+        }
     }
 }
 

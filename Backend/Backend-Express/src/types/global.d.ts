@@ -23,7 +23,7 @@ export interface IPlan {
 
 export interface ICasillero {
   numero: number;
-  estado: 'disponible' | 'ocupado';
+  estado: 'disponible' | 'ocupado' | 'reservado' | 'mantenimiento';
   perfil: Schema.Types.ObjectId;
 }
 
