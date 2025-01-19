@@ -1,63 +1,22 @@
-import { IsString, IsEmail, IsOptional, IsEnum, IsUUID } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, IsEnum, Matches } from 'class-validator';
 
-export class CreatePerfilDto {
+export class CrearPerfilDto {
   @IsEnum(['Administrador', 'Cliente'])
   rol!: 'Administrador' | 'Cliente';
 
   @IsString()
+  @IsNotEmpty()
   nombreCompleto!: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'El email debe ser válido y del dominio epn.edu.ec' })
+  @Matches(/@epn\.edu\.ec$/, { message: 'El email debe ser del dominio epn.edu.ec' })
   email!: string;
 
   @IsString()
+  @Matches(/^\d{10}$/, { message: 'La cédula debe contener exactamente 10 dígitos numéricos' })
   cedula!: string;
 
   @IsString()
+  @IsNotEmpty()
   contraseña!: string;
-
-  @IsOptional()
-  @IsString()
-  imagen?: string;
-
-  @IsUUID()
-  casillero!: string;
-
-  @IsUUID()
-  @IsOptional()
-  plan?: string;
-}
-
-export class UpdatePerfilDto {
-  @IsOptional()
-  @IsEnum(['Administrador', 'Cliente'])
-  rol?: 'Administrador' | 'Cliente';
-
-  @IsOptional()
-  @IsString()
-  nombreCompleto?: string;
-
-  @IsOptional()
-  @IsEmail()
-  email?: string;
-
-  @IsOptional()
-  @IsString()
-  cedula?: string;
-
-  @IsOptional()
-  @IsString()
-  contraseña?: string;
-
-  @IsOptional()
-  @IsString()
-  imagen?: string;
-
-  @IsOptional()
-  @IsUUID()
-  casillero?: string;
-
-  @IsOptional()
-  @IsUUID()
-  plan?: string;
 }

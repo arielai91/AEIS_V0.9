@@ -17,35 +17,7 @@ class RedisService {
     }
 
     /**
-     * Guarda un objeto JSON en Redis como un hash.
-     * @param key Clave que identifica el hash.
-     * @param fields Campos a guardar en el hash.
-     */
-    public async setHash(key: string, fields: Record<string, string>): Promise<void> {
-        try {
-            const client = redisConnection.getClient();
-            await client.hSet(key, fields);
-        } catch (err) {
-            throw new Error(`Error al guardar hash ${key} en Redis: ${(err as Error).message}`);
-        }
-    }
-
-    /**
-     * Obtiene los campos de un hash en Redis.
-     * @param key Clave que identifica el hash.
-     * @returns Campos del hash como un objeto.
-     */
-    public async getHash(key: string): Promise<Record<string, string>> {
-        try {
-            const client = redisConnection.getClient();
-            return await client.hGetAll(key);
-        } catch (err) {
-            throw new Error(`Error al obtener hash ${key} de Redis: ${(err as Error).message}`);
-        }
-    }
-
-    /**
-     * Obtiene un valor asociado a una clave en Redis.
+     * Obtiene el valor asociado a una clave en Redis.
      * @param key Clave que identifica el dato.
      * @returns El valor asociado a la clave, o null si no existe.
      */
@@ -72,30 +44,50 @@ class RedisService {
     }
 
     /**
-     * Incrementa el valor de una clave numérica.
-     * @param key Clave que identifica el dato.
-     * @returns El nuevo valor incrementado.
+     * Obtiene el TTL (tiempo de vida en segundos) de una clave en Redis.
+     * @param key Clave en Redis.
+     * @returns Tiempo de vida en segundos. Si la clave no tiene TTL, devuelve -1.
      */
-    public async incrementKey(key: string): Promise<number> {
+    public async getTTL(key: string): Promise<number> {
         try {
             const client = redisConnection.getClient();
-            return await client.incr(key);
+            return await client.ttl(key);
         } catch (err) {
-            throw new Error(`Error al incrementar la clave ${key} en Redis: ${(err as Error).message}`);
+            throw new Error(`Error al obtener el TTL de la clave ${key}: ${(err as Error).message}`);
         }
     }
 
     /**
-     * Lista todas las claves en Redis que coincidan con un patrón.
-     * @param pattern Patrón para buscar claves (por ejemplo, `user:*`).
-     * @returns Una lista de claves que coinciden con el patrón.
+     * Guarda un hash en Redis con un TTL.
+     * @param key Clave que identifica el hash.
+     * @param fields Campos a guardar en el hash.
+     * @param ttl Tiempo de vida en segundos.
      */
-    public async listKeys(pattern: string): Promise<string[]> {
+    public async setHashWithTTL(key: string, fields: Record<string, string | number>, ttl: number): Promise<void> {
         try {
             const client = redisConnection.getClient();
-            return await client.keys(pattern);
+            await client.hSet(key, fields);
+            await client.expire(key, ttl); // Asigna el TTL al hash
         } catch (err) {
-            throw new Error(`Error al listar claves con el patrón ${pattern} en Redis: ${(err as Error).message}`);
+            throw new Error(`Error al guardar hash ${key} con TTL en Redis: ${(err as Error).message}`);
+        }
+    }
+
+    public async getHash(key: string): Promise<Record<string, string>> {
+        try {
+            const client = redisConnection.getClient();
+            return await client.hGetAll(key);
+        } catch (err) {
+            throw new Error(`Error al obtener hash ${key} de Redis: ${(err as Error).message}`);
+        }
+    }
+
+    public async expireKey(key: string, ttl: number): Promise<void> {
+        try {
+            const client = redisConnection.getClient();
+            await client.expire(key, ttl);
+        } catch (err) {
+            throw new Error(`Error al configurar TTL para la clave ${key}: ${(err as Error).message}`);
         }
     }
 }

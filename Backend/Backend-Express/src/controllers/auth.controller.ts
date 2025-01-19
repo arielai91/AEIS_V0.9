@@ -1,3 +1,4 @@
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import AuthService from '@services/auth.service';
 import logger from '@logger/logger';
@@ -16,7 +17,7 @@ class AuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000,
+                maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
             res.status(200).json({
@@ -29,15 +30,18 @@ class AuthController {
         }
     }
 
-    public async refresh(req: AuthenticatedRequest, res: Response): Promise<void> {
+    public async refresh(req: Request, res: Response): Promise<void> {
         try {
+            const token = req.cookies.token;
             const { refreshToken } = req.body;
-            const userId = req.user?.id;
-
-            if (!userId) {
-                res.status(403).json({ message: 'Usuario no autenticado' });
+            if (!token || !refreshToken) {
+                res.status(400).json({ message: 'Falta el token o el refreshToken' });
                 return;
             }
+
+            // Decodificar el token para extraer el userId
+            const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+            const userId = decoded.userId as string;
 
             const result = await AuthService.refresh(refreshToken, userId);
 
@@ -45,10 +49,10 @@ class AuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000,
+                maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
-            res.status(200).json({ csrfToken: result.csrfToken });
+            res.status(200).json({ csrfToken: result.csrfToken, refreshToken: result.refreshToken, accessToken: result.accessToken });
         } catch (err) {
             logger.error('Error en refresh:', err as Error);
             res.status(403).json({ message: 'Error al renovar tokens' });

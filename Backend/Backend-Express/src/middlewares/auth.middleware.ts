@@ -25,7 +25,7 @@ const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: N
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
         // Extraer el `id` del payload y guardarlo en `req.user`
-        const userId = decoded.id as string;
+        const userId = decoded.userId as string;
         if (!userId) {
             logger.warn('No autorizado: ID de usuario faltante en el token.');
             res.status(403).json({ message: 'No autorizado: ID de usuario faltante en el token.' });

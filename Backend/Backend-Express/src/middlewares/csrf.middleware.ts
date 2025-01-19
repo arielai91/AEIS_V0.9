@@ -25,7 +25,7 @@ const validateCsrfToken = async (req: AuthenticatedRequest, _res: Response, next
 
         // Recuperar el token almacenado en Redis
 
-        const storedCsrfToken = await RedisService.getKey(`csrf:${userId}`);
+        const storedCsrfToken = await RedisService.getKey(`csrfToken:${userId}`);
         if (!storedCsrfToken) {
             throw new AuthenticationError('CSRF token no encontrado o expirado');
         }

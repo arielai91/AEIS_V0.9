@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import PerfilController from '@controllers/perfil.controller';
-// validacion y .dto
-//import validateRequest from '@middlewares/validateRequest.middleware';
-//import { CreatePerfilDto } from '@dtos/perfil.dto';
+import authenticateJWT from '@middlewares/auth.middleware';
+import validateRequest from '@middlewares/validateRequest.middleware';
+import { CrearPerfilDto } from '@dtos/perfil.dto';
+import validateCsrfToken from '@middlewares/csrf.middleware';
 
 class PerfilRoutes {
   public router: Router;
@@ -13,7 +14,8 @@ class PerfilRoutes {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', PerfilController.getPerfil);
+    this.router.post('/', validateRequest(CrearPerfilDto), PerfilController.crearPerfil); // Crear perfil
+    this.router.delete('/', authenticateJWT, validateCsrfToken, PerfilController.eliminarPerfil); // Eliminar perfil
   }
 }
 

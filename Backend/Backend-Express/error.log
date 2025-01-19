@@ -26,3 +26,104 @@
 2025-01-18T19:07:06.907Z error: Error en login: - Credenciales inválidas
 2025-01-19T01:34:35.584Z error: Error en login: - Credenciales inválidas
 2025-01-19T01:34:58.720Z error: Error en login: - Credenciales inválidas
+2025-01-19T02:03:51.244Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:10:39.426Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:10:41.098Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:11:38.314Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:11:39.972Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:11:44.190Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:14:23.455Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:15:18.297Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:21:33.280Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:22:27.615Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:32:41.630Z error: Error al crear perfil: - Perfil validation failed: plan: Cast to ObjectId failed for value "Promise { <pending> }" (type Promise) at path "plan" because of "BSONError"
+2025-01-19T02:38:52.249Z error: Error al crear perfil: - E11000 duplicate key error collection: test.perfiles index: email_1 dup key: { email: "juan.perez@epn.edu.ec" }
+2025-01-19T02:44:46.030Z error: Error en login: - data and hash arguments required
+2025-01-19T02:44:49.715Z error: Error en login: - data and hash arguments required
+2025-01-19T02:45:07.047Z error: Error en login: - data and hash arguments required
+2025-01-19T02:48:13.496Z error: Error en login: - data and hash arguments required
+2025-01-19T02:49:15.363Z error: Error en login: - data and hash arguments required
+2025-01-19T02:50:11.075Z error: Error en login: - data and hash arguments required
+2025-01-19T02:52:13.172Z error: Error en login: - data and hash arguments required
+2025-01-19T02:52:52.608Z error: Error en login: - data and hash arguments required
+2025-01-19T02:53:41.455Z error: Error en login: - data and hash arguments required
+2025-01-19T02:54:36.465Z error: Error en login: - data and hash arguments required
+2025-01-19T02:54:40.710Z error: Error en login: - data and hash arguments required
+2025-01-19T02:55:41.290Z error: Error en login: - data and hash arguments required
+2025-01-19T02:56:06.801Z error: Error en login: - data and hash arguments required
+2025-01-19T02:57:38.583Z error: Credenciales inválidas para email: juan.perez@epn.edu.ec, cédula: undefined - undefined
+2025-01-19T02:57:38.585Z error: Error en login: - Credenciales inválidas
+2025-01-19T02:58:35.294Z error: Credenciales inválidas - undefined
+2025-01-19T02:58:35.295Z error: Error en login: - Credenciales inválidas
+2025-01-19T02:59:42.508Z error: Credenciales inválidas para email: juan.perez@epn.edu.ec, cédula: undefined - undefined
+2025-01-19T02:59:42.509Z error: Error en login: - Credenciales inválidas
+2025-01-19T03:00:06.903Z error: Error en login: - Credenciales inválidas
+2025-01-19T03:00:36.666Z error: Error en login: - Credenciales inválidas
+2025-01-19T03:14:46.648Z error: Error en validación de CSRF token: - CSRF token o usuario no válido
+2025-01-19T03:15:13.131Z error: Error en validación de CSRF token: - CSRF token o usuario no válido
+2025-01-19T03:20:32.069Z error: Error en validación de CSRF token: - CSRF token o usuario no válido
+2025-01-19T03:21:46.909Z error: Error en validación de CSRF token: - CSRF token o usuario no válido
+2025-01-19T03:25:12.815Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T03:25:15.770Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T03:37:34.669Z error: Error en validación de CSRF token: - CSRF token no coincide
+2025-01-19T03:37:45.387Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T03:40:32.967Z error: Error en validación de CSRF token: - CSRF token no coincide
+2025-01-19T05:38:12.741Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:38:27.748Z error: Error en login: - Error al guardar hash refreshToken:678c656718a916e17ff13ab5 con TTL en Redis: WRONGTYPE Operation against a key holding the wrong kind of value
+2025-01-19T05:38:31.778Z error: Error en login: - Error al guardar hash refreshToken:678c656718a916e17ff13ab5 con TTL en Redis: WRONGTYPE Operation against a key holding the wrong kind of value
+2025-01-19T05:38:34.708Z error: Error en login: - Error al guardar hash refreshToken:678c656718a916e17ff13ab5 con TTL en Redis: WRONGTYPE Operation against a key holding the wrong kind of value
+2025-01-19T05:39:18.834Z error: Error en login: - Error al guardar hash refreshToken:678c656718a916e17ff13ab5 con TTL en Redis: WRONGTYPE Operation against a key holding the wrong kind of value
+2025-01-19T05:41:18.748Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:42:08.959Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:42:38.059Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:43:12.156Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:46:41.351Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:49:38.165Z error: Error en refresh: - Cannot read properties of undefined (reading 'toString')
+2025-01-19T05:49:45.755Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:50:11.839Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:51:15.319Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:51:51.346Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:53:02.144Z error: Error en refresh: - Cannot read properties of undefined (reading 'toString')
+2025-01-19T05:57:19.557Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T05:59:22.409Z error: Error en refresh: - Cannot read properties of undefined (reading 'toString')
+2025-01-19T06:00:57.848Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T06:01:59.160Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T06:03:20.746Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:03:20.748Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:03:46.909Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:03:46.911Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:03:50.688Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:03:50.689Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:04:59.834Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:04:59.837Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:05:15.940Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T06:07:06.222Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:07:06.223Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:11:47.962Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:11:47.963Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:12:57.462Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:12:57.462Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:14:06.567Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T06:15:00.161Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:15:00.162Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:15:55.808Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:15:55.811Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:17:17.386Z error: Usuario no encontrado o sin ID: 678c656718a916e17ff13ab5 - undefined
+2025-01-19T06:17:17.387Z error: Error en refresh: - Usuario no encontrado
+2025-01-19T06:20:27.218Z error: Usuario encontrado pero sin ID: {"_id":"678c656718a916e17ff13ab5","rol":"Cliente","nombreCompleto":"Juan Pérez","email":"juan.perez@epn.edu.ec"} - undefined
+2025-01-19T06:20:27.218Z error: Error en refresh: - Usuario encontrado pero sin ID
+2025-01-19T06:24:21.790Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T06:24:23.618Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T06:25:25.212Z error: Error en validación de CSRF token: - CSRF token o usuario no válido
+2025-01-19T06:25:26.800Z error: Error en validación de CSRF token: - CSRF token o usuario no válido
+2025-01-19T06:25:46.068Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T06:25:55.995Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T06:26:07.157Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T06:33:50.573Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T06:34:18.509Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T06:36:31.443Z error: Error en validación de CSRF token: - CSRF token no encontrado o expirado
+2025-01-19T07:12:37.181Z error: Error en validación de CSRF token: - CSRF token no coincide
+2025-01-19T07:13:59.975Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T07:14:00.929Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T07:14:02.193Z error: Error en refresh: - Refresh token inválido o expirado
+2025-01-19T07:14:03.552Z error: Error en refresh: - Refresh token inválido o expirado

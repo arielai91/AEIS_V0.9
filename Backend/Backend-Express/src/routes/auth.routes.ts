@@ -57,7 +57,7 @@ class AuthRoutes {
          *       401:
          *         description: Token inválido o expirado.
          */
-        this.router.post('/refresh', authenticateJWT, validateRequest(RefreshDto), validateCsrfToken, AuthController.refresh);
+        this.router.post('/refresh', validateRequest(RefreshDto), AuthController.refresh);
 
         /**
          * @swagger
