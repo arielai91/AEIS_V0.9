@@ -30,6 +30,7 @@ const solicitudSchema = new Schema({
     },
     imagen: {
         type: String, // URL o ruta de la imagen
+        requerid: true
     },
     estado: {
         type: String,

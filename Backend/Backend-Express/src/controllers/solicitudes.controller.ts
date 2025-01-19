@@ -1,40 +1,104 @@
 import { Request, Response } from 'express';
-import SolicitudService from '@services/solicitud.service';
+import SolicitudesService from '@services/solicitud.service';
 import logger from '@logger/logger';
-import { CrearSolicitudDto, EliminarSolicitudDto } from '@dtos/solicitud.dto';
+
+interface CustomRequest extends Request {
+    user?: {
+        id: string;
+        role: string;
+    };
+}
 
 class SolicitudesController {
-    /**
-     * Crear una nueva solicitud.
-     */
-    public async crearSolicitud(req: Request, res: Response): Promise<void> {
+    // Crear una solicitud
+    public async crearSolicitud(req: CustomRequest, res: Response): Promise<void> {
         try {
-            const datosSolicitud: CrearSolicitudDto = req.body;
-            const solicitudCreada = await SolicitudService.crearSolicitud(datosSolicitud);
-            res.status(201).json(solicitudCreada);
-        } catch (err) {
-            logger.error('Error al crear solicitud:', err as Error);
-            res.status(400).json({ message: 'Error al crear solicitud' });
+            const solicitud = await SolicitudesService.crearSolicitud(req.body);
+            res.status(201).json({
+                success: true,
+                message: 'Solicitud creada exitosamente.',
+                data: solicitud,
+            });
+        } catch (error) {
+            logger.error('Error al crear solicitud:', error as Error);
+            res.status(400).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Error al crear solicitud.',
+            });
         }
     }
 
-    /**
-     * Eliminar una solicitud.
-     */
-    public async eliminarSolicitud(req: Request, res: Response): Promise<void> {
+    // Eliminar una solicitud
+    public async eliminarSolicitud(req: CustomRequest, res: Response): Promise<void> {
         try {
-            const { solicitudId }: EliminarSolicitudDto = req.body;
+            const { solicitudId } = req.body;
+            await SolicitudesService.eliminarSolicitud(solicitudId);
+            res.status(200).json({
+                success: true,
+                message: 'Solicitud eliminada exitosamente.',
+            });
+        } catch (error) {
+            logger.error('Error al eliminar solicitud:', error as Error);
+            res.status(400).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Error al eliminar solicitud.',
+            });
+        }
+    }
 
-            if (!solicitudId) {
-                res.status(400).json({ message: 'Falta el ID de la solicitud' });
-                return;
-            }
+    // Listar solicitudes
+    public async listarSolicitudes(req: CustomRequest, res: Response): Promise<void> {
+        try {
+            const solicitudes = await SolicitudesService.listarSolicitudes(req.query, req.user!);
+            res.status(200).json({
+                success: true,
+                message: 'Solicitudes obtenidas exitosamente.',
+                data: solicitudes,
+            });
+        } catch (error) {
+            logger.error('Error al listar solicitudes:', error as Error);
+            res.status(500).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Error al listar solicitudes.',
+            });
+        }
+    }
 
-            await SolicitudService.eliminarSolicitud(solicitudId);
-            res.status(200).json({ message: 'Solicitud eliminada exitosamente' });
-        } catch (err) {
-            logger.error('Error al eliminar solicitud:', err as Error);
-            res.status(500).json({ message: 'Error al eliminar solicitud' });
+    // Actualizar estado de una solicitud
+    public async actualizarEstadoSolicitud(req: CustomRequest, res: Response): Promise<void> {
+        try {
+            const { solicitudId, estado } = req.body;
+            const solicitudActualizada = await SolicitudesService.actualizarEstadoSolicitud(solicitudId, estado);
+            res.status(200).json({
+                success: true,
+                message: 'Estado de la solicitud actualizado exitosamente.',
+                data: solicitudActualizada,
+            });
+        } catch (error) {
+            logger.error('Error al actualizar estado de solicitud:', error as Error);
+            res.status(400).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Error al actualizar estado de solicitud.',
+            });
+        }
+    }
+
+    // Obtener detalles de una solicitud
+    public async obtenerSolicitud(req: CustomRequest, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const solicitud = await SolicitudesService.obtenerSolicitud(id, req.user!);
+            res.status(200).json({
+                success: true,
+                message: 'Detalles de la solicitud obtenidos exitosamente.',
+                data: solicitud,
+            });
+        } catch (error) {
+            logger.error('Error al obtener detalles de la solicitud:', error as Error);
+            res.status(400).json({
+                success: false,
+                message: error instanceof Error ? error.message : 'Error al obtener detalles de la solicitud.',
+            });
         }
     }
 }

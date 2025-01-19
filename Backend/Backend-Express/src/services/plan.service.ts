@@ -1,34 +1,71 @@
 import PlanModel from '@models/Plan/Plan';
-import { IPlan } from '@models/Plan/Plan';
-import { CrearPlanDto } from '@dtos/plan.dto';
+import PerfilModel from '@models/Perfil/Perfil';
+import { CrearPlanDto, ActualizarPlanDto } from '@dtos/plan.dto';
+import { Schema } from 'mongoose';
+import { IPlan } from '@type/global';
 
 class PlanService {
-    /**
-     * Crear un nuevo plan en la base de datos.
-     * @param datosPlan Información del plan a crear.
-     * @returns El plan creado.
-     */
     public async crearPlan(datosPlan: CrearPlanDto): Promise<IPlan> {
-        const plan = new PlanModel(datosPlan);
-        return await plan.save();
+        if (datosPlan.esPorDefecto) {
+            await PlanModel.updateMany({ esPorDefecto: true }, { esPorDefecto: false });
+        }
+        const nuevoPlan = await PlanModel.create(datosPlan);
+        return nuevoPlan.toObject();
     }
 
-    /**
-     * Eliminar un plan de la base de datos.
-     * @param planId ID del plan a eliminar.
-     */
     public async eliminarPlan(planId: string): Promise<void> {
         const plan = await PlanModel.findById(planId);
+        if (!plan) throw new Error('Plan no encontrado.');
+        if (plan.usuarios.length > 0) throw new Error('No se puede eliminar un plan con usuarios asociados.');
+        await plan.deleteOne();
+    }
 
-        if (!plan) {
-            throw new Error('Plan no encontrado');
+    public async actualizarPlan(planId: string, datos: Partial<ActualizarPlanDto>): Promise<IPlan> {
+        const plan = await PlanModel.findById(planId);
+        if (!plan) throw new Error('Plan no encontrado.');
+        if (datos.esPorDefecto) {
+            await PlanModel.updateMany({ esPorDefecto: true }, { esPorDefecto: false });
         }
+        Object.assign(plan, datos);
+        await plan.save();
+        return plan.toObject();
+    }
 
-        if (plan.usuarios.length > 0) {
-            throw new Error('No se puede eliminar el plan porque tiene usuarios asignados');
+    public async obtenerPlanes(filtros: { nombre?: string; precio?: number; esPorDefecto?: boolean }): Promise<IPlan[]> {
+        const query: Record<string, unknown> = {};
+        if (filtros.nombre) query.nombre = filtros.nombre;
+        if (filtros.precio) query.precio = filtros.precio;
+        if (filtros.esPorDefecto !== undefined) query.esPorDefecto = filtros.esPorDefecto;
+        return await PlanModel.find(query).exec();
+    }
+
+    public async cambiarPlanPredeterminado(planId: string): Promise<IPlan> {
+        await PlanModel.updateMany({ esPorDefecto: true }, { esPorDefecto: false });
+        const plan = await PlanModel.findByIdAndUpdate(planId, { esPorDefecto: true }, { new: true });
+        if (!plan) throw new Error('Plan no encontrado.');
+        return plan.toObject();
+    }
+
+    public async asignarUsuario(planId: string, usuarioId: string): Promise<IPlan> {
+        const plan = await PlanModel.findById(planId);
+        if (!plan) throw new Error('Plan no encontrado.');
+        const usuario = await PerfilModel.findById(usuarioId);
+        if (!usuario) throw new Error('Usuario no encontrado.');
+        if (!plan.usuarios.includes(usuarioId as unknown as Schema.Types.ObjectId)) {
+            plan.usuarios.push(usuarioId as unknown as Schema.Types.ObjectId);
         }
+        await plan.save();
+        return plan.toObject();
+    }
 
-        await PlanModel.findByIdAndDelete(planId);
+    public async eliminarUsuario(planId: string, usuarioId: string): Promise<IPlan> {
+        const plan = await PlanModel.findById(planId);
+        if (!plan) throw new Error('Plan no encontrado.');
+        const usuarioIndex = plan.usuarios.findIndex((id) => id.toString() === usuarioId);
+        if (usuarioIndex === -1) throw new Error('Usuario no asociado a este plan.');
+        plan.usuarios.splice(usuarioIndex, 1);
+        await plan.save();
+        return plan.toObject();
     }
 }
 

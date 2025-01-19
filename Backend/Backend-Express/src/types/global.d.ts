@@ -34,6 +34,6 @@ export interface ISolicitud {
   casillero?: Schema.Types.ObjectId;
   fechaEnvio: Date;
   fechaAprobacion?: Date;
-  imagen?: string;
+  imagen: string;
   estado: 'Aprobado' | 'Rechazado' | 'Por verificar';
 }

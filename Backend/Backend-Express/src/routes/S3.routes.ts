@@ -18,13 +18,16 @@ class S3Routes {
 
   private initializeRoutes(): void {
     // Rutas para imágenes estáticas
-    this.router.get('/static/:fileName', validateRequest(FileNameDTO, 'body'), S3Controller.serveStaticImage);
+    this.router.get('/static/:fileName', validateRequest(FileNameDTO, 'params'), S3Controller.serveStaticImage);
 
     // Rutas para imágenes de perfil
     this.router.get('/perfil/', authenticateJWT, validateCsrfToken, S3Controller.servePerfilImage);
     this.router.post('/perfil/', authenticateJWT, this.upload.single('image'), validateCsrfToken, validateRequest(UploadImageDTO, 'body'), S3Controller.uploadPerfilImage);
     this.router.put('/perfil/', authenticateJWT, this.upload.single('image'), validateCsrfToken, validateRequest(UploadImageDTO, 'body'), S3Controller.updatePerfilImage);
     this.router.delete('/perfil/', authenticateJWT, validateCsrfToken, validateRequest(FileNameDTO, 'body'), S3Controller.deletePerfilImage);
+
+
+    // TODO: Ruta para imagenes de Solicitud
   }
 }
 

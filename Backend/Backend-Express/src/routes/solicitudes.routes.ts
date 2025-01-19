@@ -3,7 +3,13 @@ import SolicitudesController from '@controllers/solicitudes.controller';
 import authenticateJWT from '@middlewares/auth.middleware';
 import validateRole from '@middlewares/rol-auth.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
-import { CrearSolicitudDto, EliminarSolicitudDto } from '@dtos/solicitud.dto';
+import {
+    CrearSolicitudDto,
+    EliminarSolicitudDto,
+    ListarSolicitudesQueryDto,
+    ActualizarEstadoSolicitudDto,
+    ObtenerSolicitudParamsDto,
+} from '@dtos/solicitud.dto';
 import validateCsrfToken from '@middlewares/csrf.middleware';
 
 class SolicitudRoutes {
@@ -15,11 +21,53 @@ class SolicitudRoutes {
     }
 
     private initializeRoutes(): void {
-        // Ruta para que los usuarios creen solicitudes
-        this.router.post('/', authenticateJWT, validateRole(['Usuario']), validateRequest(CrearSolicitudDto), validateCsrfToken, SolicitudesController.crearSolicitud);
+        // Crear una solicitud
+        this.router.post(
+            '/',
+            authenticateJWT,
+            validateRole(['Usuario']),
+            validateRequest(CrearSolicitudDto, 'body'),
+            validateCsrfToken,
+            SolicitudesController.crearSolicitud,
+        );
 
-        // Ruta para que los administradores eliminen solicitudes
-        this.router.delete('/', authenticateJWT, validateRole(['Administrador']), validateRequest(EliminarSolicitudDto), validateCsrfToken, SolicitudesController.eliminarSolicitud);
+        // Eliminar una solicitud
+        this.router.delete(
+            '/',
+            authenticateJWT,
+            validateRole(['Administrador']),
+            validateRequest(EliminarSolicitudDto, 'body'),
+            validateCsrfToken,
+            SolicitudesController.eliminarSolicitud,
+        );
+
+        // Listar solicitudes
+        this.router.get(
+            '/',
+            authenticateJWT,
+            validateRole(['Administrador', 'Usuario']),
+            validateRequest(ListarSolicitudesQueryDto, 'query'),
+            SolicitudesController.listarSolicitudes,
+        );
+
+        // Actualizar estado de una solicitud
+        this.router.patch(
+            '/estado',
+            authenticateJWT,
+            validateRole(['Administrador']),
+            validateRequest(ActualizarEstadoSolicitudDto, 'body'),
+            validateCsrfToken,
+            SolicitudesController.actualizarEstadoSolicitud,
+        );
+
+        // Obtener detalles de una solicitud
+        this.router.get(
+            '/:id',
+            authenticateJWT,
+            validateRole(['Administrador', 'Usuario']),
+            validateRequest(ObtenerSolicitudParamsDto, 'params'),
+            SolicitudesController.obtenerSolicitud,
+        );
     }
 }
 
