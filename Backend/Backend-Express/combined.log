@@ -867,3 +867,13 @@
 2025-01-18T19:08:45.584Z info: Conectado a MongoDB
 2025-01-18T19:08:45.588Z info: Servidor escuchando en http://0.0.0.0:3000
 2025-01-18T19:08:47.363Z info: Cliente Redis desconectado correctamente.
+2025-01-19T01:33:20.062Z info: Environment variables validated successfully.
+2025-01-19T01:33:20.066Z info: CORS origins updated.
+2025-01-19T01:33:20.131Z info: Conectado a MongoDB
+2025-01-19T01:33:20.140Z info: Conexión exitosa a Redis
+2025-01-19T01:33:20.177Z info: Cliente Redis conectado correctamente.
+2025-01-19T01:33:20.180Z info: Servidor escuchando en http://0.0.0.0:3000
+2025-01-19T01:34:35.584Z error: Error en login: - Credenciales inválidas
+2025-01-19T01:34:35.589Z info: POST /login - Status: 401 - Duration: 43ms
+2025-01-19T01:34:58.720Z error: Error en login: - Credenciales inválidas
+2025-01-19T01:34:58.722Z info: POST /login - Status: 401 - Duration: 8ms

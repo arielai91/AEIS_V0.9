@@ -9,27 +9,23 @@ interface AuthenticatedRequest extends Request {
 class AuthController {
     public async login(req: Request, res: Response): Promise<void> {
         try {
-            const { email, password } = req.body;
-            const result = await AuthService.login(email, password);
-
-            if (!result) {
-                throw new Error('Login failed');
-            }
+            const { email, cedula, contraseña } = req.body;
+            const result = await AuthService.login(contraseña, email, cedula);
 
             res.cookie('token', result.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000, // 15 minutos
+                maxAge: 15 * 60 * 1000,
             });
-            res.json({ refreshToken: result.refreshToken, csrfToken: result.csrfToken });
+
+            res.status(200).json({
+                refreshToken: result.refreshToken,
+                csrfToken: result.csrfToken,
+            });
         } catch (err) {
-            if (err instanceof Error) {
-                logger.error('Error en login:', err);
-                res.status(401).json({ message: err.message });
-            } else {
-                res.status(401).json({ message: 'Error desconocido en login' });
-            }
+            logger.error('Error en login:', err as Error);
+            res.status(401).json({ message: 'Credenciales inválidas' });
         }
     }
 
@@ -39,29 +35,23 @@ class AuthController {
             const userId = req.user?.id;
 
             if (!userId) {
-                throw new Error('User ID is missing');
+                res.status(403).json({ message: 'Usuario no autenticado' });
+                return;
             }
 
             const result = await AuthService.refresh(refreshToken, userId);
-
-            if (!result) {
-                throw new Error('Refresh failed');
-            }
 
             res.cookie('token', result.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 15 * 60 * 1000, // 15 minutos
+                maxAge: 15 * 60 * 1000,
             });
-            res.json({ csrfToken: result.csrfToken });
+
+            res.status(200).json({ csrfToken: result.csrfToken });
         } catch (err) {
-            if (err instanceof Error) {
-                logger.error('Error en refresh:', err);
-                res.status(403).json({ message: err.message });
-            } else {
-                res.status(403).json({ message: 'Error desconocido en refresh' });
-            }
+            logger.error('Error en refresh:', err as Error);
+            res.status(403).json({ message: 'Error al renovar tokens' });
         }
     }
 
@@ -71,20 +61,17 @@ class AuthController {
             const token = req.cookies.token;
 
             if (!userId || !token) {
-                throw new Error('User ID or token is missing');
+                res.status(400).json({ message: 'Falta el token o el usuario' });
+                return;
             }
 
             await AuthService.logout(userId, token);
 
             res.clearCookie('token');
-            res.json({ message: 'Sesión cerrada exitosamente.' });
+            res.status(200).json({ message: 'Sesión cerrada exitosamente' });
         } catch (err) {
-            if (err instanceof Error) {
-                logger.error('Error en logout:', err);
-                res.status(400).json({ message: err.message });
-            } else {
-                res.status(400).json({ message: 'Error desconocido en logout' });
-            }
+            logger.error('Error en logout:', err as Error);
+            res.status(500).json({ message: 'Error al cerrar sesión' });
         }
     }
 }
