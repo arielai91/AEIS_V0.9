@@ -60,11 +60,16 @@ def verify_code(email, code):
     return False
 
 
-def clean_expired_code():
+def clean_expired_code(app):
     """Elimina los códigos de verificación que han expirado."""
-    now = datetime.now(timezone.utc)
-    expired_codes = VerificationCode.query.filter(
-        VerificationCode.expiration < now).all()
-    for code in expired_codes:
-        db.session.delete(code)
-    db.session.commit()
+    with app.app_context():
+        try:
+            now = datetime.now(timezone.utc)
+            expired_codes = VerificationCode.query.filter(
+                VerificationCode.expiration < now).all()
+            for code in expired_codes:
+                db.session.delete(code)
+            db.session.commit()
+            print('Expired verification codes cleaned up')
+        except Exception as e:
+            print(f'Error cleaning expired verification codes: {e}')

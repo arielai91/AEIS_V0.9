@@ -6,7 +6,8 @@ class VerificationCode(db.Model):
     """Modelo de código de verificación."""
     __tablename__ = 'verification_codes'  # Nombre de la tabla
     id = db.Column(db.Integer, primary_key=True)  # Columna de id
-    email = db.Column(db.String(255), primary_key=True)  # Columna de email
+    # Columna de email
+    email = db.Column(db.String(255), nullable=False, unique=True)
     code = db.Column(db.String(16), nullable=False)  # Columna de código
     expiration = db.Column(
         db.DateTime,

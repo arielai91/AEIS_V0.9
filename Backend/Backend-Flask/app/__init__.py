@@ -1,29 +1,44 @@
 from flask import Flask  # Importa la clase Flask
 from flask_cors import CORS  # Importa la librería para habilitar CORS
-# Importa la librería para protección CSRF
-from flask_wtf.csrf import CSRFProtect
 # Importa la librería para cargar variables de entorno
 from dotenv import load_dotenv
-# Importa extensiones inicializadas en app/extensions.py
-from app.extensions import mail, db
-# Importa la función register_routes definida en app/routes/__init__.py
-from app.routes import register_routes
+# Importa extensiones inicializadas
+from app.extensions import mail, db, bcrypt, mongo, csrf
+from app.routes import app_routes  # Importa la función para registrar rutas
 
 load_dotenv()  # Carga las variables de entorno
 
+# Inicializa la aplicación Flask
 app = Flask(__name__)  # Crea una instancia de la clase Flask
 
-# Carga la configuración de la aplicación
-app.config.from_object('app.config.Config')
 
-# Habilita CORS para la aplicación
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
+# Configuración de la aplicación
+def configure_app(app):
+    # Carga la configuración de la aplicación
+    app.config.from_object('app.config.Config')
+    # Habilita CORS
+    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
 
-csrf = CSRFProtect(app)  # Protege la aplicación contra CSRF
-mail.init_app(app)  # Inicializa la extensión de envío de correos
-db.init_app(app)  # Inicializa la extensión de base de datos
 
-register_routes(app)  # Registra las rutas en la aplicación
+# Inicialización de extensiones
+def initialize_extensions(app):
+    csrf.init_app(app)  # Protege la aplicación contra CSRF
+    mail.init_app(app)  # Inicializa la extensión de envío de correos
+    db.init_app(app)  # Inicializa la extensión de base de datos
+    bcrypt.init_app(app)  # Inicializa la extensión de encriptación
+    mongo.init_app(app)  # Inicializa PyMongo
 
+
+# Registro de rutas
+def initialize_routes(app):
+    app_routes(app)  # Registra las rutas de registro
+
+
+# Configura y devuelve la instancia de la aplicación
+configure_app(app)  # Configura la aplicación
+initialize_extensions(app)  # Inicializa extensiones
+initialize_routes(app)  # Registra rutas
+
+# Inicialización de la base de datos
 with app.app_context():  # Crea un contexto de aplicación
     db.create_all()  # Crea las tablas en la base de datos
