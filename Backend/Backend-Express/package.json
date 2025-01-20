@@ -65,7 +65,7 @@
     "@types/redis": "^4.0.10",
     "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.19.1",
     "eslint": "^9.18.0",
     "eslint-import-resolver-typescript": "^3.7.0",
