@@ -10,6 +10,7 @@ import {
     SolicitudIdDto,
     CsrfTokenDto,
 } from '@dtos/solicitud.dto';
+import validateRole from '@middlewares/rol-auth.middleware';
 
 class SolicitudRoutes {
     public router: Router;
@@ -24,6 +25,7 @@ class SolicitudRoutes {
         this.router.post(
             '/',
             authenticateJWT,
+            validateRole(['Cliente']),
             validateCsrfToken,
             validateRequest(CrearSolicitudDto, 'body'),
             validateRequest(CsrfTokenDto, 'headers'),
@@ -34,6 +36,7 @@ class SolicitudRoutes {
         this.router.get(
             '/',
             authenticateJWT,
+            validateRole(['Administrador']),
             validateRequest(ListarSolicitudesQueryDto, 'query'),
             SolicitudController.listarSolicitudes
         );
@@ -42,6 +45,7 @@ class SolicitudRoutes {
         this.router.patch(
             '/estado',
             authenticateJWT,
+            validateRole(['Administrador']),
             validateCsrfToken,
             validateRequest(ActualizarEstadoSolicitudDto, 'body'),
             validateRequest(CsrfTokenDto, 'headers'),
@@ -52,6 +56,7 @@ class SolicitudRoutes {
         this.router.delete(
             '/:id',
             authenticateJWT,
+            validateRole(['Administrador']),
             validateCsrfToken,
             validateRequest(SolicitudIdDto, 'params'),
             validateRequest(CsrfTokenDto, 'headers'),
