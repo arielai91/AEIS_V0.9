@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import PerfilController from '@controllers/perfil.controller';
 import authenticateJWT from '@middlewares/auth.middleware';
-import validateRequest from '@middlewares/validateRequest.middleware';
-import { CrearPerfilDto, EliminarPerfilDto } from '@dtos/perfil.dto';
 import validateCsrfToken from '@middlewares/csrf.middleware';
+import validateRequest from '@middlewares/validateRequest.middleware';
 import validateRole from '@middlewares/rol-auth.middleware';
+import upload from '@middlewares/multer.middleware';
+import { CrearPerfilDto, ActualizarPerfilDto, PerfilIdDto, SolicitudesQueryDto, CsrfTokenDto } from '@dtos/perfil.dto';
 
 class PerfilRoutes {
   public router: Router;
@@ -15,17 +16,125 @@ class PerfilRoutes {
   }
 
   private initializeRoutes(): void {
-    // Ruta para que los usuarios creen su propio perfil
-    this.router.post('/', validateRequest(CrearPerfilDto), PerfilController.crearPerfil);
+    // Gestión Básica del Perfil
+    this.router.post(
+      '/',
+      validateRequest(CrearPerfilDto, 'body'), // Validación del body
+      PerfilController.crearPerfil // Sin autenticación ni CSRF para esta ruta
+    );
 
-    // Ruta para que los administradores creen perfiles
-    this.router.post('/admin', authenticateJWT, validateRole(['Administrador']), validateRequest(CrearPerfilDto), validateCsrfToken, PerfilController.crearPerfilAdmin);
+    this.router.get(
+      '/',
+      authenticateJWT, // JWT para autenticar al usuario
+      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      PerfilController.obtenerPerfil
+    );
 
-    // Ruta para que los usuarios eliminen su propio perfil
-    this.router.delete('/', authenticateJWT, validateCsrfToken, PerfilController.eliminarPerfil);
+    this.router.patch(
+      '/',
+      authenticateJWT,
+      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateCsrfToken,
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      validateRequest(ActualizarPerfilDto, 'body'), // Validar datos del body
+      PerfilController.actualizarPerfil
+    );
 
-    // Ruta para que los administradores eliminen perfiles
-    this.router.delete('/admin', authenticateJWT, validateRole(['Administrador']), validateRequest(EliminarPerfilDto), validateCsrfToken, PerfilController.eliminarPerfilAdmin);
+    this.router.delete(
+      '/',
+      authenticateJWT,
+      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateCsrfToken,
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      PerfilController.eliminarPerfil
+    );
+
+    // Gestión Avanzada de Perfiles (Administrador)
+    this.router.post(
+      '/admin',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateCsrfToken,
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      validateRequest(CrearPerfilDto, 'body'), // Validar datos del body
+      PerfilController.crearPerfilAdmin
+    );
+
+    this.router.get(
+      '/admin/:id',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateRequest(PerfilIdDto, 'params'), // Validar ID en params
+      PerfilController.obtenerPerfilPorId
+    );
+
+    this.router.patch(
+      '/admin/:id',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateCsrfToken,
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      validateRequest(PerfilIdDto, 'params'), // Validar ID en params
+      validateRequest(ActualizarPerfilDto, 'body'), // Validar datos del body
+      PerfilController.actualizarPerfilAdmin
+    );
+
+    this.router.delete(
+      '/admin/:id',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateCsrfToken,
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      validateRequest(PerfilIdDto, 'params'), // Validar ID en params
+      PerfilController.eliminarPerfilAdmin
+    );
+
+    // Casilleros Asociados
+    this.router.get(
+      '/casilleros',
+      authenticateJWT,
+      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      PerfilController.obtenerCasillerosAsociados
+    );
+
+    // Solicitudes Asociadas
+    this.router.get(
+      '/solicitudes',
+      authenticateJWT,
+      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRequest(SolicitudesQueryDto, 'query'), // Validar filtros y paginación
+      PerfilController.obtenerSolicitudesAsociadas
+    );
+
+    // Gestión de Imágenes del Perfil
+    this.router.post(
+      '/imagen',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      upload.single('image'), // Multer maneja la validación del archivo
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      PerfilController.subirImagenPerfil
+    );
+
+    this.router.put(
+      '/imagen',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      upload.single('image'), // Multer maneja la validación del archivo
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      PerfilController.actualizarImagenPerfil
+    );
+
+    this.router.delete(
+      '/imagen',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
+      PerfilController.eliminarImagenPerfil
+    );
   }
 }
 

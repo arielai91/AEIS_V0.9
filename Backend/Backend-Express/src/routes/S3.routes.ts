@@ -1,33 +1,98 @@
-import authenticateJWT from '@middlewares/auth.middleware';
 import { Router } from 'express';
-import multer from 'multer';
 import S3Controller from '@controllers/s3.controller';
+import authenticateJWT from '@middlewares/auth.middleware';
 import validateCsrfToken from '@middlewares/csrf.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
-import { FileNameDTO, UploadImageDTO } from '@dtos/s3.dtos';
-
+import upload from '@middlewares/multer.middleware';
+import { FileNameDto, UploadImageDto, SolicitudIdDto, CsrfTokenDto } from '@dtos/s3.dtos';
+import validateRole from '@middlewares/rol-auth.middleware';
 class S3Routes {
   public router: Router;
-  private upload: multer.Multer;
 
   constructor() {
     this.router = Router();
-    this.upload = multer(); // Middleware de Multer para manejar archivos.
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    // Rutas para imágenes estáticas
-    this.router.get('/static/:fileName', validateRequest(FileNameDTO, 'params'), S3Controller.serveStaticImage);
+    // Imágenes estáticas
+    this.router.get(
+      '/static/:fileName',
+      validateRequest(FileNameDto, 'params'), // Validación del nombre del archivo
+      S3Controller.serveStaticImage
+    );
 
-    // Rutas para imágenes de perfil
-    this.router.get('/perfil/', authenticateJWT, validateCsrfToken, S3Controller.servePerfilImage);
-    this.router.post('/perfil/', authenticateJWT, this.upload.single('image'), validateCsrfToken, validateRequest(UploadImageDTO, 'body'), S3Controller.uploadPerfilImage);
-    this.router.put('/perfil/', authenticateJWT, this.upload.single('image'), validateCsrfToken, validateRequest(UploadImageDTO, 'body'), S3Controller.updatePerfilImage);
-    this.router.delete('/perfil/', authenticateJWT, validateCsrfToken, validateRequest(FileNameDTO, 'body'), S3Controller.deletePerfilImage);
+    // Imágenes de perfil
+    this.router.get(
+      '/perfil',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      S3Controller.servePerfilImage
+    );
 
+    this.router.post(
+      '/perfil',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      validateRequest(UploadImageDto, 'body'), // Validación del tipo de contenido
+      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      upload.single('image'), // Usa el middleware personalizado para manejar la imagen
+      S3Controller.uploadPerfilImage
+    );
 
-    // TODO: Ruta para imagenes de Solicitud
+    this.router.put(
+      '/perfil',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      validateRequest(UploadImageDto, 'body'), // Validación del tipo de contenido
+      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      upload.single('image'), // Usa el middleware personalizado para manejar la imagen
+      S3Controller.updatePerfilImage
+    );
+
+    this.router.delete(
+      '/perfil',
+      authenticateJWT,
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
+      validateCsrfToken,
+      validateRequest(FileNameDto, 'body'), // Validación del nombre del archivo
+      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      S3Controller.deletePerfilImage
+    );
+
+    // Imágenes de solicitudes
+    this.router.get(
+      '/solicitud/:id',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateRequest(SolicitudIdDto, 'params'), // Validación del ID de la solicitud
+      S3Controller.serveSolicitudImage
+    );
+
+    this.router.post(
+      '/solicitud/:id',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateCsrfToken,
+      validateRequest(UploadImageDto, 'body'), // Validación del tipo de contenido
+      validateRequest(SolicitudIdDto, 'params'), // Validación del ID de la solicitud
+      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      upload.single('image'), // Usa el middleware personalizado para manejar la imagen
+      S3Controller.uploadSolicitudImage
+    );
+
+    this.router.delete(
+      '/solicitud/:id',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateCsrfToken,
+      validateRequest(SolicitudIdDto, 'params'), // Validación del ID de la solicitud
+      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      S3Controller.deleteSolicitudImage
+    );
   }
 }
 

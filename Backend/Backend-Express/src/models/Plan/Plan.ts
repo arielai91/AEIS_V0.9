@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import planSchema from './planSchema';
+import planSchema from '@models/Plan/planSchema';
 
 export interface IPlan extends Document {
   nombre: 'Sin Plan' | 'Pantera Junior' | 'Pantera Senior';

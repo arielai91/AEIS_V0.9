@@ -10,7 +10,7 @@ export interface IPerfil extends Document {
   contraseña: string;
   imagen?: string;
   casilleros: Schema.Types.ObjectId[];
-  plan: Schema.Types.ObjectId;
+  plan: Schema.Types.ObjectId | null;
   solicitudes: Schema.Types.ObjectId[];
 }
 

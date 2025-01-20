@@ -1,68 +1,93 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import CasilleroService from '@services/casillero.service';
-import logger from '@logger/logger';
 
 class CasilleroController {
-  public async crearCasillero(req: Request, res: Response): Promise<void> {
+  /**
+   * Crear un casillero.
+   */
+  public async crearCasillero(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const casilleroCreado = await CasilleroService.crearCasillero(req.body);
-      res.status(201).json({ success: true, message: 'Casillero creado exitosamente.', data: casilleroCreado });
+      const casillero = await CasilleroService.crearCasillero(req.body);
+      res.status(201).json({ message: 'Casillero creado exitosamente.', casillero });
     } catch (error) {
-      logger.error('Error al crear casillero:', error as Error);
-      res.status(400).json({ success: false, message: (error as Error).message || 'Error al crear casillero.' });
+      next(error);
     }
   }
 
-  public async eliminarCasillero(req: Request, res: Response): Promise<void> {
+  /**
+   * Obtener todos los casilleros.
+   */
+  public async obtenerCasilleros(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      await CasilleroService.eliminarCasillero(req.body.casilleroId);
-      res.status(200).json({ success: true, message: 'Casillero eliminado exitosamente.' });
+      const casilleros = await CasilleroService.obtenerCasilleros(req.query);
+      res.status(200).json(casilleros);
     } catch (error) {
-      logger.error('Error al eliminar casillero:', error as Error);
-      res.status(500).json({ success: false, message: (error as Error).message || 'Error al eliminar casillero.' });
+      next(error);
     }
   }
 
-  public async asignarPerfil(req: Request, res: Response): Promise<void> {
+  /**
+   * Obtener un casillero por ID.
+   */
+  public async obtenerCasilleroPorId(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { casilleroId, perfilId } = req.body;
-      const casilleroActualizado = await CasilleroService.asignarPerfil(casilleroId, perfilId);
-      res.status(200).json({ success: true, message: 'Perfil asignado exitosamente.', data: casilleroActualizado });
+      const { id } = req.params;
+      const casillero = await CasilleroService.obtenerCasilleroPorId(id);
+      if (!casillero) {
+        res.status(404).json({ message: 'Casillero no encontrado.' });
+      }
+      res.status(200).json(casillero);
     } catch (error) {
-      logger.error('Error al asignar perfil:', error as Error);
-      res.status(400).json({ success: false, message: (error as Error).message || 'Error al asignar perfil.' });
+      next(error);
     }
   }
 
-  public async liberarCasillero(req: Request, res: Response): Promise<void> {
+  /**
+   * Eliminar un casillero.
+   */
+  public async eliminarCasillero(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const casilleroActualizado = await CasilleroService.liberarCasillero(req.body.casilleroId);
-      res.status(200).json({ success: true, message: 'Casillero liberado exitosamente.', data: casilleroActualizado });
+      const { id } = req.body;
+      await CasilleroService.eliminarCasillero(id);
+      res.status(200).json({ message: 'Casillero eliminado exitosamente.' });
     } catch (error) {
-      logger.error('Error al liberar casillero:', error as Error);
-      res.status(400).json({ success: false, message: (error as Error).message || 'Error al liberar casillero.' });
+      next(error);
     }
   }
 
-  public async actualizarEstado(req: Request, res: Response): Promise<void> {
+  /**
+   * Asignar un casillero a un perfil.
+   */
+  public async asignarCasillero(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { casilleroId, estado } = req.body;
-      const casilleroActualizado = await CasilleroService.actualizarEstado(casilleroId, estado);
-      res.status(200).json({ success: true, message: 'Estado del casillero actualizado exitosamente.', data: casilleroActualizado });
+      await CasilleroService.asignarCasillero(req.body);
+      res.status(200).json({ message: 'Casillero asignado exitosamente.' });
     } catch (error) {
-      logger.error('Error al actualizar estado del casillero:', error as Error);
-      res.status(400).json({ success: false, message: (error as Error).message || 'Error al actualizar estado del casillero.' });
+      next(error);
     }
   }
 
-  public async obtenerCasilleros(req: Request, res: Response): Promise<void> {
+  /**
+   * Liberar un casillero.
+   */
+  public async liberarCasillero(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const filtros = req.query;
-      const casilleros = await CasilleroService.obtenerCasilleros(filtros);
-      res.status(200).json({ success: true, message: 'Casilleros obtenidos exitosamente.', data: casilleros });
+      await CasilleroService.liberarCasillero(req.body);
+      res.status(200).json({ message: 'Casillero liberado exitosamente.' });
     } catch (error) {
-      logger.error('Error al obtener casilleros:', error as Error);
-      res.status(500).json({ success: false, message: (error as Error).message || 'Error al obtener casilleros.' });
+      next(error);
+    }
+  }
+
+  /**
+   * Actualizar el estado de un casillero.
+   */
+  public async actualizarEstado(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await CasilleroService.actualizarEstado(req.body);
+      res.status(200).json({ message: 'Estado del casillero actualizado exitosamente.' });
+    } catch (error) {
+      next(error);
     }
   }
 }

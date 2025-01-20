@@ -1,16 +1,15 @@
 import { Router } from 'express';
-import SolicitudesController from '@controllers/solicitudes.controller';
+import SolicitudController from '@controllers/solicitudes.controller';
 import authenticateJWT from '@middlewares/auth.middleware';
-import validateRole from '@middlewares/rol-auth.middleware';
+import validateCsrfToken from '@middlewares/csrf.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
 import {
     CrearSolicitudDto,
-    EliminarSolicitudDto,
-    ListarSolicitudesQueryDto,
     ActualizarEstadoSolicitudDto,
-    ObtenerSolicitudParamsDto,
+    ListarSolicitudesQueryDto,
+    SolicitudIdDto,
+    CsrfTokenDto,
 } from '@dtos/solicitud.dto';
-import validateCsrfToken from '@middlewares/csrf.middleware';
 
 class SolicitudRoutes {
     public router: Router;
@@ -25,48 +24,38 @@ class SolicitudRoutes {
         this.router.post(
             '/',
             authenticateJWT,
-            validateRole(['Usuario']),
+            validateCsrfToken,
             validateRequest(CrearSolicitudDto, 'body'),
-            validateCsrfToken,
-            SolicitudesController.crearSolicitud,
+            validateRequest(CsrfTokenDto, 'headers'),
+            SolicitudController.crearSolicitud
         );
 
-        // Eliminar una solicitud
-        this.router.delete(
-            '/',
-            authenticateJWT,
-            validateRole(['Administrador']),
-            validateRequest(EliminarSolicitudDto, 'body'),
-            validateCsrfToken,
-            SolicitudesController.eliminarSolicitud,
-        );
-
-        // Listar solicitudes
+        // Obtener todas las solicitudes con filtros
         this.router.get(
             '/',
             authenticateJWT,
-            validateRole(['Administrador', 'Usuario']),
             validateRequest(ListarSolicitudesQueryDto, 'query'),
-            SolicitudesController.listarSolicitudes,
+            SolicitudController.listarSolicitudes
         );
 
-        // Actualizar estado de una solicitud
+        // Actualizar el estado de una solicitud
         this.router.patch(
             '/estado',
             authenticateJWT,
-            validateRole(['Administrador']),
-            validateRequest(ActualizarEstadoSolicitudDto, 'body'),
             validateCsrfToken,
-            SolicitudesController.actualizarEstadoSolicitud,
+            validateRequest(ActualizarEstadoSolicitudDto, 'body'),
+            validateRequest(CsrfTokenDto, 'headers'),
+            SolicitudController.actualizarEstadoSolicitud
         );
 
-        // Obtener detalles de una solicitud
-        this.router.get(
+        // Eliminar una solicitud por ID
+        this.router.delete(
             '/:id',
             authenticateJWT,
-            validateRole(['Administrador', 'Usuario']),
-            validateRequest(ObtenerSolicitudParamsDto, 'params'),
-            SolicitudesController.obtenerSolicitud,
+            validateCsrfToken,
+            validateRequest(SolicitudIdDto, 'params'),
+            validateRequest(CsrfTokenDto, 'headers'),
+            SolicitudController.eliminarSolicitud
         );
     }
 }

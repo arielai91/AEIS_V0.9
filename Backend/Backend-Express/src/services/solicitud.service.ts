@@ -1,78 +1,115 @@
 import SolicitudModel from '@models/Solicitud/Solicitud';
-import { CrearSolicitudDto } from '@dtos/solicitud.dto';
-import { Types } from 'mongoose';
+import PerfilModel from '@models/Perfil/Perfil';
+import CasilleroModel from '@models/Casillero/Casillero';
+import PlanModel from '@models/Plan/Plan';
+import { CrearSolicitudDto, ActualizarEstadoSolicitudDto, ListarSolicitudesQueryDto } from '@dtos/solicitud.dto';
 import { ISolicitud } from '@type/global';
+import { FilterQuery } from 'mongoose';
 
-interface User {
-    id: string;
-    role: string;
-}
+class SolicitudService {
+    /**
+     * Crear una nueva solicitud.
+     */
+    public async crearSolicitud(data: CrearSolicitudDto): Promise<ISolicitud> {
+        const { perfil, tipo, plan, casillero, imagen } = data;
 
-class SolicitudesService {
-    // Crear una solicitud
-    public async crearSolicitud(datosSolicitud: CrearSolicitudDto): Promise<ISolicitud> {
-        const solicitud = await SolicitudModel.create({
-            perfil: new Types.ObjectId(datosSolicitud.perfil),
-            tipo: datosSolicitud.tipo,
-            plan: datosSolicitud.plan ? new Types.ObjectId(datosSolicitud.plan) : undefined,
-            casillero: datosSolicitud.casillero ? new Types.ObjectId(datosSolicitud.casillero) : undefined,
-            imagen: datosSolicitud.imagen,
+        // Verificar la existencia del perfil
+        const perfilExistente = await PerfilModel.findById(perfil).exec();
+        if (!perfilExistente) {
+            throw new Error('El perfil especificado no existe.');
+        }
+
+        // Validar la relación según el tipo de solicitud
+        if (tipo === 'Plan' && plan) {
+            const planExistente = await PlanModel.findById(plan).exec();
+            if (!planExistente) {
+                throw new Error('El plan especificado no existe.');
+            }
+        } else if (tipo === 'Casillero' && casillero) {
+            const casilleroExistente = await CasilleroModel.findById(casillero).exec();
+            if (!casilleroExistente) {
+                throw new Error('El casillero especificado no existe.');
+            }
+        }
+
+        // Crear la solicitud
+        const nuevaSolicitud = new SolicitudModel({
+            perfil,
+            tipo,
+            plan: tipo === 'Plan' ? plan : undefined,
+            casillero: tipo === 'Casillero' ? casillero : undefined,
+            imagen,
         });
-        return solicitud.toObject();
+
+        return await nuevaSolicitud.save();
     }
 
-    // Eliminar una solicitud
-    public async eliminarSolicitud(solicitudId: string): Promise<void> {
-        const solicitud = await SolicitudModel.findById(solicitudId);
+    /**
+     * Listar solicitudes con filtros y paginación.
+     */
+    public async listarSolicitudes(filtros: ListarSolicitudesQueryDto): Promise<ISolicitud[]> {
+        const { estado, perfil, tipo, page = 1, limit = 10 } = filtros;
+
+        const query: FilterQuery<ISolicitud> = {};
+
+        if (estado) {
+            query.estado = estado;
+        }
+        if (perfil) {
+            query.perfil = perfil;
+        }
+        if (tipo) {
+            query.tipo = tipo;
+        }
+
+        return await SolicitudModel.find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .populate('perfil plan casillero')
+            .exec();
+    }
+    /**
+     * Obtener una solicitud por ID.
+     */
+    public async obtenerSolicitudPorId(id: string): Promise<ISolicitud | null> {
+        return await SolicitudModel.findById(id).populate('perfil plan casillero').exec();
+    }
+
+    /**
+     * Eliminar una solicitud por ID.
+     */
+    public async eliminarSolicitud(id: string): Promise<void> {
+        const solicitud = await SolicitudModel.findByIdAndDelete(id).exec();
         if (!solicitud) {
-            throw new Error('Solicitud no encontrada.');
+            throw new Error('La solicitud especificada no existe.');
         }
-        await solicitud.deleteOne();
     }
 
-    // Listar solicitudes con filtros y acceso por rol
-    public async listarSolicitudes(filtros: { tipo?: string; estado?: string; }, user: { id: string; role: string; }): Promise<ISolicitud[]> {
-        const query: Record<string, unknown> = {};
+    /**
+     * Actualizar el estado de una solicitud.
+     */
+    public async actualizarEstadoSolicitud(data: ActualizarEstadoSolicitudDto): Promise<void> {
+        const { solicitudId, estado } = data;
 
-        if (filtros.tipo) {
-            query.tipo = filtros.tipo;
-        }
-        if (filtros.estado) {
-            query.estado = filtros.estado;
-        }
-
-        // Filtrar solicitudes por usuario si no es administrador
-        if (user.role !== 'Administrador') {
-            query.perfil = new Types.ObjectId(user.id);
-        }
-
-        return await SolicitudModel.find(query).exec();
-    }
-
-    // Actualizar estado de una solicitud
-    public async actualizarEstadoSolicitud(solicitudId: string, estado: 'Aprobado' | 'Rechazado' | 'Por verificar'): Promise<ISolicitud> {
-        const solicitud = await SolicitudModel.findById(solicitudId);
+        const solicitud = await SolicitudModel.findById(solicitudId).exec();
         if (!solicitud) {
-            throw new Error('Solicitud no encontrada.');
+            throw new Error('La solicitud especificada no existe.');
         }
+
         solicitud.estado = estado;
-        if (estado === 'Aprobado' || estado === 'Rechazado') {
-            solicitud.fechaAprobacion = new Date();
-        }
-        return await solicitud.save();
-    }
+        solicitud.fechaAprobacion = estado === 'Aprobado' ? new Date() : null;
+        await solicitud.save();
 
-    // Obtener detalles de una solicitud
-    public async obtenerSolicitud(id: string, user: User): Promise<ISolicitud> {
-        const solicitud = await SolicitudModel.findById(id).populate(['perfil', 'plan', 'casillero']);
-        if (!solicitud) {
-            throw new Error('Solicitud no encontrada.');
+        // Opcional: manejar acciones según el estado
+        if (estado === 'Aprobado' && solicitud.tipo === 'Casillero') {
+            const casillero = await CasilleroModel.findById(solicitud.casillero).exec();
+            if (casillero) {
+                casillero.estado = 'ocupado';
+                casillero.perfil = solicitud.perfil;
+                await casillero.save();
+            }
         }
-        if (user.role !== 'Administrador' && solicitud.perfil.toString() !== user.id) {
-            throw new Error('No tienes permiso para ver esta solicitud.');
-        }
-        return solicitud.toObject();
     }
 }
 
-export default new SolicitudesService();
+export default new SolicitudService();

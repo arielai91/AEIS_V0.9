@@ -1,79 +1,218 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import PerfilService from '@services/perfil.service';
+import { CrearPerfilDto, ActualizarPerfilDto } from '@dtos/perfil.dto';
 import logger from '@logger/logger';
-
-interface AuthenticatedRequest extends Request {
-  user?: { id: string };
-}
+import { AuthenticatedRequest } from '@type/global';
 
 class PerfilController {
-  /**
-   * Crear un nuevo perfil.
-   */
-  public async crearPerfil(req: Request, res: Response): Promise<void> {
+  public async crearPerfil(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const datosPerfil = req.body;
-      datosPerfil.rol = 'Cliente'; // Asignar rol de usuario
-      const perfilCreado = await PerfilService.crearPerfil(datosPerfil);
-      res.status(201).json(perfilCreado);
-    } catch (err) {
-      logger.error('Error al crear Cliente:', err as Error);
-      res.status(400).json({ message: 'Error al crear Cliente' });
+      const data: CrearPerfilDto = req.body;
+      const perfil = await PerfilService.crearPerfil(data);
+      logger.info('Perfil creado exitosamente.');
+      res.status(201).json({ message: 'Perfil creado exitosamente.', perfil });
+    } catch (error) {
+      logger.error('Error al crear perfil:', error as Error);
+      next(error);
     }
   }
 
-  /**
-   * Crear un nuevo perfil por un administrador.
-   */
-  public async crearPerfilAdmin(req: Request, res: Response): Promise<void> {
+  public async obtenerPerfil(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const datosPerfil = req.body;
-      datosPerfil.rol = 'Administrador'; // Asignar rol de administrador
-      const perfilCreado = await PerfilService.crearPerfil(datosPerfil);
-      res.status(201).json(perfilCreado);
-    } catch (err) {
-      logger.error('Error al crear Admin:', err as Error);
-      res.status(400).json({ message: 'Error al crear Admin' });
-    }
-  }
-
-  /**
-   * Eliminar perfil.
-   */
-  public async eliminarPerfil(req: AuthenticatedRequest, res: Response): Promise<void> {
-    try {
-      const userId = req.user?.id;
-
-      if (!userId) {
-        res.status(403).json({ message: 'Usuario no autenticado' });
-        return;
+      const id = req.user?.id as string;
+      if (!id) {
+        logger.warn('ID de usuario no proporcionado.');
+        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
       }
-
-      await PerfilService.eliminarPerfil(userId);
-      res.status(200).json({ message: 'Perfil eliminado exitosamente' });
-    } catch (err) {
-      logger.error('Error al eliminar perfil:', err as Error);
-      res.status(500).json({ message: 'Error al eliminar perfil' });
+      const perfil = await PerfilService.obtenerPerfilPorId(id);
+      if (!perfil) {
+        logger.warn('Perfil no encontrado.');
+        res.status(404).json({ message: 'Perfil no encontrado.' });
+      }
+      logger.info('Perfil obtenido exitosamente.');
+      res.status(200).json(perfil);
+    } catch (error) {
+      logger.error('Error al obtener perfil:', error as Error);
+      next(error);
     }
   }
 
-  /**
-   * Eliminar perfil por un administrador.
-   */
-  public async eliminarPerfilAdmin(req: Request, res: Response): Promise<void> {
+  public async actualizarPerfil(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { perfilId } = req.body;
-
-      if (!perfilId) {
-        res.status(400).json({ message: 'Falta el ID del perfil' });
-        return;
+      const id = req.user?.id as string;
+      if (!id) {
+        logger.warn('ID de usuario no proporcionado.');
+        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
       }
+      const data: ActualizarPerfilDto = req.body;
+      const perfilActualizado = await PerfilService.actualizarPerfil(id, data);
+      if (!perfilActualizado) {
+        logger.warn('Perfil no encontrado.');
+        res.status(404).json({ message: 'Perfil no encontrado.' });
+      }
+      logger.info('Perfil actualizado exitosamente.');
+      res.status(200).json({ message: 'Perfil actualizado exitosamente.', perfilActualizado });
+    } catch (error) {
+      logger.error('Error al actualizar perfil:', error as Error);
+      next(error);
+    }
+  }
 
-      await PerfilService.eliminarPerfil(perfilId);
-      res.status(200).json({ message: 'Perfil eliminado exitosamente por admin' });
-    } catch (err) {
-      logger.error('Error al eliminar perfil por admin:', err as Error);
-      res.status(500).json({ message: 'Error al eliminar perfil por admin' });
+  public async eliminarPerfil(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = req.user?.id as string;
+      if (!id) {
+        logger.warn('ID de usuario no proporcionado.');
+        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
+      }
+      await PerfilService.eliminarPerfil(id);
+      logger.info('Perfil eliminado exitosamente.');
+      res.status(200).json({ message: 'Perfil eliminado exitosamente.' });
+    } catch (error) {
+      logger.error('Error al eliminar perfil:', error as Error);
+      next(error);
+    }
+  }
+
+  public async crearPerfilAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const data: CrearPerfilDto = req.body;
+      const perfil = await PerfilService.crearPerfil(data);
+      logger.info('Perfil creado exitosamente por el administrador.');
+      res.status(201).json({ message: 'Perfil creado exitosamente por el administrador.', perfil });
+    } catch (error) {
+      logger.error('Error al crear perfil por el administrador:', error as Error);
+      next(error);
+    }
+  }
+
+  public async obtenerPerfilPorId(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        logger.warn('ID de perfil no proporcionado.');
+        res.status(400).json({ message: 'ID de perfil no proporcionado.' });
+      }
+      const perfil = await PerfilService.obtenerPerfilPorId(id);
+      if (!perfil) {
+        logger.warn('Perfil no encontrado.');
+        res.status(404).json({ message: 'Perfil no encontrado.' });
+      }
+      logger.info('Perfil obtenido exitosamente.');
+      res.status(200).json(perfil);
+    } catch (error) {
+      logger.error('Error al obtener perfil por ID:', error as Error);
+      next(error);
+    }
+  }
+
+  public async actualizarPerfilAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        logger.warn('ID de perfil no proporcionado.');
+        res.status(400).json({ message: 'ID de perfil no proporcionado.' });
+      }
+      const data: ActualizarPerfilDto = req.body;
+      const perfilActualizado = await PerfilService.actualizarPerfil(id, data);
+      if (!perfilActualizado) {
+        logger.warn('Perfil no encontrado.');
+        res.status(404).json({ message: 'Perfil no encontrado.' });
+      }
+      logger.info('Perfil actualizado exitosamente por el administrador.');
+      res.status(200).json({ message: 'Perfil actualizado exitosamente por el administrador.', perfilActualizado });
+    } catch (error) {
+      logger.error('Error al actualizar perfil por el administrador:', error as Error);
+      next(error);
+    }
+  }
+
+  public async eliminarPerfilAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        logger.warn('ID de perfil no proporcionado.');
+        res.status(400).json({ message: 'ID de perfil no proporcionado.' });
+      }
+      await PerfilService.eliminarPerfil(id);
+      logger.info('Perfil eliminado exitosamente por el administrador.');
+      res.status(200).json({ message: 'Perfil eliminado exitosamente por el administrador.' });
+    } catch (error) {
+      logger.error('Error al eliminar perfil por el administrador:', error as Error);
+      next(error);
+    }
+  }
+
+  public async obtenerCasillerosAsociados(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = req.user?.id as string;
+      if (!id) {
+        logger.warn('ID de usuario no proporcionado.');
+        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
+      }
+      const casilleros = await PerfilService.obtenerCasillerosAsociados(id);
+      logger.info('Casilleros asociados obtenidos exitosamente.');
+      res.status(200).json(casilleros);
+    } catch (error) {
+      logger.error('Error al obtener casilleros asociados:', error as Error);
+      next(error);
+    }
+  }
+
+  public async obtenerSolicitudesAsociadas(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = req.user?.id as string;
+      if (!id) {
+        logger.warn('ID de usuario no proporcionado.');
+        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
+      }
+      const query = req.query;
+      const solicitudes = await PerfilService.obtenerSolicitudesAsociadas(id, query);
+      logger.info('Solicitudes asociadas obtenidas exitosamente.');
+      res.status(200).json(solicitudes);
+    } catch (error) {
+      logger.error('Error al obtener solicitudes asociadas:', error as Error);
+      next(error);
+    }
+  }
+
+  public async subirImagenPerfil(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const file = req.file;
+      if (!file) {
+        logger.warn('Archivo de imagen no proporcionado.');
+        res.status(400).json({ message: 'Archivo de imagen no proporcionado.' });
+      }
+      logger.info('Imagen subida exitosamente.');
+      res.status(201).json({ message: 'Imagen subida exitosamente.' });
+    } catch (error) {
+      logger.error('Error al subir imagen de perfil:', error as Error);
+      next(error);
+    }
+  }
+
+  public async actualizarImagenPerfil(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const file = req.file;
+      if (!file) {
+        logger.warn('Archivo de imagen no proporcionado.');
+        res.status(400).json({ message: 'Archivo de imagen no proporcionado.' });
+      }
+      logger.info('Imagen actualizada exitosamente.');
+      res.status(200).json({ message: 'Imagen actualizada exitosamente.' });
+    } catch (error) {
+      logger.error('Error al actualizar imagen de perfil:', error as Error);
+      next(error);
+    }
+  }
+
+  public async eliminarImagenPerfil(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      logger.info('Imagen eliminada exitosamente.');
+      res.status(200).json({ message: 'Imagen eliminada exitosamente.' });
+    } catch (error) {
+      logger.error('Error al eliminar imagen de perfil:', error as Error);
+      next(error);
     }
   }
 }

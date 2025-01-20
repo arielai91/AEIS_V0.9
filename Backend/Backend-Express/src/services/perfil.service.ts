@@ -1,58 +1,92 @@
-import { Types } from 'mongoose';
-import bcrypt from 'bcrypt';
-import validator from 'validator';
 import PerfilModel from '@models/Perfil/Perfil';
-import Plan from '@models/Plan/Plan';
-import { IPerfil } from '@type/global';
-import { CrearPerfilDto } from '@dtos/perfil.dto';
+import CasilleroModel from '@models/Casillero/Casillero';
+import SolicitudModel from '@models/Solicitud/Solicitud';
+import { CrearPerfilDto, ActualizarPerfilDto, SolicitudesQueryDto } from '@dtos/perfil.dto';
+import { IPerfil, ICasillero, ISolicitud } from '@type/global';
+import { FilterQuery } from 'mongoose';
 
 class PerfilService {
     /**
-     * Crear un nuevo perfil en la base de datos.
-     * @param datosPerfil Información del perfil a crear.
-     * @returns El perfil creado.
+     * Crear un nuevo perfil.
      */
-    public async crearPerfil(datosPerfil: CrearPerfilDto): Promise<IPerfil> {
-        // Validar y sanitizar los datos proporcionados
-        if (!validator.isEmail(datosPerfil.email)) {
-            throw new Error('El email proporcionado no es válido.');
-        }
-        if (!validator.isLength(datosPerfil.contraseña, { min: 6 })) {
-            throw new Error('La contraseña debe tener al menos 6 caracteres.');
-        }
-        if (!validator.isLength(datosPerfil.cedula, { min: 10, max: 10 })) {
-            throw new Error('La cédula debe contener exactamente 10 dígitos.');
-        }
-
-        // Encriptar la contraseña
-        const hashedPassword = await bcrypt.hash(datosPerfil.contraseña, 10);
-
-        // Obtener el plan por defecto
-        const planPorDefecto = await Plan.findOne({ esPorDefecto: true });
-        const planId = planPorDefecto ? planPorDefecto._id : null;
-
-        // Crear el perfil con los datos sanitizados
-        const perfil = new PerfilModel({
-            rol: validator.escape(datosPerfil.rol),
-            nombreCompleto: validator.escape(datosPerfil.nombreCompleto),
-            email: validator.normalizeEmail(datosPerfil.email),
-            cedula: validator.escape(datosPerfil.cedula),
-            contraseña: hashedPassword,
-            plan: planId,
-        });
-
-        return await perfil.save();
+    public async crearPerfil(data: CrearPerfilDto): Promise<IPerfil> {
+        const nuevoPerfil = new PerfilModel(data);
+        return await nuevoPerfil.save();
     }
 
     /**
-     * Eliminar perfil de la base de datos.
-     * @param userId ID del usuario a eliminar.
+     * Obtener un perfil por ID.
      */
-    public async eliminarPerfil(userId: string): Promise<void> {
-        if (!Types.ObjectId.isValid(userId)) {
-            throw new Error('ID no válido');
-        }
-        await PerfilModel.findByIdAndDelete(userId);
+    public async obtenerPerfilPorId(id: string): Promise<IPerfil | null> {
+        return await PerfilModel.findById(id).populate('casilleros plan solicitudes').exec();
+    }
+
+    /**
+     * Actualizar un perfil.
+     */
+    public async actualizarPerfil(id: string, data: ActualizarPerfilDto): Promise<IPerfil | null> {
+        return await PerfilModel.findByIdAndUpdate(id, data, { new: true, runValidators: true }).exec();
+    }
+
+    /**
+     * Eliminar un perfil.
+     */
+    public async eliminarPerfil(id: string): Promise<void> {
+        // Eliminar casilleros asociados
+        await CasilleroModel.updateMany({ perfil: id }, { perfil: null, estado: 'disponible' }).exec();
+
+        // Eliminar solicitudes asociadas
+        await SolicitudModel.deleteMany({ perfil: id }).exec();
+
+        // Eliminar el perfil
+        await PerfilModel.findByIdAndDelete(id).exec();
+    }
+
+    /**
+     * Obtener los casilleros asociados a un perfil.
+     */
+    public async obtenerCasillerosAsociados(id: string): Promise<ICasillero[]> {
+        return await CasilleroModel.find({ perfil: id }).exec();
+    }
+
+    /**
+     * Obtener las solicitudes asociadas a un perfil.
+     */
+    public async obtenerSolicitudesAsociadas(id: string, query: SolicitudesQueryDto): Promise<ISolicitud[]> {
+        const { estado, page = 1, limit = 10 } = query;
+
+        const pageNumber = parseInt(page as unknown as string, 10);
+        const limitNumber = parseInt(limit as unknown as string, 10);
+
+        const filtro: FilterQuery<ISolicitud> = { perfil: id };
+        if (estado) filtro.estado = estado;
+
+        return await SolicitudModel.find(filtro)
+            .skip((pageNumber - 1) * limitNumber)
+            .limit(limitNumber)
+            .exec();
+    }
+
+    /**
+     * Subir imagen de perfil.
+     * Aquí podrías integrar un servicio de almacenamiento como S3.
+     */
+    public async subirImagenPerfil(id: string, imagePath: string): Promise<void> {
+        await PerfilModel.findByIdAndUpdate(id, { imagen: imagePath }).exec();
+    }
+
+    /**
+     * Actualizar imagen de perfil.
+     */
+    public async actualizarImagenPerfil(id: string, newImagePath: string): Promise<void> {
+        await PerfilModel.findByIdAndUpdate(id, { imagen: newImagePath }).exec();
+    }
+
+    /**
+     * Eliminar imagen de perfil.
+     */
+    public async eliminarImagenPerfil(id: string): Promise<void> {
+        await PerfilModel.findByIdAndUpdate(id, { imagen: null }).exec();
     }
 }
 

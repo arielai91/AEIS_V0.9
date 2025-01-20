@@ -1,106 +1,69 @@
-import { Request, Response } from 'express';
-import SolicitudesService from '@services/solicitud.service';
-import logger from '@logger/logger';
+import { Request, Response, NextFunction } from 'express';
+import SolicitudService from '@services/solicitud.service';
 
-interface CustomRequest extends Request {
-    user?: {
-        id: string;
-        role: string;
-    };
-}
-
-class SolicitudesController {
-    // Crear una solicitud
-    public async crearSolicitud(req: CustomRequest, res: Response): Promise<void> {
+class SolicitudController {
+    /**
+     * Crear una solicitud.
+     */
+    public async crearSolicitud(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const solicitud = await SolicitudesService.crearSolicitud(req.body);
-            res.status(201).json({
-                success: true,
-                message: 'Solicitud creada exitosamente.',
-                data: solicitud,
-            });
+            const solicitud = await SolicitudService.crearSolicitud(req.body);
+            res.status(201).json({ message: 'Solicitud creada exitosamente.', solicitud });
         } catch (error) {
-            logger.error('Error al crear solicitud:', error as Error);
-            res.status(400).json({
-                success: false,
-                message: error instanceof Error ? error.message : 'Error al crear solicitud.',
-            });
+            next(error);
         }
     }
 
-    // Eliminar una solicitud
-    public async eliminarSolicitud(req: CustomRequest, res: Response): Promise<void> {
+    /**
+     * Listar solicitudes.
+     */
+    public async listarSolicitudes(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { solicitudId } = req.body;
-            await SolicitudesService.eliminarSolicitud(solicitudId);
-            res.status(200).json({
-                success: true,
-                message: 'Solicitud eliminada exitosamente.',
-            });
+            const solicitudes = await SolicitudService.listarSolicitudes(req.query);
+            res.status(200).json(solicitudes);
         } catch (error) {
-            logger.error('Error al eliminar solicitud:', error as Error);
-            res.status(400).json({
-                success: false,
-                message: error instanceof Error ? error.message : 'Error al eliminar solicitud.',
-            });
+            next(error);
         }
     }
 
-    // Listar solicitudes
-    public async listarSolicitudes(req: CustomRequest, res: Response): Promise<void> {
+    /**
+     * Obtener detalles de una solicitud.
+     */
+    public async obtenerSolicitud(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const solicitudes = await SolicitudesService.listarSolicitudes(req.query, req.user!);
-            res.status(200).json({
-                success: true,
-                message: 'Solicitudes obtenidas exitosamente.',
-                data: solicitudes,
-            });
+            const solicitud = await SolicitudService.obtenerSolicitudPorId(req.params.id);
+            if (!solicitud) {
+                res.status(404).json({ message: 'Solicitud no encontrada.' });
+            }
+            res.status(200).json(solicitud);
         } catch (error) {
-            logger.error('Error al listar solicitudes:', error as Error);
-            res.status(500).json({
-                success: false,
-                message: error instanceof Error ? error.message : 'Error al listar solicitudes.',
-            });
+            next(error);
         }
     }
 
-    // Actualizar estado de una solicitud
-    public async actualizarEstadoSolicitud(req: CustomRequest, res: Response): Promise<void> {
+    /**
+     * Eliminar una solicitud.
+     */
+    public async eliminarSolicitud(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { solicitudId, estado } = req.body;
-            const solicitudActualizada = await SolicitudesService.actualizarEstadoSolicitud(solicitudId, estado);
-            res.status(200).json({
-                success: true,
-                message: 'Estado de la solicitud actualizado exitosamente.',
-                data: solicitudActualizada,
-            });
+            await SolicitudService.eliminarSolicitud(req.params.id);
+            res.status(200).json({ message: 'Solicitud eliminada exitosamente.' });
         } catch (error) {
-            logger.error('Error al actualizar estado de solicitud:', error as Error);
-            res.status(400).json({
-                success: false,
-                message: error instanceof Error ? error.message : 'Error al actualizar estado de solicitud.',
-            });
+            next(error);
         }
     }
 
-    // Obtener detalles de una solicitud
-    public async obtenerSolicitud(req: CustomRequest, res: Response): Promise<void> {
+    /**
+     * Actualizar el estado de una solicitud.
+     */
+    public async actualizarEstadoSolicitud(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { id } = req.params;
-            const solicitud = await SolicitudesService.obtenerSolicitud(id, req.user!);
-            res.status(200).json({
-                success: true,
-                message: 'Detalles de la solicitud obtenidos exitosamente.',
-                data: solicitud,
-            });
+            await SolicitudService.actualizarEstadoSolicitud(req.body);
+            res.status(200).json({ message: 'Estado de la solicitud actualizado exitosamente.' });
         } catch (error) {
-            logger.error('Error al obtener detalles de la solicitud:', error as Error);
-            res.status(400).json({
-                success: false,
-                message: error instanceof Error ? error.message : 'Error al obtener detalles de la solicitud.',
-            });
+            next(error);
         }
     }
 }
 
-export default new SolicitudesController();
+export default new SolicitudController();

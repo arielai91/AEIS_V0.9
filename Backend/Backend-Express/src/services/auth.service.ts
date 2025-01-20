@@ -9,19 +9,8 @@ import {
     getRefreshTokenTTL,
 } from '@utils/token.utils';
 import logger from '@logger/logger';
+import { UserProfileRedis, AuthResult } from '@type/global';
 
-interface AuthResult {
-    accessToken: string;
-    refreshToken: string;
-    csrfToken: string;
-}
-
-interface UserProfile {
-    id: string;
-    nombreCompleto: string;
-    email: string;
-    rol: string;
-}
 
 class AuthService {
     /**
@@ -62,7 +51,7 @@ class AuthService {
     /**
      * Filtro para datos de perfil que deben almacenarse.
      */
-    private filterProfileData(user: IPerfil): UserProfile {
+    private filterProfileData(user: IPerfil): UserProfileRedis {
         return {
             id: user.id || user._id.toString(),
             nombreCompleto: user.nombreCompleto,

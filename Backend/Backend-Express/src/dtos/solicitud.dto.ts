@@ -1,72 +1,91 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum, ValidateIf } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsMongoId, IsOptional, IsNumber, Min } from 'class-validator';
 
-// DTO para crear una solicitud
+/**
+ * DTO para crear una solicitud
+ */
 export class CrearSolicitudDto {
-    @IsString()
-    @IsNotEmpty()
-    public perfil!: string;
+    @IsMongoId({ message: 'El ID del perfil debe ser un ObjectId válido.' })
+    perfil!: string;
 
     @IsString()
     @IsEnum(['Plan', 'Casillero'], {
-        message: 'El tipo de solicitud debe ser "Plan" o "Casillero".',
+        message: 'El tipo de solicitud debe ser uno de los siguientes: Plan o Casillero.',
     })
-    public tipo!: 'Plan' | 'Casillero';
+    tipo!: 'Plan' | 'Casillero';
 
-    @ValidateIf((obj) => obj.tipo === 'Plan')
-    @IsString()
-    @IsNotEmpty({ message: 'El campo "plan" es obligatorio si el tipo es "Plan".' })
-    public plan?: string;
+    @IsMongoId({ message: 'El ID del plan debe ser un ObjectId válido.' })
+    @IsOptional()
+    plan?: string;
 
-    @ValidateIf((obj) => obj.tipo === 'Casillero')
-    @IsString()
-    @IsNotEmpty({ message: 'El campo "casillero" es obligatorio si el tipo es "Casillero".' })
-    public casillero?: string;
+    @IsMongoId({ message: 'El ID del casillero debe ser un ObjectId válido.' })
+    @IsOptional()
+    casillero?: string;
 
     @IsString()
-    @IsNotEmpty({ message: 'La imagen es obligatoria para comprobar el pago.' })
-    public imagen!: string;
+    @IsNotEmpty({ message: 'La imagen del comprobante de pago es obligatoria.' })
+    imagen!: string;
 }
 
-// DTO para eliminar una solicitud
-export class EliminarSolicitudDto {
-    @IsString()
-    @IsNotEmpty()
-    public solicitudId!: string;
-}
-
-// DTO para listar solicitudes con filtros
+/**
+ * DTO para filtrar solicitudes
+ */
 export class ListarSolicitudesQueryDto {
     @IsString()
+    @IsEnum(['Aprobado', 'Rechazado', 'Por verificar'], {
+        message: 'El estado debe ser uno de los siguientes: Aprobado, Rechazado, Por verificar.',
+    })
     @IsOptional()
+    estado?: string;
+
+    @IsMongoId({ message: 'El ID del perfil debe ser un ObjectId válido.' })
+    @IsOptional()
+    perfil?: string;
+
+    @IsString()
     @IsEnum(['Plan', 'Casillero'], {
-        message: 'El tipo de solicitud debe ser "Plan" o "Casillero".',
+        message: 'El tipo debe ser uno de los siguientes: Plan o Casillero.',
     })
-    public tipo?: string;
-
-    @IsString()
     @IsOptional()
-    @IsEnum(['Aprobado', 'Rechazado', 'Por verificar'], {
-        message: 'El estado debe ser "Aprobado", "Rechazado" o "Por verificar".',
-    })
-    public estado?: string;
+    tipo?: string;
+
+    @IsNumber()
+    @Min(1, { message: 'La página debe ser mayor o igual a 1.' })
+    @IsOptional()
+    page?: number;
+
+    @IsNumber()
+    @Min(1, { message: 'El límite debe ser mayor o igual a 1.' })
+    @IsOptional()
+    limit?: number;
 }
 
-// DTO para actualizar el estado de una solicitud
+/**
+ * DTO para actualizar el estado de una solicitud
+ */
 export class ActualizarEstadoSolicitudDto {
-    @IsString()
-    @IsNotEmpty()
-    public solicitudId!: string;
+    @IsMongoId({ message: 'El ID de la solicitud debe ser un ObjectId válido.' })
+    solicitudId!: string;
 
     @IsString()
     @IsEnum(['Aprobado', 'Rechazado', 'Por verificar'], {
-        message: 'El estado debe ser "Aprobado", "Rechazado" o "Por verificar".',
+        message: 'El estado debe ser uno de los siguientes: Aprobado, Rechazado, Por verificar.',
     })
-    public estado!: string;
+    estado!: 'Aprobado' | 'Rechazado' | 'Por verificar';
 }
 
-// DTO para validar el parámetro de ID en los detalles de la solicitud
-export class ObtenerSolicitudParamsDto {
+/**
+ * DTO para eliminar una solicitud por ID
+ */
+export class SolicitudIdDto {
+    @IsMongoId({ message: 'El ID de la solicitud debe ser un ObjectId válido.' })
+    solicitudId!: string;
+}
+
+/**
+ * DTO para validar el CSRF token
+ */
+export class CsrfTokenDto {
     @IsString()
-    @IsNotEmpty({ message: 'El ID de la solicitud es obligatorio.' })
-    public id!: string;
+    @IsNotEmpty({ message: 'El token CSRF es obligatorio.' })
+    'x-csrf-token'!: string;
 }

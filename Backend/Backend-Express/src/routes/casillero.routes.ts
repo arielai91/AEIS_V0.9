@@ -1,10 +1,18 @@
 import { Router } from 'express';
 import CasilleroController from '@controllers/casillero.controller';
 import authenticateJWT from '@middlewares/auth.middleware';
-import validateRole from '@middlewares/rol-auth.middleware';
-import validateRequest from '@middlewares/validateRequest.middleware';
 import validateCsrfToken from '@middlewares/csrf.middleware';
-import { CrearCasilleroDto, EliminarCasilleroDto, AsignarPerfilDto, LiberarCasilleroDto, ActualizarEstadoDto, ObtenerCasillerosQueryDto } from '@dtos/casillero.dto';
+import validateRequest from '@middlewares/validateRequest.middleware';
+import {
+  CrearCasilleroDto,
+  EliminarCasilleroDto,
+  AsignarCasilleroDto,
+  LiberarCasilleroDto,
+  ActualizarEstadoDto,
+  FiltroCasillerosQueryDto,
+  CsrfTokenDto,
+} from '@dtos/casillero.dto';
+import validateRole from '@middlewares/rol-auth.middleware';
 
 class CasilleroRoutes {
   public router: Router;
@@ -15,64 +23,68 @@ class CasilleroRoutes {
   }
 
   private initializeRoutes(): void {
-    // Ruta para que los administradores creen casilleros
+    // Crear un casillero
     this.router.post(
       '/',
       authenticateJWT,
       validateRole(['Administrador']),
-      validateRequest(CrearCasilleroDto, 'body'),
       validateCsrfToken,
+      validateRequest(CrearCasilleroDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
       CasilleroController.crearCasillero
     );
 
-    // Ruta para que los administradores eliminen casilleros
-    this.router.delete(
+    // Obtener todos los casilleros
+    this.router.get(
       '/',
       authenticateJWT,
-      validateRole(['Administrador']),
-      validateRequest(EliminarCasilleroDto, 'body'),
-      validateCsrfToken,
-      CasilleroController.eliminarCasillero
+      validateRole(['Cliente', 'Administrador']),
+      validateRequest(FiltroCasillerosQueryDto, 'query'),
+      CasilleroController.obtenerCasilleros
     );
 
-    // Ruta para asignar un perfil a un casillero
+    // Asignar un casillero a un perfil
     this.router.patch(
-      '/asignar-perfil',
+      '/asignar',
       authenticateJWT,
       validateRole(['Administrador']),
-      validateRequest(AsignarPerfilDto, 'body'),
       validateCsrfToken,
-      CasilleroController.asignarPerfil
+      validateRequest(AsignarCasilleroDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
+      CasilleroController.asignarCasillero
     );
 
-    // Ruta para liberar un casillero
+    // Liberar un casillero
     this.router.patch(
       '/liberar',
       authenticateJWT,
       validateRole(['Administrador']),
-      validateRequest(LiberarCasilleroDto, 'body'),
       validateCsrfToken,
+      validateRequest(LiberarCasilleroDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
       CasilleroController.liberarCasillero
     );
 
-    // Ruta para cambiar el estado del casillero
+    // Actualizar el estado de un casillero
     this.router.patch(
       '/estado',
       authenticateJWT,
       validateRole(['Administrador']),
-      validateRequest(ActualizarEstadoDto, 'body'),
       validateCsrfToken,
+      validateRequest(ActualizarEstadoDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
       CasilleroController.actualizarEstado
     );
 
-    // Ruta para obtener casilleros
-    this.router.get(
+    // Eliminar un casillero
+    this.router.delete(
       '/',
       authenticateJWT,
-      validateRole(['Administrador', 'Cliente']),
+      validateRole(['Administrador']),
       validateCsrfToken,
-      validateRequest(ObtenerCasillerosQueryDto, 'query'),
-      CasilleroController.obtenerCasilleros
+      validateRequest(EliminarCasilleroDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
+      CasilleroController.eliminarCasillero
     );
   }
 }

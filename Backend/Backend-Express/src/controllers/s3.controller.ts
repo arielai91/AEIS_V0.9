@@ -1,17 +1,14 @@
-// s3.controller.ts
 import { Request, Response } from 'express';
 import s3Service from '@services/s3.service';
 import PerfilModel from '@models/Perfil/Perfil';
 import logger from '@logger/logger';
-
-// Extender la interfaz Request para incluir la propiedad user
-interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-  };
-}
+import { AuthenticatedRequest } from '@type/global';
+import SolicitudModel from '@models/Solicitud/Solicitud';
 
 class S3Controller {
+  /**
+   * Servir imágenes estáticas
+   */
   async serveStaticImage(req: Request, res: Response): Promise<void> {
     try {
       const { fileName } = req.params;
@@ -23,6 +20,9 @@ class S3Controller {
     }
   }
 
+  /**
+   * Servir imagen de perfil
+   */
   async servePerfilImage(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const userId = req.user?.id;
@@ -47,6 +47,9 @@ class S3Controller {
     }
   }
 
+  /**
+   * Subir imagen de perfil
+   */
   async uploadPerfilImage(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const userId = req.user?.id;
@@ -76,6 +79,9 @@ class S3Controller {
     }
   }
 
+  /**
+   * Actualizar imagen de perfil
+   */
   async updatePerfilImage(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const userId = req.user?.id;
@@ -113,6 +119,9 @@ class S3Controller {
     }
   }
 
+  /**
+   * Eliminar imagen de perfil
+   */
   async deletePerfilImage(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const userId = req.user?.id;
@@ -136,6 +145,85 @@ class S3Controller {
     } catch (err) {
       logger.error('Error al eliminar la imagen de perfil', err as Error);
       res.status(500).json({ success: false, message: 'Error al eliminar la imagen de perfil.' });
+    }
+  }
+
+  /**
+   * Servir imagen de solicitud
+   */
+  async serveSolicitudImage(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const solicitud = await SolicitudModel.findById(id);
+
+      if (!solicitud || !solicitud.imagen) {
+        res.status(404).json({ success: false, message: 'Imagen de solicitud no encontrada.' });
+        return;
+      }
+
+      const url = await s3Service.getSignedUrl('solicitud', solicitud.imagen);
+      res.redirect(url);
+    } catch (err) {
+      logger.error('Error al servir imagen de solicitud', err as Error);
+      res.status(500).json({ success: false, message: 'Error al obtener la imagen de solicitud.' });
+    }
+  }
+
+  /**
+   * Subir imagen de solicitud
+   */
+  async uploadSolicitudImage(req: AuthenticatedRequest, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const file = req.file;
+
+      if (!file) {
+        res.status(400).json({ success: false, message: 'Archivo no proporcionado.' });
+        return;
+      }
+
+      const solicitud = await SolicitudModel.findById(id);
+
+      if (!solicitud) {
+        res.status(404).json({ success: false, message: 'Solicitud no encontrada.' });
+        return;
+      }
+
+      const fileName = `${id}-${Date.now()}-${file.originalname}`;
+      await s3Service.uploadFile('solicitud', fileName, file.buffer, file.mimetype);
+
+      solicitud.imagen = fileName;
+      await solicitud.save();
+
+      res.status(200).json({ success: true, message: 'Imagen subida con éxito.', fileName });
+    } catch (err) {
+      logger.error('Error al subir la imagen de solicitud', err as Error);
+      res.status(500).json({ success: false, message: 'Error al subir la imagen de solicitud.' });
+    }
+  }
+
+  /**
+   * Eliminar imagen de solicitud
+   */
+  async deleteSolicitudImage(req: AuthenticatedRequest, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const solicitud = await SolicitudModel.findById(id);
+
+      if (!solicitud || !solicitud.imagen) {
+        res.status(404).json({ success: false, message: 'Imagen de solicitud no encontrada.' });
+        return;
+      }
+
+      await s3Service.deleteFile('solicitud', solicitud.imagen);
+      // tendra el nombre pero no se eliminara el campo
+      //solicitud.imagen = null;
+      //await solicitud.save();
+
+      res.status(200).json({ success: true, message: 'Imagen eliminada con éxito.' });
+    } catch (err) {
+      logger.error('Error al eliminar la imagen de solicitud', err as Error);
+      res.status(500).json({ success: false, message: 'Error al eliminar la imagen de solicitud.' });
     }
   }
 }

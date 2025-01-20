@@ -2,10 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import AuthService from '@services/auth.service';
 import logger from '@logger/logger';
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: string };
-}
+import { AuthenticatedRequest } from '@type/global';
 
 class AuthController {
     public async login(req: Request, res: Response): Promise<void> {

@@ -1,11 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import RedisService from '@services/redis.service';
 import logger from '@logger/logger';
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: string }; // Limita el tipo del payload a lo que realmente necesitas
-}
+import { AuthenticatedRequest } from '@type/global';
 
 /**
  * Middleware para verificar el Access Token (JWT).

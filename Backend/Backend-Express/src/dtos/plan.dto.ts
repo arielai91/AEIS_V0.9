@@ -1,107 +1,111 @@
-import { IsString, IsNotEmpty, IsNumber, IsArray, IsBoolean, IsOptional, IsIn } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsNumber, IsMongoId, Min, IsOptional, IsBoolean } from 'class-validator';
 
-// DTO para crear un plan
+/**
+ * DTO para crear un plan
+ */
 export class CrearPlanDto {
     @IsString()
-    @IsNotEmpty()
-    @IsIn(['Sin Plan', 'Pantera Junior', 'Pantera Senior'], {
-        message: 'El nombre del plan debe ser uno de los valores permitidos: Sin Plan, Pantera Junior, Pantera Senior.',
+    @IsNotEmpty({ message: 'El nombre del plan es obligatorio.' })
+    @IsEnum(['Sin Plan', 'Pantera Junior', 'Pantera Senior'], {
+        message: 'El nombre debe ser uno de los siguientes: Sin Plan, Pantera Junior, Pantera Senior.',
     })
-    public nombre!: string;
+    nombre!: string;
 
     @IsNumber()
-    @IsNotEmpty()
-    public precio!: number;
+    @Min(0, { message: 'El precio debe ser mayor o igual a 0.' })
+    precio!: number;
 
     @IsNumber()
-    @IsOptional()
-    public duracion?: number;
+    @Min(1, { message: 'La duración debe ser al menos 1 mes.' })
+    duracion!: number;
 
-    @IsArray()
+    @IsString({ each: true })
     @IsOptional()
-    @IsString({ each: true, message: 'Cada beneficio debe ser una cadena de texto.' })
-    public beneficios?: string[];
+    beneficios?: string[];
 
-    @IsBoolean()
     @IsOptional()
-    public esPorDefecto?: boolean;
+    @IsNumber()
+    esPorDefecto?: boolean;
 }
 
-// DTO para eliminar un plan
-export class EliminarPlanDto {
+/**
+ * DTO para obtener planes con filtros
+ */
+export class PlanesQueryDto {
     @IsString()
-    @IsNotEmpty()
-    public planId!: string;
+    @IsOptional()
+    @IsEnum(['Sin Plan', 'Pantera Junior', 'Pantera Senior'], {
+        message: 'El nombre del plan debe ser válido.',
+    })
+    nombre?: string;
+
+    @IsNumber()
+    @IsOptional()
+    @Min(0)
+    precioMin?: number;
+
+    @IsNumber()
+    @IsOptional()
+    @Min(0)
+    precioMax?: number;
 }
 
-// DTO para actualizar un plan
+/**
+ * DTO para actualizar un plan
+ */
 export class ActualizarPlanDto {
     @IsString()
-    @IsNotEmpty()
-    public planId!: string;
-
-    @IsString()
     @IsOptional()
-    public nombre?: string;
+    nombre?: string;
 
     @IsNumber()
     @IsOptional()
-    public precio?: number;
+    precio?: number;
 
     @IsNumber()
     @IsOptional()
-    public duracion?: number;
+    duracion?: number;
 
-    @IsArray()
     @IsOptional()
-    @IsString({ each: true })
-    public beneficios?: string[];
-
     @IsBoolean()
-    @IsOptional()
-    public esPorDefecto?: boolean;
+    esPorDefecto?: boolean; // Agregar esta línea
 }
 
-// DTO para filtrar planes en consultas
-export class ObtenerPlanesQueryDto {
-    @IsString()
-    @IsOptional()
-    public nombre?: string;
-
-    @IsNumber()
-    @IsOptional()
-    public precio?: number;
-
-    @IsBoolean()
-    @IsOptional()
-    public esPorDefecto?: boolean;
+/**
+ * DTO para el ID de un plan
+ */
+export class PlanIdDto {
+    @IsMongoId({ message: 'El ID del plan debe ser un ObjectId válido.' })
+    id!: string;
 }
 
-// DTO para cambiar el plan predeterminado
-export class CambiarPlanPredeterminadoDto {
-    @IsString()
-    @IsNotEmpty()
-    public planId!: string;
-}
-
-// DTO para asignar un usuario a un plan
+/**
+ * DTO para asignar un usuario a un plan
+ */
 export class AsignarUsuarioDto {
-    @IsString()
-    @IsNotEmpty()
-    public planId!: string;
+    @IsMongoId({ message: 'El ID del plan debe ser un ObjectId válido.' })
+    planId!: string;
 
-    @IsString()
-    @IsNotEmpty()
-    public usuarioId!: string;
+    @IsMongoId({ message: 'El ID del usuario debe ser un ObjectId válido.' })
+    usuarioId!: string;
 }
 
-// DTO para eliminar un usuario de un plan
+/**
+ * DTO para eliminar un usuario de un plan
+ */
 export class EliminarUsuarioDto {
-    @IsString()
-    @IsNotEmpty()
-    public planId!: string;
+    @IsMongoId({ message: 'El ID del plan debe ser un ObjectId válido.' })
+    planId!: string;
 
+    @IsMongoId({ message: 'El ID del usuario debe ser un ObjectId válido.' })
+    usuarioId!: string;
+}
+
+/**
+ * DTO para el token CSRF
+ */
+export class CsrfTokenDto {
     @IsString()
-    @IsNotEmpty()
-    public usuarioId!: string;
+    @IsNotEmpty({ message: 'El token CSRF es obligatorio.' })
+    'x-csrf-token'!: string;
 }

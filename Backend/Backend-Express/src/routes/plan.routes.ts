@@ -3,16 +3,16 @@ import PlanController from '@controllers/plan.controller';
 import authenticateJWT from '@middlewares/auth.middleware';
 import validateRole from '@middlewares/rol-auth.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
+import validateCsrfToken from '@middlewares/csrf.middleware';
 import {
   CrearPlanDto,
-  EliminarPlanDto,
   ActualizarPlanDto,
-  ObtenerPlanesQueryDto,
-  CambiarPlanPredeterminadoDto,
   AsignarUsuarioDto,
-  EliminarUsuarioDto
+  EliminarUsuarioDto,
+  PlanIdDto,
+  PlanesQueryDto,
+  CsrfTokenDto,
 } from '@dtos/plan.dto';
-import validateCsrfToken from '@middlewares/csrf.middleware';
 
 class PlanRoutes {
   public router: Router;
@@ -28,68 +28,64 @@ class PlanRoutes {
       '/',
       authenticateJWT,
       validateRole(['Administrador']),
+      validateCsrfToken,
       validateRequest(CrearPlanDto, 'body'),
-      validateCsrfToken,
-      PlanController.crearPlan,
+      validateRequest(CsrfTokenDto, 'headers'),
+      PlanController.crearPlan
     );
 
-    // Eliminar un plan
-    this.router.delete(
-      '/',
-      authenticateJWT,
-      validateRole(['Administrador']),
-      validateRequest(EliminarPlanDto, 'body'),
-      validateCsrfToken,
-      PlanController.eliminarPlan,
-    );
-
-    // Actualizar un plan
-    this.router.patch(
-      '/actualizar',
-      authenticateJWT,
-      validateRole(['Administrador']),
-      validateRequest(ActualizarPlanDto, 'body'),
-      validateCsrfToken,
-      PlanController.actualizarPlan,
-    );
-
-    // Obtener planes
+    // Obtener todos los planes
     this.router.get(
       '/',
       authenticateJWT,
       validateRole(['Administrador', 'Cliente']),
-      validateRequest(ObtenerPlanesQueryDto, 'query'),
-      PlanController.obtenerPlanes,
+      validateRequest(PlanesQueryDto, 'query'),
+      PlanController.obtenerPlanes
     );
 
-    // Cambiar el plan predeterminado
+    // Actualizar un plan por ID
     this.router.patch(
-      '/predeterminado',
+      '/:id',
       authenticateJWT,
       validateRole(['Administrador']),
-      validateRequest(CambiarPlanPredeterminadoDto, 'body'),
       validateCsrfToken,
-      PlanController.cambiarPlanPredeterminado,
+      validateRequest(PlanIdDto, 'params'),
+      validateRequest(ActualizarPlanDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
+      PlanController.actualizarPlan
     );
 
-    // Asignar un usuario a un plan
-    this.router.patch(
-      '/asignar-usuario',
+    // Eliminar un plan por ID
+    this.router.delete(
+      '/:id',
       authenticateJWT,
       validateRole(['Administrador']),
+      validateCsrfToken,
+      validateRequest(PlanIdDto, 'params'),
+      validateRequest(CsrfTokenDto, 'headers'),
+      PlanController.eliminarPlan
+    );
+
+    // Asignar usuario a un plan
+    this.router.patch(
+      '/asignar',
+      authenticateJWT,
+      validateRole(['Administrador']),
+      validateCsrfToken,
       validateRequest(AsignarUsuarioDto, 'body'),
-      validateCsrfToken,
-      PlanController.asignarUsuario,
+      validateRequest(CsrfTokenDto, 'headers'),
+      PlanController.asignarUsuario
     );
 
-    // Eliminar un usuario de un plan
+    // Eliminar usuario de un plan
     this.router.patch(
-      '/eliminar-usuario',
+      '/eliminar',
       authenticateJWT,
       validateRole(['Administrador']),
-      validateRequest(EliminarUsuarioDto, 'body'),
       validateCsrfToken,
-      PlanController.eliminarUsuario,
+      validateRequest(EliminarUsuarioDto, 'body'),
+      validateRequest(CsrfTokenDto, 'headers'),
+      PlanController.eliminarUsuario
     );
   }
 }

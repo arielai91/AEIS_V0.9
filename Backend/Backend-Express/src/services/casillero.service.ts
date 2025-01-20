@@ -1,105 +1,99 @@
-import { Types, ObjectId } from 'mongoose';
 import CasilleroModel from '@models/Casillero/Casillero';
 import PerfilModel from '@models/Perfil/Perfil';
-import { CrearCasilleroDto } from '@dtos/casillero.dto';
+import { CrearCasilleroDto, ActualizarEstadoDto, AsignarCasilleroDto, LiberarCasilleroDto, FiltroCasillerosQueryDto } from '@dtos/casillero.dto';
 import { ICasillero } from '@type/global';
+import { FilterQuery, Schema } from 'mongoose';
 
 class CasilleroService {
-    public async crearCasillero(datosCasillero: CrearCasilleroDto): Promise<ICasillero> {
-        const existe = await CasilleroModel.findOne({ numero: datosCasillero.numero });
-        if (existe) {
-            throw new Error(`El casillero con número ${datosCasillero.numero} ya existe.`);
-        }
-
-        const casillero = await CasilleroModel.create({
-            numero: datosCasillero.numero,
-        });
-
-        return casillero.toObject();
+    /**
+     * Crear un nuevo casillero.
+     */
+    public async crearCasillero(data: CrearCasilleroDto): Promise<ICasillero> {
+        const nuevoCasillero = new CasilleroModel(data);
+        return await nuevoCasillero.save();
     }
 
-    public async eliminarCasillero(casilleroId: string): Promise<void> {
-        const casillero = await CasilleroModel.findById(casilleroId);
+    /**
+     * Obtener todos los casilleros con filtros.
+     */
+    public async obtenerCasilleros(filtros: FiltroCasillerosQueryDto): Promise<ICasillero[]> {
+        const { estado, page = 1, limit = 10 } = filtros;
+        const query: FilterQuery<ICasillero> = {};
 
-        if (!casillero) {
-            throw new Error('Casillero no encontrado.');
+        if (estado) {
+            query.estado = estado;
         }
 
-        if (casillero.perfil) {
-            throw new Error('No se puede eliminar un casillero asignado.');
-        }
-
-        await casillero.deleteOne();
+        return await CasilleroModel.find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .exec();
     }
 
-    public async asignarPerfil(casilleroId: string, perfilId: string): Promise<ICasillero> {
-        const casillero = await CasilleroModel.findById(casilleroId);
-        if (!casillero) {
-            throw new Error('Casillero no encontrado.');
+    /**
+     * Obtener un casillero por ID.
+     */
+    public async obtenerCasilleroPorId(id: string): Promise<ICasillero | null> {
+        return await CasilleroModel.findById(id).exec();
+    }
+
+    /**
+     * Eliminar un casillero.
+     */
+    public async eliminarCasillero(id: string): Promise<void> {
+        await CasilleroModel.findByIdAndDelete(id).exec();
+    }
+
+    /**
+     * Asignar un casillero a un perfil.
+     */
+    public async asignarCasillero(data: AsignarCasilleroDto): Promise<void> {
+        const { casilleroId, perfilId } = data;
+
+        const casillero = await CasilleroModel.findById(casilleroId).exec();
+        if (!casillero || casillero.estado !== 'disponible') {
+            throw new Error('El casillero no está disponible para asignación.');
         }
 
-        if (casillero.estado !== 'disponible') {
-            throw new Error('El casillero no está disponible.');
+        const perfil = await PerfilModel.findById(perfilId).exec();
+        if (!perfil) {
+            throw new Error('El perfil especificado no existe.');
         }
 
-        const perfilExiste = await PerfilModel.findById(perfilId);
-        if (!perfilExiste) {
-            throw new Error('Perfil no encontrado.');
-        }
-
-        casillero.perfil = perfilId as unknown as ObjectId;
+        casillero.perfil = new Schema.Types.ObjectId(perfilId);
         casillero.estado = 'ocupado';
-
-        return await casillero.save();
+        await casillero.save();
     }
 
-    public async liberarCasillero(casilleroId: string): Promise<ICasillero> {
-        const casillero = await CasilleroModel.findById(casilleroId);
-        if (!casillero) {
-            throw new Error('Casillero no encontrado.');
+    /**
+     * Liberar un casillero.
+     */
+    public async liberarCasillero(data: LiberarCasilleroDto): Promise<void> {
+        const { casilleroId } = data;
+
+        const casillero = await CasilleroModel.findById(casilleroId).exec();
+        if (!casillero || !casillero.perfil) {
+            throw new Error('El casillero no está asignado a ningún perfil.');
         }
 
-        if (!casillero.perfil) {
-            throw new Error('El casillero no tiene un perfil asignado.');
-        }
-
-        casillero.perfil = null as unknown as ObjectId;
+        casillero.perfil = null;
         casillero.estado = 'disponible';
-
-        return await casillero.save();
+        await casillero.save();
     }
 
-    public async actualizarEstado(casilleroId: string, estado: 'disponible' | 'ocupado' | 'reservado' | 'mantenimiento'): Promise<ICasillero> {
-        const casillero = await CasilleroModel.findById(casilleroId);
+    /**
+     * Actualizar el estado de un casillero.
+     */
+    public async actualizarEstado(data: ActualizarEstadoDto): Promise<void> {
+        const { casilleroId, estado } = data;
+
+        const casillero = await CasilleroModel.findById(casilleroId).exec();
         if (!casillero) {
-            throw new Error('Casillero no encontrado.');
+            throw new Error('El casillero especificado no existe.');
         }
 
         casillero.estado = estado;
-
-        if (estado === 'disponible') {
-            casillero.perfil = null as unknown as ObjectId;
-        }
-
-        return await casillero.save();
-    }
-
-    public async obtenerCasilleros(filtros: { estado?: string; perfilId?: string; numero?: string }): Promise<ICasillero[]> {
-        const query: Record<string, unknown> = {};
-
-        if (filtros.estado) {
-            query.estado = filtros.estado;
-        }
-
-        if (filtros.perfilId) {
-            query.perfil = new Types.ObjectId(filtros.perfilId);
-        }
-
-        if (filtros.numero) {
-            query.numero = parseInt(filtros.numero, 10);
-        }
-
-        return await CasilleroModel.find(query).exec();
+        await casillero.save();
     }
 }
 

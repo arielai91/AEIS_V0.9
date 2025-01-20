@@ -1,5 +1,5 @@
 import { Document, model, Schema } from 'mongoose';
-import solicitudSchema from './solicitudSchema';
+import solicitudSchema from '@models/Solicitud/solicitudSchema';
 
 // Define la interfaz para el documento Solicitud
 export interface ISolicitud extends Document {
@@ -8,7 +8,7 @@ export interface ISolicitud extends Document {
     plan?: Schema.Types.ObjectId;
     casillero?: Schema.Types.ObjectId;
     fechaEnvio: Date;
-    fechaAprobacion?: Date;
+    fechaAprobacion?: Date | null;
     imagen: string;
     estado: 'Aprobado' | 'Rechazado' | 'Por verificar';
 }

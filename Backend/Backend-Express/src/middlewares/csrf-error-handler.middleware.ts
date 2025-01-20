@@ -1,11 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import RedisService from '@services/redis.service';
 import logger from '@logger/logger';
 import CsrfError from '@errors/csrf-error';
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: string };
-}
+import { AuthenticatedRequest } from '@type/global';
 
 /**
  * Maneja errores relacionados con CSRF y valida el token contra Redis.

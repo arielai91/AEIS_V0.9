@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-
+import { Request } from 'express';
 export interface IPerfil {
   rol: 'Administrador' | 'Cliente';
   nombreCompleto: string;
@@ -8,7 +8,7 @@ export interface IPerfil {
   contraseña: string;
   imagen?: string;
   casilleros: Schema.Types.ObjectId[];
-  plan: Schema.Types.ObjectId;
+  plan: Schema.Types.ObjectId | null;
   solicitudes: Schema.Types.ObjectId[];
 }
 
@@ -24,7 +24,7 @@ export interface IPlan {
 export interface ICasillero {
   numero: number;
   estado: 'disponible' | 'ocupado' | 'reservado' | 'mantenimiento';
-  perfil: Schema.Types.ObjectId;
+  perfil: Schema.Types.ObjectId | null;
 }
 
 export interface ISolicitud {
@@ -33,7 +33,26 @@ export interface ISolicitud {
   plan?: Schema.Types.ObjectId;
   casillero?: Schema.Types.ObjectId;
   fechaEnvio: Date;
-  fechaAprobacion?: Date;
+  fechaAprobacion?: Date | null;
   imagen: string;
   estado: 'Aprobado' | 'Rechazado' | 'Por verificar';
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string; // Solo el ID del usuario autenticado
+  };
+}
+
+interface UserProfileRedis {
+  id: string;
+  nombreCompleto: string;
+  email: string;
+  rol: string;
+}
+
+interface AuthResult {
+  accessToken: string;
+  refreshToken: string;
+  csrfToken: string;
 }

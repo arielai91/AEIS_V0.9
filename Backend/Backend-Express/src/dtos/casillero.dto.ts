@@ -1,66 +1,79 @@
-// casillero.dtos.ts
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsEnum, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsMongoId, IsNumber, Min } from 'class-validator';
 
+/**
+ * DTO para crear un casillero
+ */
 export class CrearCasilleroDto {
     @IsNumber()
-    @IsNotEmpty()
-    public numero!: number;
-
-    @IsString()
-    @IsOptional()
-    public estado?: string;
-
-    @IsString()
-    @IsOptional()
-    public perfil?: string;
+    @Min(1, { message: 'El número del casillero debe ser mayor o igual a 1.' })
+    numero!: number;
 }
 
+/**
+ * DTO para eliminar un casillero
+ */
 export class EliminarCasilleroDto {
-    @IsString()
-    @IsNotEmpty()
-    public casilleroId!: string;
+    @IsMongoId({ message: 'El ID del casillero debe ser un ObjectId válido.' })
+    id!: string;
 }
 
-export class AsignarPerfilDto {
-    @IsString()
-    @IsNotEmpty()
-    public casilleroId!: string;
+/**
+ * DTO para asignar un casillero a un perfil
+ */
+export class AsignarCasilleroDto {
+    @IsMongoId({ message: 'El ID del casillero debe ser un ObjectId válido.' })
+    casilleroId!: string;
 
-    @IsString()
-    @IsNotEmpty()
-    public perfilId!: string;
+    @IsMongoId({ message: 'El ID del perfil debe ser un ObjectId válido.' })
+    perfilId!: string;
 }
 
+/**
+ * DTO para liberar un casillero
+ */
 export class LiberarCasilleroDto {
-    @IsString()
-    @IsNotEmpty()
-    public casilleroId!: string;
+    @IsMongoId({ message: 'El ID del casillero debe ser un ObjectId válido.' })
+    casilleroId!: string;
 }
 
+/**
+ * DTO para actualizar el estado de un casillero
+ */
 export class ActualizarEstadoDto {
-    @IsString()
-    @IsNotEmpty()
-    public casilleroId!: string;
+    @IsMongoId({ message: 'El ID del casillero debe ser un ObjectId válido.' })
+    casilleroId!: string;
 
+    @IsString()
     @IsEnum(['disponible', 'ocupado', 'reservado', 'mantenimiento'], {
-        message: 'Estado no válido.',
+        message: 'El estado debe ser uno de los siguientes: disponible, ocupado, reservado, mantenimiento.',
     })
-    public estado!: string;
+    estado!: 'disponible' | 'ocupado' | 'reservado' | 'mantenimiento';
 }
 
-export class ObtenerCasillerosQueryDto {
-    @IsEnum(['disponible', 'ocupado', 'reservado', 'mantenimiento'], {
-        message: 'Estado no válido.',
-    })
-    @IsOptional()
-    public estado?: string;
-
+/**
+ * DTO para filtrar casilleros
+ */
+export class FiltroCasillerosQueryDto {
     @IsString()
-    @IsOptional()
-    public perfilId?: string;
+    @IsEnum(['disponible', 'ocupado', 'reservado', 'mantenimiento'], {
+        message: 'El estado debe ser uno de los siguientes: disponible, ocupado, reservado, mantenimiento.',
+    })
+    estado?: string;
 
     @IsNumber()
-    @Min(1, { message: 'El número del casillero debe ser positivo.' })
-    @IsOptional()
-    public numero?: number;
+    @Min(1, { message: 'La página debe ser mayor o igual a 1.' })
+    page?: number;
+
+    @IsNumber()
+    @Min(1, { message: 'El límite debe ser mayor o igual a 1.' })
+    limit?: number;
+}
+
+/**
+ * DTO para validar el CSRF token
+ */
+export class CsrfTokenDto {
+    @IsString()
+    @IsNotEmpty({ message: 'El token CSRF es obligatorio.' })
+    'x-csrf-token'!: string;
 }

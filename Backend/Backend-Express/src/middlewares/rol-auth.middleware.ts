@@ -1,16 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import RedisService from '@services/redis.service';
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: string };
-}
-
-interface UserProfile {
-    id: string;
-    nombreCompleto: string;
-    email: string;
-    rol: string;
-}
+import { AuthenticatedRequest, UserProfileRedis } from '@type/global';
 
 /**
  * Middleware para validar roles basados en Redis.
@@ -31,7 +21,7 @@ const validateRole = (allowedRoles: string[]) => {
                 return;
             }
 
-            const userProfile: UserProfile = JSON.parse(userProfileData.profile);
+            const userProfile: UserProfileRedis = JSON.parse(userProfileData.profile);
             userProfile.rol = userProfileData.rol;
 
             if (!allowedRoles.includes(userProfile.rol)) {

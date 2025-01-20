@@ -1,11 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import RedisService from '@services/redis.service';
 import AuthenticationError from '@errors/AuthenticationError';
 import logger from '@logger/logger';
+import { AuthenticatedRequest } from '@type/global';
 
-interface AuthenticatedRequest extends Request {
-    user?: { id: string };
-}
 
 const validateCsrfToken = async (req: AuthenticatedRequest, _res: Response, next: NextFunction) => {
     try {
