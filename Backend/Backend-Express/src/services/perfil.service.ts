@@ -1,0 +1,93 @@
+import PerfilModel from '@models/Perfil/Perfil';
+import CasilleroModel from '@models/Casillero/Casillero';
+import SolicitudModel from '@models/Solicitud/Solicitud';
+import { CrearPerfilDto, ActualizarPerfilDto, SolicitudesQueryDto } from '@dtos/perfil.dto';
+import { IPerfil, ICasillero, ISolicitud } from '@type/global';
+import { FilterQuery } from 'mongoose';
+
+class PerfilService {
+    /**
+     * Crear un nuevo perfil.
+     */
+    public async crearPerfil(data: CrearPerfilDto): Promise<IPerfil> {
+        const nuevoPerfil = new PerfilModel(data);
+        return await nuevoPerfil.save();
+    }
+
+    /**
+     * Obtener un perfil por ID.
+     */
+    public async obtenerPerfilPorId(id: string): Promise<IPerfil | null> {
+        return await PerfilModel.findById(id).populate('casilleros plan solicitudes').exec();
+    }
+
+    /**
+     * Actualizar un perfil.
+     */
+    public async actualizarPerfil(id: string, data: ActualizarPerfilDto): Promise<IPerfil | null> {
+        return await PerfilModel.findByIdAndUpdate(id, data, { new: true, runValidators: true }).exec();
+    }
+
+    /**
+     * Eliminar un perfil.
+     */
+    public async eliminarPerfil(id: string): Promise<void> {
+        // Eliminar casilleros asociados
+        await CasilleroModel.updateMany({ perfil: id }, { perfil: null, estado: 'disponible' }).exec();
+
+        // Eliminar solicitudes asociadas
+        await SolicitudModel.deleteMany({ perfil: id }).exec();
+
+        // Eliminar el perfil
+        await PerfilModel.findByIdAndDelete(id).exec();
+    }
+
+    /**
+     * Obtener los casilleros asociados a un perfil.
+     */
+    public async obtenerCasillerosAsociados(id: string): Promise<ICasillero[]> {
+        return await CasilleroModel.find({ perfil: id }).exec();
+    }
+
+    /**
+     * Obtener las solicitudes asociadas a un perfil.
+     */
+    public async obtenerSolicitudesAsociadas(id: string, query: SolicitudesQueryDto): Promise<ISolicitud[]> {
+        const { estado, page = 1, limit = 10 } = query;
+
+        const pageNumber = parseInt(page as unknown as string, 10);
+        const limitNumber = parseInt(limit as unknown as string, 10);
+
+        const filtro: FilterQuery<ISolicitud> = { perfil: id };
+        if (estado) filtro.estado = estado;
+
+        return await SolicitudModel.find(filtro)
+            .skip((pageNumber - 1) * limitNumber)
+            .limit(limitNumber)
+            .exec();
+    }
+
+    /**
+     * Subir imagen de perfil.
+     * Aquí podrías integrar un servicio de almacenamiento como S3.
+     */
+    public async subirImagenPerfil(id: string, imagePath: string): Promise<void> {
+        await PerfilModel.findByIdAndUpdate(id, { imagen: imagePath }).exec();
+    }
+
+    /**
+     * Actualizar imagen de perfil.
+     */
+    public async actualizarImagenPerfil(id: string, newImagePath: string): Promise<void> {
+        await PerfilModel.findByIdAndUpdate(id, { imagen: newImagePath }).exec();
+    }
+
+    /**
+     * Eliminar imagen de perfil.
+     */
+    public async eliminarImagenPerfil(id: string): Promise<void> {
+        await PerfilModel.findByIdAndUpdate(id, { imagen: null }).exec();
+    }
+}
+
+export default new PerfilService();
