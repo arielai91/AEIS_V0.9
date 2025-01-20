@@ -14,6 +14,8 @@ class Config:
         'MAIL_USE_SSL', 'false').lower() in ['true', 'on', '1']
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MONGO_URI = os.getenv('MONGO_URI',
+        'mongodb://localhost:27017/test')
     SCHEDULER_API_ENABLED = os.getenv(
         'SCHEDULER_API_ENABLED', 'true').lower() in ['true', 'on', '1']
     DEBUG = os.getenv(

@@ -4,4 +4,4 @@ from .email_service import (
     clean_expired_code
 )
 
-__all__ = ['send_verification_email', 'verify_code', 'clean_expired_code']
+__all__ = ['send_verification_email', 'verify_code', 'clean_expired_code', 'update_password']

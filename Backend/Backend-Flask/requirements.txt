@@ -12,3 +12,5 @@ psycopg2-binary==2.9.10  # Controlador para conectar aplicaciones Python con bas
 email-validator==2.2.0  # Biblioteca para validar direcciones de correo electrónico
 pyflakes==3.2.0  # Herramienta para detectar errores en el código Python (parte de Flake8)
 pycodestyle==2.12.1  # Herramienta para verificar que el código Python cumpla con PEP 8 (parte de Flake8)
+Flask-Bcrypt==1.0.1  # Extensión para manejar el hashing de contraseñas en Flask
+Flask-PyMongo==2.3.0  # Extensión para integrar MongoDB con Flask

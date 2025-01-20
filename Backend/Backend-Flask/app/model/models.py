@@ -1,6 +1,12 @@
 from datetime import datetime, timezone  # Importa la clase datetime
 from app.extensions import db  # Importa la extensión db
 
+class Perfil(db.Model):
+    """Modelo de perfil."""
+    __tablename__ = 'perfiles'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
 
 class VerificationCode(db.Model):
     """Modelo de código de verificación."""

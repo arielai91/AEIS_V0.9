@@ -49,3 +49,14 @@ def verify_code_route():
         logger.error(f"Error al verificar el código: {e}")
         return jsonify({
             'error': 'Ocurrió un error al verificar el código'}), 400
+
+
+# Endpoint para solicitar el cambio de contraseña
+@email_routes.route('/request-password-reset', methods=['POST'])
+def request_password_reset():
+    email = request.json.get('email')
+    if not email:
+        return jsonify({'message': 'Email is required'}), 400
+
+    send_verification_email(email)
+    return jsonify({'message': 'Verification email sent'}), 200
