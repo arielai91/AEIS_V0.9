@@ -2,8 +2,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app.services import clean_expired_code
 
 
-def start_scheduler():
+def start_scheduler(app):
     """clean_expired_code cada 10 minutos."""
     scheduler = BackgroundScheduler()
-    scheduler.add_job(clean_expired_code, 'interval', minutes=10)
+    scheduler.add_job(lambda: clean_expired_code(app), 'interval', seconds=30)
     scheduler.start()
