@@ -27,6 +27,9 @@ updates:
       - dependency-name: "@angular/compiler-cli"
         versions:
           - ">=17.0.0"
+      - dependency-name: "@angular-eslint/builder"
+        versions:
+          - ">=17.0.0"
       - dependency-name: "@angular-eslint/eslint-plugin"
         versions:
           - ">=17.0.0"
@@ -34,6 +37,9 @@ updates:
         versions:
           - ">=17.0.0"
       - dependency-name: "@angular-eslint/schematics"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular-eslint/template-parser"
         versions:
           - ">=17.0.0"
       - dependency-name: "@typescript-eslint/eslint-plugin"
@@ -44,7 +50,7 @@ updates:
           - ">=6.0.0"
       - dependency-name: "@types/jasmine"
         versions:
-          - ">=6.0.0"
+          - ">=5.0.0"
       - dependency-name: "@types/node"
         versions:
           - ">=19.0.0"
@@ -53,10 +59,10 @@ updates:
           - ">=15.0.0"
       - dependency-name: "eslint"
         versions:
-          - ">=10.0.0"
+          - ">=9.0.0"
       - dependency-name: "jasmine-core"
         versions:
-          - ">=6.0.0"
+          - ">=5.0.0"
       - dependency-name: "karma"
         versions:
           - ">=7.0.0"
@@ -87,6 +93,15 @@ updates:
       - dependency-name: "sass"
         versions:
           - ">=2.0.0"
+      - dependency-name: "http-server"
+        versions:
+          - ">=15.0.0"
+      - dependency-name: "prettier"
+        versions:
+          - ">=4.0.0"
+      - dependency-name: "webpack-bundle-analyzer"
+        versions:
+          - ">=5.0.0"
 
   # Configuración para el backend en Express
   - package-ecosystem: "npm"
