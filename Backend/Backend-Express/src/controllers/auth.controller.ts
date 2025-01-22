@@ -17,10 +17,21 @@ class AuthController {
                 maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
-            res.status(200).json({
-                refreshToken: result.refreshToken,
-                csrfToken: result.csrfToken,
+            res.cookie('refreshToken', result.refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
             });
+
+            res.cookie('csrfToken', result.csrfToken, {
+                httpOnly: false,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 15 * 60 * 1000, // 15 minutos
+            });
+
+            res.status(200).json({ message: 'Inicio de sesión exitoso' });
         } catch (err) {
             logger.error('Error en login:', err as Error);
             res.status(401).json({ message: 'Credenciales inválidas' });
@@ -30,7 +41,7 @@ class AuthController {
     public async refresh(req: Request, res: Response): Promise<void> {
         try {
             const token = req.cookies.token;
-            const { refreshToken } = req.body;
+            const refreshToken = req.cookies.refreshToken;
             if (!token || !refreshToken) {
                 res.status(400).json({ message: 'Falta el token o el refreshToken' });
                 return;
@@ -49,7 +60,21 @@ class AuthController {
                 maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
-            res.status(200).json({ csrfToken: result.csrfToken, refreshToken: result.refreshToken, accessToken: result.accessToken });
+            res.cookie('refreshToken', result.refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+            });
+
+            res.cookie('csrfToken', result.csrfToken, {
+                httpOnly: false,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 15 * 60 * 1000, // 15 minutos
+            });
+
+            res.status(200).json({ message: 'Tokens renovados con éxito' });
         } catch (err) {
             logger.error('Error en refresh:', err as Error);
             res.status(403).json({ message: 'Error al renovar tokens' });
@@ -69,6 +94,8 @@ class AuthController {
             await AuthService.logout(userId, token);
 
             res.clearCookie('token');
+            res.clearCookie('refreshToken');
+            res.clearCookie('csrfToken');
             res.status(200).json({ message: 'Sesión cerrada exitosamente' });
         } catch (err) {
             logger.error('Error en logout:', err as Error);

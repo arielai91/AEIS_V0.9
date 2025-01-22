@@ -121,7 +121,7 @@ class ServerConfig {
     private configureSecurityMiddlewares(): void {
         this.app.use(configureHelmet()); // Configuración de encabezados de seguridad
         this.app.use(xss());             // Protección contra ataques XSS
-        this.app.use(mongoSanitize());   // Protección contra inyecciones de MongoDB
+        this.app.use(mongoSanitize({ replaceWith: '_' }));   // Protección contra inyecciones de MongoDB
     }
 
     private loadPerformanceMiddlewares(): void {

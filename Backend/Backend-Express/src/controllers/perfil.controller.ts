@@ -8,6 +8,7 @@ class PerfilController {
   public async crearPerfil(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const data: CrearPerfilDto = req.body;
+      data.rol = 'Cliente';
       const perfil = await PerfilService.crearPerfil(data);
       logger.info('Perfil creado exitosamente.');
       res.status(201).json({ message: 'Perfil creado exitosamente.', perfil });
@@ -77,6 +78,7 @@ class PerfilController {
   public async crearPerfilAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const data: CrearPerfilDto = req.body;
+      data.rol = 'Administrador';
       const perfil = await PerfilService.crearPerfil(data);
       logger.info('Perfil creado exitosamente por el administrador.');
       res.status(201).json({ message: 'Perfil creado exitosamente por el administrador.', perfil });

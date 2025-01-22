@@ -1,6 +1,8 @@
+import bcrypt from 'bcrypt';
 import PerfilModel from '@models/Perfil/Perfil';
 import CasilleroModel from '@models/Casillero/Casillero';
 import SolicitudModel from '@models/Solicitud/Solicitud';
+import PlanModel from '@models/Plan/Plan';
 import { CrearPerfilDto, ActualizarPerfilDto, SolicitudesQueryDto } from '@dtos/perfil.dto';
 import { IPerfil, ICasillero, ISolicitud } from '@type/global';
 import { FilterQuery } from 'mongoose';
@@ -10,6 +12,18 @@ class PerfilService {
      * Crear un nuevo perfil.
      */
     public async crearPerfil(data: CrearPerfilDto): Promise<IPerfil> {
+        if (!data.plan) {
+            const planPorDefecto = await PlanModel.findOne({ esPorDefecto: true });
+            if (planPorDefecto) {
+                data.plan = planPorDefecto._id as string;
+            } else {
+                throw new Error('No se encontró un plan por defecto.');
+            }
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        data.contraseña = await bcrypt.hash(data.contraseña, salt);
+
         const nuevoPerfil = new PerfilModel(data);
         return await nuevoPerfil.save();
     }
