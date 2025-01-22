@@ -1,4 +1,4 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
 /dist
@@ -13,7 +13,7 @@ yarn-error.log
 
 # IDEs and editors
 .idea/
-.project
+/.project
 .classpath
 .c9/
 *.launch
@@ -30,6 +30,7 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+/.angular/universal
 .sass-cache/
 /connect.lock
 /coverage
@@ -37,6 +38,22 @@ yarn-error.log
 testem.log
 /typings
 
-# System files
+# Cypress
+/cypress/videos
+/cypress/screenshots
+
+# Tailwind CSS
+/tailwind.css
+/tailwind-output.css
+
+# Logs y configuración local
+*.log
+*.lock
+/.eslintcache
+
+# Archivos del sistema
 .DS_Store
 Thumbs.db
+*.swp
+*.tmp
+*.temp

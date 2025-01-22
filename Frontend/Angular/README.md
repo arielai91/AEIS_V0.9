@@ -1,80 +1,27 @@
-# Frontend-Angular
+# Angular
 
-Esta carpeta contiene el código del frontend desarrollado con **Angular**. Su propósito es proporcionar una interfaz de usuario moderna, interactiva y altamente personalizable.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
 
-## Estructura del Proyecto
+## Development server
 
-La estructura del proyecto está organizada de la siguiente manera:
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-```
-Frontend-Angular/
-├── .angular/              # Archivos temporales generados por Angular CLI
-├── .vscode/               # Configuración del entorno de desarrollo para Visual Studio Code
-├── node_modules/          # Módulos instalados de Node.js
-├── public/                # Archivos públicos como imágenes o assets
-├── src/                   # Código fuente principal de la aplicación Angular
-├── .editorconfig          # Configuración de estilo de código
-├── .gitignore             # Archivos y carpetas ignorados por Git
-├── angular.json           # Configuración global del proyecto Angular
-├── package.json           # Dependencias y scripts del proyecto
-├── package-lock.json      # Versión fija de las dependencias
-├── postcss.config.js      # Configuración de PostCSS para estilos
-├── tailwind.config.js     # Configuración de Tailwind CSS
-├── tsconfig.app.json      # Configuración de TypeScript para la aplicación
-├── tsconfig.json          # Configuración global de TypeScript
-├── tsconfig.spec.json     # Configuración de TypeScript para pruebas
-├── README.md              # Documentación del proyecto
-```
+## Code scaffolding
 
-## Características Principales
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-- **Angular CLI**: Utilizado para la gestión y configuración del proyecto.
-- **Tailwind CSS**: Framework de utilidades para diseñar interfaces de usuario rápidas y personalizables.
-- **PostCSS**: Procesamiento avanzado de estilos CSS.
-- **Modularidad**: Código organizado en módulos y componentes reutilizables.
-- **Soporte para Pruebas**: Configuración lista para pruebas unitarias y de integración.
+## Build
 
-## Configuración
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-### 1. Requisitos Previos
+## Running unit tests
 
-Asegúrate de tener instalados:
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-- **Node.js** (versión 14 o superior)
-- **Angular CLI** (versión 13 o superior)
+## Running end-to-end tests
 
-### 2. Instalación de Dependencias
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-Ejecuta el siguiente comando en la raíz del proyecto para instalar las dependencias necesarias:
+## Further help
 
-```bash
-npm install
-```
-
-### 3. Iniciar el Servidor de Desarrollo
-
-Ejecuta el servidor de desarrollo utilizando el siguiente comando:
-
-```bash
-npm start
-```
-
-Por defecto, el servidor estará disponible en: `http://localhost:4200`.
-
-### 4. Generar una Construcción para Producción
-
-Para generar una versión optimizada del proyecto, ejecuta:
-
-```bash
-npm build
-```
-
-El resultado se generará en la carpeta `dist/`.
-
-## Estructura Principal de la Carpeta `src`
-
-- `src/app/`: Contiene los módulos y componentes principales de la aplicación.
-
-## Configuración de Estilos
-
-Este proyecto utiliza **Tailwind CSS** para el diseño. La configuración se encuentra en el archivo `tailwind.config.js` y se complementa con `postcss.config.js` para un procesamiento avanzado de estilos.
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

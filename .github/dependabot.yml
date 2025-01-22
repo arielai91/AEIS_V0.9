@@ -6,9 +6,102 @@ updates:
     schedule:
       interval: "weekly" # Verificar actualizaciones semanalmente
     ignore:
-      - dependency-name: "@angular/*" # Opcional: Ignorar dependencias específicas
+      - dependency-name: "@angular/*" # Ignorar actualizaciones mayores a la versión 16
         versions:
-          - "<12.0.0" # Ejemplo: Ignorar actualizaciones mayores
+          - ">=17.0.0"
+      - dependency-name: "rxjs"
+        versions:
+          - ">=8.0.0"
+      - dependency-name: "tslib"
+        versions:
+          - ">=3.0.0"
+      - dependency-name: "zone.js"
+        versions:
+          - ">=0.14.0"
+      - dependency-name: "@angular-devkit/build-angular"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular/cli"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular/compiler-cli"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular-eslint/builder"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular-eslint/eslint-plugin"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular-eslint/eslint-plugin-template"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular-eslint/schematics"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@angular-eslint/template-parser"
+        versions:
+          - ">=17.0.0"
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+        versions:
+          - ">=6.0.0"
+      - dependency-name: "@typescript-eslint/parser"
+        versions:
+          - ">=6.0.0"
+      - dependency-name: "@types/jasmine"
+        versions:
+          - ">=5.0.0"
+      - dependency-name: "@types/node"
+        versions:
+          - ">=19.0.0"
+      - dependency-name: "cypress"
+        versions:
+          - ">=15.0.0"
+      - dependency-name: "eslint"
+        versions:
+          - ">=9.0.0"
+      - dependency-name: "jasmine-core"
+        versions:
+          - ">=5.0.0"
+      - dependency-name: "karma"
+        versions:
+          - ">=7.0.0"
+      - dependency-name: "karma-chrome-launcher"
+        versions:
+          - ">=4.0.0"
+      - dependency-name: "karma-coverage"
+        versions:
+          - ">=3.0.0"
+      - dependency-name: "karma-jasmine"
+        versions:
+          - ">=6.0.0"
+      - dependency-name: "karma-jasmine-html-reporter"
+        versions:
+          - ">=3.0.0"
+      - dependency-name: "postcss"
+        versions:
+          - ">=9.0.0"
+      - dependency-name: "tailwindcss"
+        versions:
+          - ">=4.0.0"
+      - dependency-name: "typescript"
+        versions:
+          - ">=6.0.0"
+      - dependency-name: "autoprefixer"
+        versions:
+          - ">=11.0.0"
+      - dependency-name: "sass"
+        versions:
+          - ">=2.0.0"
+      - dependency-name: "http-server"
+        versions:
+          - ">=15.0.0"
+      - dependency-name: "prettier"
+        versions:
+          - ">=4.0.0"
+      - dependency-name: "webpack-bundle-analyzer"
+        versions:
+          - ">=5.0.0"
 
   # Configuración para el backend en Express
   - package-ecosystem: "npm"
