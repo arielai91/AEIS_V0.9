@@ -48,7 +48,7 @@ const validateRequest = <T extends object>(
       // Validar los datos transformados
       const errors: ValidationError[] = await validate(dto, {
         whitelist: true,
-        forbidNonWhitelisted: true,
+        forbidNonWhitelisted: source !== 'headers', // No rechazar encabezados adicionales
       });
 
       // Si hay errores de validación, devolver una respuesta con los detalles

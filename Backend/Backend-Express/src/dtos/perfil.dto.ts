@@ -1,12 +1,12 @@
-import { IsString, IsEmail, IsNotEmpty, Matches, IsOptional, IsEnum, IsMongoId } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, Matches, IsOptional, IsEnum, IsMongoId, Length } from 'class-validator';
 
 /**
  * DTO para crear un perfil
  */
 export class CrearPerfilDto {
   @IsEnum(['Administrador', 'Cliente'], { message: 'El rol debe ser Administrador o Cliente.' })
-  @IsNotEmpty()
-  rol!: 'Administrador' | 'Cliente';
+  @IsOptional()
+  rol?: 'Administrador' | 'Cliente';
 
   @IsString()
   @IsNotEmpty()
@@ -23,7 +23,12 @@ export class CrearPerfilDto {
 
   @IsString()
   @IsNotEmpty()
+  @Length(8, undefined, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   contraseña!: string;
+
+  @IsMongoId({ message: 'El ID del plan debe ser un ObjectId válido.' })
+  @IsOptional()
+  plan?: string;
 }
 
 /**
@@ -83,7 +88,7 @@ export class SolicitudesQueryDto {
  * DTO para validar el CSRF Token en los headers
  */
 export class CsrfTokenDto {
-  @IsString()
+  @IsString({ message: 'El token CSRF debe ser una cadena de texto.' })
   @IsNotEmpty()
   'x-csrf-token'!: string;
 }

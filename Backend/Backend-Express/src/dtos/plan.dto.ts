@@ -24,7 +24,7 @@ export class CrearPlanDto {
     beneficios?: string[];
 
     @IsOptional()
-    @IsNumber()
+    @IsBoolean()
     esPorDefecto?: boolean;
 }
 

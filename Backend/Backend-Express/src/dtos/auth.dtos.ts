@@ -37,23 +37,3 @@ export class LoginDto {
     @IsNotEmpty()
     contraseña!: string;
 }
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     RefreshDto:
- *       type: object
- *       properties:
- *         refreshToken:
- *           type: string
- *           description: Refresh Token para renovar el Access Token.
- *           example: abcdefghijklmnopqrstuvwxyz
- *       required:
- *         - refreshToken
- */
-export class RefreshDto {
-    @IsString()
-    @IsNotEmpty()
-    refreshToken!: string;
-}
