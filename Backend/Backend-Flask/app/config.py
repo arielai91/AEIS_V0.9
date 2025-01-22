@@ -20,6 +20,8 @@ class Config:
         'MAIL_USE_SSL') or 'false').lower() in ['true', 'on', '1']
     MAIL_USERNAME = os.getenv('MAIL_USERNAME') or None
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD') or None
+    MAIL_DEFAULT_SENDER = os.getenv(
+        'MAIL_DEFAULT_SENDER') or 'tu_correo@gmail.com'
 
     # Configuración de entorno
     FLASK_ENV = os.getenv('FLASK_ENV', 'development')

@@ -1,4 +1,5 @@
 import secrets   # Importa el módulo secrets
+import string
 # Importa las clases datetime y timedelta
 from datetime import datetime, timedelta, timezone
 from flask_mail import Message  # Importa la clase Message
@@ -8,6 +9,9 @@ from app.model.models import VerificationCode
 # Importa la función validate_email_address
 from app.utils import validate_email_address
 
+def generate_verification_code(length=6):
+    alphabet = string.ascii_uppercase + string.digits
+    return ''.join(secrets.choice(alphabet) for _ in range(length))
 
 def send_verification_email(email):
     """Genera un código de verificación único y
@@ -17,10 +21,17 @@ def send_verification_email(email):
         # Lanza una excepción si no es valido
         raise ValueError('Dirección de correo electrónico no válida')
     # Genera un código de verificación único
-    verification_code = secrets.token_urlsafe(16)
+    verification_code = generate_verification_code()
     # Calcula la fecha de expiración
     expiration = datetime.now(timezone.utc) + timedelta(minutes=5)
     # Crea una entrada en la base de datos
+
+    # Busca un código de verificación existente
+    existing_code = VerificationCode.query.filter_by(email=email).first()
+    if existing_code:
+        db.session.delete(existing_code)
+        db.session.commit()
+
     code_entry = VerificationCode(
         email=email,
         code=verification_code,
@@ -53,6 +64,9 @@ def verify_code(email, code):
     code_entry = VerificationCode.query.filter_by(
         email=email,
         code=code).first()
+    
+    print(code_entry.is_expired())
+
     if code_entry and not code_entry.is_expired():
         db.session.delete(code_entry)
         db.session.commit()

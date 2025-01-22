@@ -8,14 +8,17 @@ class VerificationCode(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Columna de id
     # Columna de email
     email = db.Column(db.String(255), nullable=False, unique=True)
-    code = db.Column(db.String(16), nullable=False)  # Columna de código
+    code = db.Column(db.String(6), nullable=False)  # Columna de código
     expiration = db.Column(
         db.DateTime,
         nullable=False)  # Columna de fecha de expiración
 
     def is_expired(self):
         """Comprueba si el código de verificación ha expirado."""
-        return datetime.now(timezone.utc) > self.expiration
+        current_time = datetime.now(timezone.utc)
+        print(f"Current time: {current_time}, Expiration time: {self.expiration}")
+        print(f"Is expired: {current_time > self.expiration}")
+        return current_time > self.expiration
 
     def __repr__(self):
         return f'<VerificationCode {self.email}>'

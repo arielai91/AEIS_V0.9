@@ -22,7 +22,7 @@ def configure_app(app):
 
 # Inicialización de extensiones
 def initialize_extensions(app):
-    csrf.init_app(app)  # Protege la aplicación contra CSRF
+    #csrf.init_app(app)  # Protege la aplicación contra CSRF
     mail.init_app(app)  # Inicializa la extensión de envío de correos
     db.init_app(app)  # Inicializa la extensión de base de datos
     bcrypt.init_app(app)  # Inicializa la extensión de encriptación
