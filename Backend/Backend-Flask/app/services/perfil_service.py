@@ -22,7 +22,7 @@ def update_password(email, code, new_password):
     # Actualizar la contraseña en MongoDB
     result = mongo.db.perfiles.update_one(
         {"email": email},  # Filtro
-        {"$set": {"password": hashed_password}}  # Actualización
+        {"$set": {"contraseña": hashed_password}}  # Actualización
     )
 
     if result.matched_count == 0:

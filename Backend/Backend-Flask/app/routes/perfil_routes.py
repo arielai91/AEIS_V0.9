@@ -10,7 +10,7 @@ def update_password_route():
     # Obtener datos de la solicitud
     email = request.json.get('email')
     code = request.json.get('code')
-    new_password = request.json.get('new_password')
+    new_password = request.json.get('contraseña')
 
     # Validar datos
     if not email or not code or not new_password:

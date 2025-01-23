@@ -5,7 +5,7 @@ email_routes = Blueprint('email_routes', __name__)
 
 
 # Define la ruta /send_verification_email
-@email_routes.route('/send_verification_email', methods=['POST'])
+@email_routes.route('/register', methods=['POST'])
 def send_verification_email_route():
     data = request.get_json()
     email = data.get('email')
@@ -14,7 +14,7 @@ def send_verification_email_route():
         return jsonify({'message': 'Email is required'}), 400
 
     try:
-        send_verification_email(email)
+        send_verification_email(email, "register")
         return jsonify({
             'message': 'Correo de verificación enviado correctamente'})
     except ValueError:
@@ -44,7 +44,7 @@ def verify_code_route():
 
 
 # Endpoint para solicitar el cambio de contraseña
-@email_routes.route('/request-password-reset', methods=['POST'])
+@email_routes.route('/reset_password', methods=['POST'])
 def request_password_reset():
     email = request.json.get('email')
 
@@ -52,7 +52,7 @@ def request_password_reset():
         return jsonify({'message': 'Email is required'}), 400
 
     try:
-        send_verification_email(email)
-        return jsonify({'message': 'Verification email sent'}), 200
+        send_verification_email(email, "reset_password")
+        return jsonify({'message': 'Correo de cambio de se contraseña enviado correctamente'}), 200
     except Exception:
         return jsonify({'message': 'Failed to send verification email'}), 500
