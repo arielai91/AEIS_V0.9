@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   redis-stack:
     image: redis/redis-stack:latest
@@ -8,7 +7,7 @@ services:
       - "8001:8001" # Puerto para RedisInsight (interfaz gráfica)
     volumes:
       - redis-data:/data # Volumen para datos persistentes
-    restart: "on-failure" # Reinicia si el contenedor falla
+    restart: "on-failure"
 
   postgres:
     image: postgres:latest
@@ -21,7 +20,7 @@ services:
       - "5432:5432" # Puerto para PostgreSQL
     volumes:
       - postgres-data:/var/lib/postgresql/data # Volumen para persistencia
-    restart: "on-failure" # Reinicia si el contenedor falla
+    restart: "on-failure"
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -35,9 +34,49 @@ services:
       - postgres # Espera a que PostgreSQL esté disponible
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-    restart: "on-failure" # Reinicia si el contenedor falla
+    restart: "on-failure"
+
+  # backend-flask:
+  #   build:
+  #     context: ../Backend/Backend-Flask
+  #   container_name: backend-flask-container
+  #   ports:
+  #     - "5000:5000" # Puerto interno y externo para Flask
+  #   volumes:
+  #     - ../Backend/Backend-Flask:/app
+  #   env_file:
+  #     - ../Backend/Backend-Flask/.env # Archivo .env de Flask
+  #   working_dir: /app
+  #   command: python run.py
+  #   restart: "on-failure"
+
+  # backend-express:
+  #   build:
+  #     context: ../Backend/Backend-Express
+  #   container_name: backend-express-container
+  #   ports:
+  #     - "3000:3000" # Puerto interno y externo para Express
+  #   volumes:
+  #     - ../Backend/Backend-Express:/app
+  #   env_file:
+  #     - ../Backend/Backend-Express/.env # Archivo .env de Express
+  #   working_dir: /app
+  #   command: npm run dev
+  #   restart: "on-failure"
+
+  # frontend:
+  #   build:
+  #     context: ../Frontend
+  #   container_name: frontend-container
+  #   ports:
+  #     - "5500:5500" # Puerto interno y externo para Frontend
+  #   volumes:
+  #     - ../Frontend:/app
+  #   working_dir: /app
+  #   command: npm start
+  #   restart: "on-failure"
 
 volumes:
-  redis-data: # Volumen para Redis
-  postgres-data: # Volumen para PostgreSQL
-  pgadmin-data: # Volumen para pgAdmin
+  redis-data:
+  postgres-data:
+  pgadmin-data:

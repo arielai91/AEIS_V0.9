@@ -1,0 +1,22 @@
+# Ignorar el entorno virtual de Python
+venv/
+
+# Archivos y carpetas relacionados con Git
+.git/
+.gitignore
+
+# Archivos de configuración de entornos
+.env
+.env.example
+
+# Archivos de caché y compilación de Python
+*.pyc
+*.pyo
+__pycache__/
+
+# Archivos de log
+*.log
+
+# Archivos específicos de sistemas operativos
+.DS_Store
+Thumbs.db
