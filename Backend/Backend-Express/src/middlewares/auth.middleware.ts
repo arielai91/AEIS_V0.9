@@ -14,7 +14,7 @@ const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: N
 
         if (!token) {
             logger.warn('No autorizado: token faltante.');
-            res.status(401).json({ message: 'No autorizado: token faltante.' });
+            res.status(401).json({ success: false, message: 'No autorizado: token faltante.' });
             return;
         }
 
@@ -25,7 +25,7 @@ const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: N
         const userId = decoded.userId as string;
         if (!userId) {
             logger.warn('No autorizado: ID de usuario faltante en el token.');
-            res.status(403).json({ message: 'No autorizado: ID de usuario faltante en el token.' });
+            res.status(403).json({ success: false, message: 'No autorizado: ID de usuario faltante en el token.' });
             return;
         }
         req.user = { id: userId };
@@ -34,14 +34,14 @@ const authenticateJWT = async (req: AuthenticatedRequest, res: Response, next: N
         const isBlacklisted = await RedisService.getKey(`blacklist:${token}`);
         if (isBlacklisted) {
             logger.warn(`No autorizado: token inválido o expirado. Token: ${token}`);
-            res.status(403).json({ message: 'No autorizado: token inválido o expirado.' });
+            res.status(403).json({ success: false, message: 'No autorizado: token inválido o expirado.' });
             return;
         }
 
         next(); // Pasar al siguiente middleware o controlador
     } catch (err) {
         logger.error('No autorizado: token inválido o expirado.', err as Error);
-        res.status(403).json({ message: 'No autorizado: token inválido o expirado.' });
+        res.status(403).json({ success: false, message: 'No autorizado: token inválido o expirado.' });
     }
 };
 

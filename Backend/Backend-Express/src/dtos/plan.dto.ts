@@ -4,27 +4,27 @@ import { IsString, IsNotEmpty, IsEnum, IsNumber, IsMongoId, Min, IsOptional, IsB
  * DTO para crear un plan
  */
 export class CrearPlanDto {
-    @IsString()
+    @IsString({ message: 'El nombre del plan debe ser una cadena de texto.' })
     @IsNotEmpty({ message: 'El nombre del plan es obligatorio.' })
     @IsEnum(['Sin Plan', 'Pantera Junior', 'Pantera Senior'], {
         message: 'El nombre debe ser uno de los siguientes: Sin Plan, Pantera Junior, Pantera Senior.',
     })
     nombre!: string;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'El precio debe ser un número.' })
     @Min(0, { message: 'El precio debe ser mayor o igual a 0.' })
     precio!: number;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'La duración debe ser un número.' })
     @Min(1, { message: 'La duración debe ser al menos 1 mes.' })
     duracion!: number;
 
-    @IsString({ each: true })
+    @IsString({ each: true, message: 'Cada beneficio debe ser una cadena de texto.' })
     @IsOptional()
     beneficios?: string[];
 
     @IsOptional()
-    @IsBoolean()
+    @IsBoolean({ message: 'El valor debe ser verdadero o falso.' })
     esPorDefecto?: boolean;
 }
 
@@ -32,21 +32,21 @@ export class CrearPlanDto {
  * DTO para obtener planes con filtros
  */
 export class PlanesQueryDto {
-    @IsString()
+    @IsString({ message: 'El nombre del plan debe ser una cadena de texto.' })
     @IsOptional()
     @IsEnum(['Sin Plan', 'Pantera Junior', 'Pantera Senior'], {
         message: 'El nombre del plan debe ser válido.',
     })
     nombre?: string;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'El precio mínimo debe ser un número.' })
     @IsOptional()
-    @Min(0)
+    @Min(0, { message: 'El precio mínimo debe ser mayor o igual a 0.' })
     precioMin?: number;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'El precio máximo debe ser un número.' })
     @IsOptional()
-    @Min(0)
+    @Min(0, { message: 'El precio máximo debe ser mayor o igual a 0.' })
     precioMax?: number;
 }
 
@@ -54,21 +54,21 @@ export class PlanesQueryDto {
  * DTO para actualizar un plan
  */
 export class ActualizarPlanDto {
-    @IsString()
+    @IsString({ message: 'El nombre del plan debe ser una cadena de texto.' })
     @IsOptional()
     nombre?: string;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'El precio debe ser un número.' })
     @IsOptional()
     precio?: number;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'La duración debe ser un número.' })
     @IsOptional()
     duracion?: number;
 
     @IsOptional()
-    @IsBoolean()
-    esPorDefecto?: boolean; // Agregar esta línea
+    @IsBoolean({ message: 'El valor debe ser verdadero o falso.' })
+    esPorDefecto?: boolean;
 }
 
 /**
@@ -105,7 +105,7 @@ export class EliminarUsuarioDto {
  * DTO para el token CSRF
  */
 export class CsrfTokenDto {
-    @IsString()
+    @IsString({ message: 'El token CSRF debe ser una cadena de texto.' })
     @IsNotEmpty({ message: 'El token CSRF es obligatorio.' })
     'x-csrf-token'!: string;
 }

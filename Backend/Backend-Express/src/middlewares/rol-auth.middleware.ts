@@ -12,7 +12,7 @@ const validateRole = (allowedRoles: string[]) => {
         try {
             const userId = req.user?.id;
             if (!userId) {
-                res.status(403).json({ message: 'Usuario no autenticado.' });
+                res.status(403).json({ success: false, message: 'Usuario no autenticado.' });
                 return;
             }
 
@@ -21,7 +21,7 @@ const validateRole = (allowedRoles: string[]) => {
             // Verificar si los datos del perfil contienen las propiedades necesarias
             if (!userProfileData || !userProfileData.rol) {
                 logger.warn(`Perfil no encontrado en Redis para el usuario: ${userId}`);
-                res.status(403).json({ message: 'Acceso denegado. Rol no autorizado.' });
+                res.status(403).json({ success: false, message: 'Acceso denegado. Rol no autorizado.' });
                 return;
             }
 
@@ -33,13 +33,13 @@ const validateRole = (allowedRoles: string[]) => {
             };
 
             if (!allowedRoles.includes(userProfile.rol)) {
-                res.status(403).json({ message: 'Acceso denegado. Rol no autorizado.' });
+                res.status(403).json({ success: false, message: 'Acceso denegado. Rol no autorizado.' });
                 return;
             }
 
             next();
         } catch (err) {
-            res.status(500).json({ message: `Error interno al validar roles: ${err}` });
+            res.status(500).json({ success: false, message: `Error interno al validar roles: ${err}` });
         }
     };
 };

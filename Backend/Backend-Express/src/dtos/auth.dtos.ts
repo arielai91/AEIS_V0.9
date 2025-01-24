@@ -24,16 +24,16 @@ import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
  */
 export class LoginDto {
     @IsOptional()
-    @IsString()
-    @IsNotEmpty()
+    @IsString({ message: 'El email debe ser una cadena de texto.' })
+    @IsNotEmpty({ message: 'El email no puede estar vacío.' })
     email?: string;
 
     @IsOptional()
-    @IsString()
-    @IsNotEmpty()
+    @IsString({ message: 'La cédula debe ser una cadena de texto.' })
+    @IsNotEmpty({ message: 'La cédula no puede estar vacía.' })
     cedula?: string;
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString({ message: 'La contraseña debe ser una cadena de texto.' })
+    @IsNotEmpty({ message: 'La contraseña no puede estar vacía.' })
     contraseña!: string;
 }

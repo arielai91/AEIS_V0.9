@@ -7,7 +7,7 @@ export class CrearSolicitudDto {
     @IsMongoId({ message: 'El ID del perfil debe ser un ObjectId válido.' })
     perfil!: string;
 
-    @IsString()
+    @IsString({ message: 'El tipo de solicitud debe ser una cadena de texto.' })
     @IsEnum(['Plan', 'Casillero'], {
         message: 'El tipo de solicitud debe ser uno de los siguientes: Plan o Casillero.',
     })
@@ -21,7 +21,7 @@ export class CrearSolicitudDto {
     @IsOptional()
     casillero?: string;
 
-    @IsString()
+    @IsString({ message: 'La imagen del comprobante de pago debe ser una cadena de texto.' })
     @IsNotEmpty({ message: 'La imagen del comprobante de pago es obligatoria.' })
     imagen!: string;
 }
@@ -30,7 +30,7 @@ export class CrearSolicitudDto {
  * DTO para filtrar solicitudes
  */
 export class ListarSolicitudesQueryDto {
-    @IsString()
+    @IsString({ message: 'El estado debe ser una cadena de texto.' })
     @IsEnum(['Aprobado', 'Rechazado', 'Por verificar'], {
         message: 'El estado debe ser uno de los siguientes: Aprobado, Rechazado, Por verificar.',
     })
@@ -41,19 +41,19 @@ export class ListarSolicitudesQueryDto {
     @IsOptional()
     perfil?: string;
 
-    @IsString()
+    @IsString({ message: 'El tipo debe ser una cadena de texto.' })
     @IsEnum(['Plan', 'Casillero'], {
         message: 'El tipo debe ser uno de los siguientes: Plan o Casillero.',
     })
     @IsOptional()
     tipo?: string;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'La página debe ser un número.' })
     @Min(1, { message: 'La página debe ser mayor o igual a 1.' })
     @IsOptional()
     page?: number;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'El límite debe ser un número.' })
     @Min(1, { message: 'El límite debe ser mayor o igual a 1.' })
     @IsOptional()
     limit?: number;
@@ -66,7 +66,7 @@ export class ActualizarEstadoSolicitudDto {
     @IsMongoId({ message: 'El ID de la solicitud debe ser un ObjectId válido.' })
     solicitudId!: string;
 
-    @IsString()
+    @IsString({ message: 'El estado debe ser una cadena de texto.' })
     @IsEnum(['Aprobado', 'Rechazado', 'Por verificar'], {
         message: 'El estado debe ser uno de los siguientes: Aprobado, Rechazado, Por verificar.',
     })
@@ -85,7 +85,7 @@ export class SolicitudIdDto {
  * DTO para validar el CSRF token
  */
 export class CsrfTokenDto {
-    @IsString()
+    @IsString({ message: 'El token CSRF debe ser una cadena de texto.' })
     @IsNotEmpty({ message: 'El token CSRF es obligatorio.' })
     'x-csrf-token'!: string;
 }

@@ -8,8 +8,8 @@ export class CrearPerfilDto {
   @IsOptional()
   rol?: 'Administrador' | 'Cliente';
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'El nombre completo debe ser una cadena de texto.' })
+  @IsNotEmpty({ message: 'El nombre completo no puede estar vacío.' })
   @Matches(/^.{1,30}$/, { message: 'El nombre completo debe tener un máximo de 30 caracteres.' })
   nombreCompleto!: string;
 
@@ -17,12 +17,12 @@ export class CrearPerfilDto {
   @Matches(/@epn\.edu\.ec$/, { message: 'El email debe ser del dominio epn.edu.ec.' })
   email!: string;
 
-  @IsString()
+  @IsString({ message: 'La cédula debe ser una cadena de texto.' })
   @Matches(/^\d{10}$/, { message: 'La cédula debe contener exactamente 10 dígitos numéricos.' })
   cedula!: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'La contraseña debe ser una cadena de texto.' })
+  @IsNotEmpty({ message: 'La contraseña no puede estar vacía.' })
   @Length(8, undefined, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   contraseña!: string;
 
@@ -35,7 +35,7 @@ export class CrearPerfilDto {
  * DTO para actualizar un perfil
  */
 export class ActualizarPerfilDto {
-  @IsString()
+  @IsString({ message: 'El nombre completo debe ser una cadena de texto.' })
   @IsOptional()
   @Matches(/^.{1,30}$/, { message: 'El nombre completo debe tener un máximo de 30 caracteres.' })
   nombreCompleto?: string;
@@ -45,12 +45,12 @@ export class ActualizarPerfilDto {
   @IsOptional()
   email?: string;
 
-  @IsString()
+  @IsString({ message: 'La cédula debe ser una cadena de texto.' })
   @Matches(/^\d{10}$/, { message: 'La cédula debe contener exactamente 10 dígitos numéricos.' })
   @IsOptional()
   cedula?: string;
 
-  @IsString()
+  @IsString({ message: 'La contraseña debe ser una cadena de texto.' })
   @IsOptional()
   contraseña?: string;
 
@@ -72,15 +72,15 @@ export class PerfilIdDto {
  */
 export class SolicitudesQueryDto {
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'El estado debe ser una cadena de texto.' })
   estado?: 'Aprobado' | 'Rechazado' | 'Por verificar';
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'La página debe ser una cadena de texto.' })
   page?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'El límite debe ser una cadena de texto.' })
   limit?: string;
 }
 
@@ -89,6 +89,6 @@ export class SolicitudesQueryDto {
  */
 export class CsrfTokenDto {
   @IsString({ message: 'El token CSRF debe ser una cadena de texto.' })
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'El token CSRF no puede estar vacío.' })
   'x-csrf-token'!: string;
 }

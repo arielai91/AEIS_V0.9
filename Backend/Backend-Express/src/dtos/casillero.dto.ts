@@ -4,7 +4,7 @@ import { IsString, IsNotEmpty, IsEnum, IsMongoId, IsNumber, Min } from 'class-va
  * DTO para crear un casillero
  */
 export class CrearCasilleroDto {
-    @IsNumber()
+    @IsNumber({}, { message: 'El número del casillero debe ser un número.' })
     @Min(1, { message: 'El número del casillero debe ser mayor o igual a 1.' })
     numero!: number;
 }
@@ -43,7 +43,7 @@ export class ActualizarEstadoDto {
     @IsMongoId({ message: 'El ID del casillero debe ser un ObjectId válido.' })
     casilleroId!: string;
 
-    @IsString()
+    @IsString({ message: 'El estado debe ser una cadena de texto.' })
     @IsEnum(['disponible', 'ocupado', 'reservado', 'mantenimiento'], {
         message: 'El estado debe ser uno de los siguientes: disponible, ocupado, reservado, mantenimiento.',
     })
@@ -54,17 +54,17 @@ export class ActualizarEstadoDto {
  * DTO para filtrar casilleros
  */
 export class FiltroCasillerosQueryDto {
-    @IsString()
+    @IsString({ message: 'El estado debe ser una cadena de texto.' })
     @IsEnum(['disponible', 'ocupado', 'reservado', 'mantenimiento'], {
         message: 'El estado debe ser uno de los siguientes: disponible, ocupado, reservado, mantenimiento.',
     })
     estado?: string;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'La página debe ser un número.' })
     @Min(1, { message: 'La página debe ser mayor o igual a 1.' })
     page?: number;
 
-    @IsNumber()
+    @IsNumber({}, { message: 'El límite debe ser un número.' })
     @Min(1, { message: 'El límite debe ser mayor o igual a 1.' })
     limit?: number;
 }
@@ -73,7 +73,7 @@ export class FiltroCasillerosQueryDto {
  * DTO para validar el CSRF token
  */
 export class CsrfTokenDto {
-    @IsString()
+    @IsString({ message: 'El token CSRF debe ser una cadena de texto.' })
     @IsNotEmpty({ message: 'El token CSRF es obligatorio.' })
     'x-csrf-token'!: string;
 }
