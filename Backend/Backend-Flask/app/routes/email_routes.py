@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services import send_verification_email, verify_code
+from app.services import send_verification_email, verify_code, perfil_existe
 
 email_routes = Blueprint('email_routes', __name__)
 
@@ -9,10 +9,24 @@ email_routes = Blueprint('email_routes', __name__)
 def send_verification_email_route():
     data = request.get_json()
     email = data.get('email')
-
-    if not email:
-        return jsonify({'message': 'Correo electrónico es requerido', 'success': False}), 400
-
+    password = data.get('contraseña')
+    cedula = data.get('cedula')
+    
+    if not email or not password or not cedula:
+        return jsonify({'message': 'Correo electrónico, contraseña y cédula son requeridos', 'success': False}), 400
+    
+    if perfil_existe(email):
+        return jsonify({'message': 'El correo electrónico ya está registrado', 'success': False}), 400
+    
+    if len(cedula) != 10:
+        return jsonify({'message': 'Cédula debe tener 10 dígitos', 'success': False}), 400
+    
+    if password > 8:
+        return jsonify({'message': 'Contraseña debe tener al menos 8 caracteres', 'success': False}), 400
+    
+    if not email.endswith('@epn.edu.ec'):
+        return jsonify({'message': 'Correo electrónico debe ser de la EPN', 'success': False}), 400
+    
     try:
         send_verification_email(email, "register")
         return jsonify({'message': 'Correo de verificación enviado correctamente', 'success': True}), 200

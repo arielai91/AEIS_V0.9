@@ -11,8 +11,7 @@ def update_password(email, code, new_password):
         raise ValueError('Código de verificación inválido o expirado')
 
     # Buscar el perfil en MongoDB
-    perfil = mongo.db.perfiles.find_one({"email": email})
-    if not perfil:
+    if not perfil_existe(email):
         raise ValueError('Perfil no encontrado')
 
     # Generar el hash de la nueva contraseña
@@ -27,3 +26,10 @@ def update_password(email, code, new_password):
 
     if result.matched_count == 0:
         raise ValueError("No se pudo actualizar la contraseña")
+
+def perfil_existe(email):
+    """
+    Verifica si un perfil existe en MongoDB por el correo electrónico.
+    """
+    perfil = mongo.db.perfiles.find_one({"email": email})
+    return perfil is not None 

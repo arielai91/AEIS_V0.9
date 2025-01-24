@@ -86,10 +86,22 @@
     gap: 1rem;
 }
 
+.login-info {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100%; /* Asegura que ocupe el alto del contenedor */
+}
+
+
 .login-info__message {
-    display: none;
+    display: none; /* Se mostrará solo cuando sea necesario */
     font-weight: bold;
     color: var(--error);
+    text-align: center; /* Asegura que el texto esté centrado horizontalmente */
+    margin: 0 auto; /* Centra el mensaje horizontalmente */
+    padding: 0; /* Opcional: Espaciado adicional */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
 }
 
 .login-form__forgot-password {

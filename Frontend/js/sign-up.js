@@ -5,7 +5,7 @@ const DOM_ELEMENTS = {
     lastNameInput: document.getElementById("lastname"),
     userId: document.getElementById("cedula"),
     emailInput: document.getElementById("email"),
-    passwordInput: document.getElementById("password"),
+    passwordInput: document.getElementById("passwordInput"),
     passwordConfirmInput: document.getElementById("password_confirm"),
     termsCheckbox: document.getElementById("terms"),
     registerButton: document.querySelector(".registration-form__button"),

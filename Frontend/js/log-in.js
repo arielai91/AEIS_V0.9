@@ -1,43 +1,107 @@
-
-
-
 const DOM_ELEMENTS = {
-    identifier: document.getElementById("identifier"),
-    password: document.getElementById("password"),
+    identifierInput: document.getElementById("identifier"),
+    passwordInput: document.getElementById("password"),
+    infoMessage: document.querySelector(".login-info__message"),
     toggleButton: document.getElementById("toggle-password"),
-    loginButton: document.querySelector(".login-form__button")
+    loginButton: document.querySelector(".login-form__button"),
 };
 
-const ROUTES= {
-
-}
+const ROUTES = {
+    expressRoute: "http://localhost:3000/auth/login",
+};
 
 function togglePasswordVisibility() {
-    const svg = DOM_ELEMENTS.toggleButton.querySelector("svg"); // Selecciona el <svg>
+    const svg = DOM_ELEMENTS.toggleButton?.querySelector("svg"); // Asegura que toggleButton existe
 
-    if (DOM_ELEMENTS.password.type === "password") {
-        DOM_ELEMENTS.password.type = "text"; // Muestra la contraseña
+    if (!svg) return;
 
-        // Cambia el ícono al de "ojo abierto"
+    if (DOM_ELEMENTS.passwordInput.type === "password") {
+        DOM_ELEMENTS.passwordInput.type = "text"; // Muestra la contraseña
         svg.innerHTML = `
             <path fill="none" d="M0 0h24v24H0z"/>
             <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
         `;
     } else {
-        DOM_ELEMENTS.password.type = "password"; // Oculta la contraseña
-
-        // Cambia el ícono al de "ojo cerrado"
+        DOM_ELEMENTS.passwordInput.type = "password"; // Oculta la contraseña
         svg.innerHTML = `
             <path fill="none" d="M0 0h24v24H0z"/>
-            <path d= "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-/>
+            <path d="M12 19c-4.42 0-8.41-2.67-10-6.5C3.59 8.67 7.58 6 12 6s8.41 2.67 10 6.5c-1.59 3.83-5.58 6.5-10 6.5zM12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
         `;
     }
 }
 
-function initializeEventListeners() {
-    // DOM_ELEMENTS.loginButton.addEventListener("click", loginUser);
-    DOM_ELEMENTS.toggleButton.addEventListener("click", togglePasswordVisibility)
+function showInfoMessage(message) {
+    if (DOM_ELEMENTS.infoMessage) {
+        DOM_ELEMENTS.infoMessage.textContent = message;
+        DOM_ELEMENTS.infoMessage.style.display = "block";
+    }
 }
 
-initializeEventListeners();
+function validateEmptyInputs() {
+    let valid = true;
+
+    [DOM_ELEMENTS.identifierInput, DOM_ELEMENTS.passwordInput].forEach((input) => {
+        if (input && input.value.trim() === "") {
+            showInfoMessage("Campos vacíos.");
+            valid = false;
+        }
+    });
+
+    return valid;
+}
+
+function loginUser(event) {
+    event.preventDefault();
+    const loginUrl = ROUTES.expressRoute;
+    const data = {
+        email: DOM_ELEMENTS.identifierInput?.value,
+        cedula: DOM_ELEMENTS.identifierInput?.value,
+        contraseña: DOM_ELEMENTS.passwordInput?.value,
+    };
+
+    if (validateEmptyInputs()) {
+        fetch(loginUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+            credentials: "include", // Incluir cookies en la solicitud
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    if (data.rol === "Administrador") {
+                        console.log("INICIO EXITOSO")
+                        window.location.href = "admin.html";
+                    } else {
+                        console.log("INICIO EXITOSO")
+                        window.location.href = "user.html";
+                    }
+                } else {
+                    showInfoMessage(data.message);
+                }
+            })
+            .catch((error) => {
+                showInfoMessage("Error en el inicio de sesión. Intenta nuevamente.");
+                console.error("Error:", error);
+            });
+    }
+}
+
+function initializeEventListeners() {
+    if (DOM_ELEMENTS.toggleButton) {
+        DOM_ELEMENTS.toggleButton.addEventListener("click", togglePasswordVisibility);
+    } else {
+        console.error("El botón de toggle password no está definido.");
+    }
+
+    if (DOM_ELEMENTS.loginButton) {
+        DOM_ELEMENTS.loginButton.addEventListener("click", loginUser);
+    } else {
+        console.error("El botón de login no está definido.");
+    }
+}
+
+// Inicia los event listeners después de que el DOM esté cargado
+document.addEventListener("DOMContentLoaded", initializeEventListeners);

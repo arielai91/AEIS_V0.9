@@ -116,12 +116,12 @@ window.addEventListener("click", (event) => {
 });
 
 // Event listener para el formulario de cambio de contraseña
-document.getElementById("password-form")?.addEventListener("submit", function (e) {
+document.getElementById("passwordInput-form")?.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const currentPassword = document.getElementById("current-password").value;
-    const newPassword = document.getElementById("new-password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
+    const currentPassword = document.getElementById("current-passwordInput").value;
+    const newPassword = document.getElementById("new-passwordInput").value;
+    const confirmPassword = document.getElementById("confirm-passwordInput").value;
 
     if (newPassword !== confirmPassword) {
         alert("Las contraseñas nuevas no coinciden");

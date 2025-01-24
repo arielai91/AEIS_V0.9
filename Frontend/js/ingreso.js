@@ -3,7 +3,7 @@ import { ImageUpdater } from "../content/Image.js";
 // Crear archivo ingreso.js
 document.addEventListener("DOMContentLoaded", function () {
   const togglePassword = document.getElementById("togglePassword");
-  const passwordInput = document.getElementById("password");
+  const passwordInput = document.getElementById("passwordInput");
   const ingresoForm = document.getElementById("ingresoForm");
   const botonInicioElements = document.querySelectorAll(".boton_inicio");
   botonInicioElements.forEach((element) => {
@@ -12,13 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Toggle password visibility
+  // Toggle passwordInput visibility
   togglePassword.addEventListener("click", function () {
     const type =
       passwordInput.getAttribute("type") === "password" ? "text" : "password";
     passwordInput.setAttribute("type", type);
 
-    // Change icon based on password visibility
+    // Change icon based on passwordInput visibility
     const path = togglePassword.querySelector("path:last-child");
     if (type === "password") {
       path.setAttribute(
@@ -85,7 +85,7 @@ function obtainRol(field, credencial) {
 }
 
 function loginUser() {
-  const credencial = document.getElementById("identifier").value;
+  const credencial = document.getElementById("identifierInput").value;
   let field = "email";
   const esCorreoOCedula = (credencial) => {
     const regexCorreo = /^[a-zA-Z0-9._%+-]+@epn\.edu\.ec$/;
@@ -115,7 +115,7 @@ function loginUser() {
   const userData = {
     field: field,
     value: credencial,
-    contraseña: document.getElementById("password").value,
+    contraseña: document.getElementById("passwordInput").value,
   };
 
   fetch("https://codebyelaina.com/perfiles/login", {
