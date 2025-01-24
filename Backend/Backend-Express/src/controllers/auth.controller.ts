@@ -103,10 +103,10 @@ class AuthController {
                 maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
-            res.status(200).json({ message: 'Tokens renovados con éxito' });
+            res.status(200).json({ message: 'Tokens renovados con éxito', success: true });
         } catch (err) {
             logger.error('Error en refresh:', err as Error);
-            res.status(403).json({ message: 'Error al renovar tokens' });
+            res.status(403).json({ message: 'Error al renovar tokens', success: false });
         }
     }
 
@@ -116,7 +116,7 @@ class AuthController {
             const token = req.cookies.token;
 
             if (!userId || !token) {
-                res.status(400).json({ message: 'Falta el token o el usuario' });
+                res.status(400).json({ message: 'Falta el token o el usuario', success: false });
                 return;
             }
 
@@ -125,10 +125,10 @@ class AuthController {
             res.clearCookie('token');
             res.clearCookie('refreshToken');
             res.clearCookie('csrfToken');
-            res.status(200).json({ message: 'Sesión cerrada exitosamente' });
+            res.status(200).json({ message: 'Sesión cerrada exitosamente', success: true });
         } catch (err) {
             logger.error('Error en logout:', err as Error);
-            res.status(500).json({ message: 'Error al cerrar sesión' });
+            res.status(500).json({ message: 'Error al cerrar sesión', success: false });
         }
     }
 }
