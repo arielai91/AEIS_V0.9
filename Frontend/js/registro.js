@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-
     registroForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -123,7 +122,7 @@ function verify_code(email, verificationCode) {
                 successModal.style.display = "flex";
                 const successButton = successModal.querySelector(".modal-btn-primary");
                 successButton.addEventListener("click", () => {
-                    window.location.href = "ingreso.html";
+                    window.location.href = "log-in.html";
                 });
             } else {
                 const invalidCodeMessage = document.querySelector(".invalid-code");

@@ -61,10 +61,11 @@
                 </label>
                 <input id="terms" class="registration-form__checkbox" type="checkbox">
             </div>
-
-            <ul class="validation-message" id="validation-message"></ul> <!-- Lista de mensajes de validación -->
-            <button type="submit" class="registration-form__button">REGISTRARME</button>
         </form>
+
+        <ul class="validation-message" id="validation-message">
+        </ul> <!-- Lista de mensajes de validación -->
+        <button type="submit" class="registration-form__button">REGISTRARME</button>
     </div>
 </main>
 
@@ -89,7 +90,7 @@
         <h2 class="modal__title">Registro exitoso</h2>
         <div class="modal__success-icon">✓</div>
         <p class="modal__text">Cuenta registrada exitosamente</p>
-        <button onclick="toggleSuccessModal()" class="modal__button modal__button--primary">OK</button>
+        <button id="modal__button--primary" class="modal__button modal__button--primary">OK</button>
     </div>
 </div>
 

@@ -58,7 +58,7 @@
 }
 
 .verification-form__input-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .verification-form__label {
@@ -92,11 +92,13 @@
 }
 
 .verification-form__error {
-    margin-top: 0.5rem;
+    display: none;
+    align-content: center;
+    justify-content: center;
     color: var(--error);
     font-weight: bold;
+    margin-top: 1rem;
     font-size: 0.9rem;
-    display: none;
     text-align: center;
 }
 
@@ -111,6 +113,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 60%;
+    margin-top: 0;
 }
 
 .verification-form__button:hover {

@@ -75,18 +75,22 @@
 
 /* Botón */
 .registration-form__button {
+    display: flex; /* Habilita flexbox */
+    width: 20%;
+    align-items: center; /* Centra horizontalmente los elementos */
+    justify-content: center; /* Opcional: centra verticalmente si el contenedor tiene altura */
     background-color: var(--primary);
     color: var(--light);
     padding: 1rem 2rem;
     border-radius: 8px;
     border: none;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: bolder;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: auto; /* Ajusta el ancho al contenido */
     justify-self: center; /* Centra el botón horizontalmente */
     grid-column: span 2; /* Ocupa las dos columnas */
+    margin-top: 1rem;
 }
 
 .registration-form__button:hover {
@@ -145,21 +149,18 @@
     }
 }
 
-.validation-message__item {
-    margin: auto;
-    color: var(--error) !important;
-    font-weight: bolder;
-    font-size: 14px;
-    display: none;
-    list-style-type: disc;
-    padding-left: 20px;
-}
-
-.validation-message li::before {
-    font-weight: bold;
-    margin-right: 5px;
+.validation-message {
+    display: flex; /* Habilita flexbox */
+    width: 100%;
+    align-items: center; /* Centra horizontalmente los elementos */
+    justify-content: center; /* Opcional: centra verticalmente si el contenedor tiene altura */
 }
 
 .validation-message li {
-    margin-bottom: 5px;
+    list-style-type: none; /* Quita la viñeta */
+    margin: 1rem;
+    color: var(--error);
+    font-weight: bolder;
+    font-size: 14px;
+    text-align: center; /* Alinea el texto en el centro */
 }

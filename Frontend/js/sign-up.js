@@ -7,6 +7,11 @@ const DOM_ELEMENTS = {
     validationMessageList: document.getElementById("validation-message"),
     verificationModal: document.getElementById("verification-modal"),
     emailDisplay: document.getElementById("email-display"),
+    verificationCodeInput: document.getElementById("code"),
+    verificationCodeError: document.querySelector(".verification-form__error"),
+    verificationCodeButton: document.querySelector(".verification-form__button"),
+    successModal: document.getElementById("success-modal"),
+    successModalButton: document.getElementById("modal__button--primary")
 };
 
 const ROUTES = {
@@ -14,10 +19,15 @@ const ROUTES = {
     flaskRoute: "http://localhost:5000/email/",
 };
 
-const RESPONSE = {
+const VALIDATION_RESPONSE = {
     message: ["El correo ya está registrado.", "La contraseña es demasiado corta."],
-    success: true, // Cambiar a true si deseas simular un registro exitoso
+    success: true
 };
+
+const CODE_RESPONSE = {
+    message: "Código incorrecto.",
+    success: true // Cambiar a true si deseas simular un código correcto
+}
 
 // Función para verificar si se aceptaron los términos y condiciones
 function verifyTerms() {
@@ -32,6 +42,11 @@ function verifyTerms() {
 function showVerificationModal(email) {
     DOM_ELEMENTS.emailDisplay.textContent = email;
     DOM_ELEMENTS.verificationModal.style.display = "flex";
+}
+
+function showSuccessModal() {
+    DOM_ELEMENTS.verificationModal.style.display = "none";
+    DOM_ELEMENTS.successModal.style.display = "flex";
 }
 
 // Función para manejar los mensajes de error
@@ -49,15 +64,13 @@ function displayValidationMessages(messages) {
 function handleRegister(event) {
     event.preventDefault();
 
-    // Verificar términos y condiciones
-    const termsResult = verifyTerms();
-    if (!termsResult.success) {
-        displayValidationMessages([termsResult.message]);
-        return;
-    }
-
     // Leer el éxito de RESPUESTA
-    if (RESPONSE.success) {
+    if (VALIDATION_RESPONSE.success) {
+        const termsResult = verifyTerms();
+        if (!termsResult.success) {
+            displayValidationMessages([termsResult.message]);
+            return;
+        }
         const email = DOM_ELEMENTS.emailInput.value;
         const registerUrl = `${ROUTES.flaskRoute}/register`;
         console.log('Ruta: ', registerUrl);
@@ -79,20 +92,62 @@ function handleRegister(event) {
             .catch(error => {
                 console.error("Error en el registro:", error);
             });
-
-        // Mostrar la modal de verificación
-        showVerificationModal(email);
     } else {
         // Mostrar los mensajes de validación de RESPUESTA
-        displayValidationMessages(RESPONSE.message);
+        displayValidationMessages(VALIDATION_RESPONSE.message);
     }
 }
 
-// Asignar eventos
-DOM_ELEMENTS.registerButton.addEventListener("click", handleRegister);
+// Funcion para redirigir a la pagina de ingreso
+function redirectToLogin() {
+    window.location.href = "/Frontend/html/log-in.html";
+}
+
+// Funcion para verificar el código de verificación
+function verifyCode() {
+    event.preventDefault();
+    const verificationCode = DOM_ELEMENTS.verificationCodeInput.value;
+    const email = DOM_ELEMENTS.emailInput.value;
+    const verifyCodeUrl = `${ROUTES.flaskRoute}/verify_code`;
+    if (!CODE_RESPONSE.success) {
+        console.log("Boton de verificación presionado", !CODE_RESPONSE.success);
+        DOM_ELEMENTS.verificationCodeError.style.display = "flex";
+    } else {
+        showSuccessModal();
+    }
+    // fetch(verifyCodeUrl, {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ email: email, code: verificationCode }),
+    // })
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //         if (data.success) {
+    //             registerUser();
+    //             DOM_ELEMENTS.verificationModal.style.display = "none";
+    //             const successModal = document.getElementById("success-modal");
+    //             successModal.style.display = "flex";
+    //         } else {
+    //             DOM_ELEMENTS.verificationCodeError.style.display = "block";
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.error("Error en la verificación:", error);
+    //     });
+}
+
+function initializeEventListeners() {
+    DOM_ELEMENTS.registerButton.addEventListener("click", handleRegister);
+    DOM_ELEMENTS.verificationCodeButton.addEventListener("click", verifyCode);
+    DOM_ELEMENTS.successModalButton.addEventListener("click", redirectToLogin)
+}
 
 // const imageUpdater = new ImageUpdater(
 //     "https://codebyelaina.com/bucket/image/logo_aeis.png",
 //     ".logo_aeis"
 // );
 // imageUpdater.updateImage();
+
+initializeEventListeners();
