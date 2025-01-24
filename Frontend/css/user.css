@@ -1,0 +1,303 @@
+/* Navbar */
+.navbar {
+    background-color: var(--dark);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    box-shadow: var(--shadow);
+}
+
+.navbar__left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.navbar__logo {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+}
+
+.navbar__brand {
+    color: var(--light);
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 10px;
+}
+
+.navbar__logout {
+    text-decoration: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.navbar__logout:hover {
+    background-color: var(--dark);
+    color: var(--primary);
+}
+
+/* Main Layout */
+.user-main {
+    display: flex;
+    padding: 2rem;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile-card {
+    background-color: var(--dark);
+    padding: 2rem;
+    border-radius: 16px;
+    color: var(--light);
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.profile-card__container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+}
+
+.profile-card__picture {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--primary);
+    position: relative;
+}
+
+.profile-card__picture img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.profile-card__change-picture {
+    margin: 10px auto;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: var(--light);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-card__change-picture:hover {
+    background-color: var(--primary-hover);
+}
+
+.profile-card__info h3,
+.profile-card__info p {
+    margin: 10px 0;
+}
+
+.profile-card__change-password {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: var(--light);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-card__change-password:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Sidebar Menu */
+.sidebar__menu {
+    background-color: var(--dark);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.sidebar__menu-item {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    background-color: transparent;
+    color: var(--light);
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar__menu-item:hover {
+    background-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Content */
+.content {
+    flex: 1;
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.panel {
+    display: none;
+}
+
+.panel--active {
+    display: block;
+}
+
+.panel__title {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+/* No Plan */
+.plan {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.plan__image img {
+    width: 200px;
+    height: 200px;
+}
+
+.plan__title {
+    margin: 1rem 0;
+    color: var(--dark);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.plan__description {
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+}
+
+.plan__cta {
+    padding: 1rem 2rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.plan__cta:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* Planes */
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.plan-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.plan-card__title {
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.plan-card__price {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.plan-card__features li {
+    list-style: none;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+}
+
+.plans-grid__cta {
+    padding: 1rem 2rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.plans-grid__cta:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* Locker */
+.locker-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+}
+
+.locker {
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+    background-color: var(--gray);
+    color: white;
+    font-weight: bold;
+}
+
+.locker--available {
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
+.locker--available:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--dark);
+    padding: 2rem;
+    color: var(--light);
+    text-align: center;
+}
