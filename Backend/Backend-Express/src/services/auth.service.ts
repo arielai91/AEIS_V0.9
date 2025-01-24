@@ -21,8 +21,12 @@ class AuthService {
         const query = email ? { email } : { cedula };
         const user = await PerfilModel.findOne(query).select('+contraseña');
 
-        if (!user || !user.contraseña || !(await bcrypt.compare(contraseña, user.contraseña))) {
-            throw new Error('Credenciales inválidas');
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        if (!user.contraseña || !(await bcrypt.compare(contraseña, user.contraseña))) {
+            throw new Error('Contraseña incorrecta');
         }
 
         const userId = user.id;
