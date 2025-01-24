@@ -59,7 +59,7 @@ function handleRegister(event) {
     // Leer el éxito de RESPUESTA
     if (RESPONSE.success) {
         const email = DOM_ELEMENTS.emailInput.value;
-        const registerUrl = `${ROUTES.flaskRoute}/register`;
+        const registerUrl = `${ROUTES.flaskRoute}register`;
         console.log('Ruta: ', registerUrl);
         fetch(registerUrl, {
             method: "POST",

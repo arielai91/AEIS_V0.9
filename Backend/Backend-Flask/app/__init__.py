@@ -17,7 +17,7 @@ def configure_app(app):
     # Carga la configuración de la aplicación
     app.config.from_object('app.config.Config')
     # Habilita CORS
-    # CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
+    CORS(app, resources={r"/*": {"origins": "http://localhost:5500"}})
 
 # Inicialización de extensiones
 def initialize_extensions(app):
