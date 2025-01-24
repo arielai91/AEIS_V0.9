@@ -5,7 +5,8 @@ import { IsString, IsNotEmpty, IsEnum, IsMongoId, IsOptional, IsNumber, Min } fr
  */
 export class CrearSolicitudDto {
     @IsMongoId({ message: 'El ID del perfil debe ser un ObjectId válido.' })
-    perfil!: string;
+    @IsOptional()
+    perfil?: string;
 
     @IsString({ message: 'El tipo de solicitud debe ser una cadena de texto.' })
     @IsEnum(['Plan', 'Casillero'], {

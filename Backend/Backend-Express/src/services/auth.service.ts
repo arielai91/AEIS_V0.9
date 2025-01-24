@@ -35,7 +35,7 @@ class AuthService {
         const csrfToken = generateCsrfToken();
 
         const userProfile = this.filterProfileData(user);
-
+        const rol = userProfile.rol;
         // Convertir userProfile a Record<string, string | number>
         const userProfileRecord: Record<string, string | number> = {
             id: userProfile.id,
@@ -49,7 +49,7 @@ class AuthService {
         await RedisService.setHashWithTTL(`profile:${userId}`, userProfileRecord, getCsrfTokenTTL());
 
         logger.info(`Usuario ${userId} inició sesión exitosamente.`);
-        return { accessToken, refreshToken, csrfToken };
+        return { accessToken, refreshToken, csrfToken, rol };
     }
 
     /**
@@ -84,6 +84,8 @@ class AuthService {
 
         // Actualizar el perfil en Redis con nuevo TTL
         const user = await PerfilModel.findById(userId).select('id nombreCompleto email rol').lean();
+        const rol = user?.rol;
+
         if (user && user._id) {
             const userRecord: Record<string, string | number> = {
                 id: user._id.toString(),
@@ -101,7 +103,7 @@ class AuthService {
         await RedisService.setKey(`csrfToken:${userId}`, csrfToken, getCsrfTokenTTL());
 
         logger.info(`Tokens renovados para el usuario ${userId}.`);
-        return { accessToken, refreshToken: newRefreshToken, csrfToken };
+        return { accessToken, refreshToken: newRefreshToken, csrfToken, rol };
     }
     /**
      * Maneja el cierre de sesión del usuario.

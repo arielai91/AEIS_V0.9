@@ -26,9 +26,9 @@ class SolicitudRoutes {
             '/',
             authenticateJWT,
             validateRole(['Cliente']),
+            validateRequest(CsrfTokenDto, 'headers'),
             validateCsrfToken,
             validateRequest(CrearSolicitudDto, 'body'),
-            validateRequest(CsrfTokenDto, 'headers'),
             SolicitudController.crearSolicitud
         );
 
