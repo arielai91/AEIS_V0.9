@@ -31,7 +31,7 @@ class AuthController {
                 maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
-            res.status(200).json({ message: 'Inicio de sesión exitoso' });
+            res.status(200).json({ message: 'Inicio de sesión exitoso'});
         } catch (err) {
             logger.error('Error en login:', err as Error);
             res.status(401).json({ message: 'Credenciales inválidas' });

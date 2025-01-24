@@ -3,95 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style_registro.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/sign-up.css">
+    <link rel="stylesheet" href="../css/modals.css">
+    <link rel="stylesheet" href="../css/footer.css">
     <title>Registro AEIS</title>
 </head>
 <body>
-<nav>
-    <div class="boton_inicio">
-        <div class="logo_aeis"></div>
-        <span>AEIS</span>
-    </div>
-    <div>
-        <a href="ingreso.html">Ingresar</a>
-        <a href="registro.html" id="registroButton" class="registro">Registrarse</a>
-    </div>
-</nav>
+<header class="header">
+    <nav class="header__nav">
+        <div class="header__start">
+            <div class="header__logo">
+                <div class="header__logo-img"></div>
+                <span class="header__brand">AEIS</span>
+            </div>
+        </div>
+        <div class="header__links">
+            <a href="ingreso.html" class="header__link">Ingresar</a>
+            <a href="registro.html" id="register-button" class="header__link">Registrarse</a>
+        </div>
+    </nav>
+</header>
 
-<main class="registro-main">
-    <div class="registro-container">
-        <h2>Registro</h2>
-        <form id="registroForm" class="registro-form">
-            <fieldset>
-                <legend>Información Personal</legend>
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" placeholder="Ej: Ariel" required>
+<main class="registration-main">
+    <div class="registration-container">
+        <h2 class="registration-title">Registro</h2>
+        <form id="registration-form" class="registration-form">
+            <fieldset class="registration-form__fieldset">
+                <legend class="registration-form__legend">Información Personal</legend>
+                <label for="name" class="registration-form__label">Nombre:</label>
+                <input type="text" id="name" name="name" class="registration-form__input" placeholder="Ej: Ariel" required>
 
-                <label for="lastname">Apellido:</label>
-                <input type="text" id="lastname" name="lastname" placeholder="Ej: Pérez" required>
+                <label for="lastname" class="registration-form__label">Apellido:</label>
+                <input type="text" id="lastname" name="lastname" class="registration-form__input" placeholder="Ej: Pérez" required>
 
-                <label for="cedula">Cédula:</label>
-                <input type="number" id="cedula" name="cedula" placeholder="Ej: 1754928374" required>
+                <label for="cedula" class="registration-form__label">Cédula:</label>
+                <input type="number" id="cedula" name="cedula" class="registration-form__input" placeholder="Ej: 1754928374" required>
             </fieldset>
 
-            <fieldset>
-                <legend>Cuenta</legend>
-                <label for="email">Correo Institucional:</label>
-                <input type="email" id="email" name="email" placeholder="ejemplo@epn.edu.ec" required>
+            <fieldset class="registration-form__fieldset">
+                <legend class="registration-form__legend">Cuenta</legend>
+                <label for="email" class="registration-form__label">Correo Institucional:</label>
+                <input type="email" id="email" name="email" class="registration-form__input" placeholder="ejemplo@epn.edu.ec" required>
 
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                <label for="password" class="registration-form__label">Contraseña:</label>
+                <input type="password" id="password" name="password" class="registration-form__input" placeholder="Contraseña" required>
 
-                <label for="password_confirm">Confirmar contraseña:</label>
-                <input type="password" id="password_confirm" name="password_confirm"
+                <label for="password_confirm" class="registration-form__label">Confirmar contraseña:</label>
+                <input type="password" id="password_confirm" name="password_confirm" class="registration-form__input"
                        placeholder="Confirma la contraseña" required>
             </fieldset>
-            <div class="form_input">
-                <label for="terms" class="terms">Acepto los <a href="terms.html" target="_blank" class="page_terms">
-                    términos y condiciones</a></label>
-                <input id="terms" class="checkbox" type="checkbox">
+
+            <div class="registration-form__terms">
+                <label for="terms" class="registration-form__label registration-form__label--terms">
+                    Acepto los <a href="terms.html" target="_blank" class="registration-form__terms-link">términos y condiciones</a>
+                </label>
+                <input id="terms" class="registration-form__checkbox" type="checkbox">
             </div>
-            <ul class="validation-message" id="validationMessage"></ul> <!-- Lista de mensajes de validación -->
-            <button type="submit">REGISTRARME</button>
+
+            <ul class="validation-message" id="validation-message"></ul> <!-- Lista de mensajes de validación -->
+            <button type="submit" class="registration-form__button">REGISTRARME</button>
         </form>
     </div>
 </main>
 
-<div id="verificacionModal" class="modal">
-    <div class="modal-content verification-modal">
-        <h2>Verificación de Correo</h2>
-        <p>Hemos enviado un código de verificación al correo <span id="emailDisplay"></span>.
-            ¿Deseas <a href="#" id="editarCorreo">editarlo</a>?</p>
-        <form id="verificacionForm">
-            <div class="verification-input">
-                <label for="codigo">Código de Verificación:</label>
-                <input type="text" id="codigo" class="code" name="codigo" placeholder="520348" required>
-                <p class="invalid-code">Código de verificación inválido</p>
+<div id="verification-modal" class="modal modal--verification">
+    <div class="modal__content">
+        <h2 class="modal__title">Verificación de Correo</h2>
+        <p class="modal__text">Hemos enviado un código de verificación al correo <span id="email-display"></span>.
+            ¿Deseas <a href="#" id="edit-email" class="modal__edit-link">editarlo</a>?</p>
+        <form id="verification-form" class="verification-form">
+            <div class="verification-form__input-group">
+                <label for="code" class="verification-form__label">Código de Verificación:</label>
+                <input type="text" id="code" class="verification-form__input" name="code" placeholder="520348" required>
+                <p class="verification-form__error">Código de verificación inválido</p>
             </div>
-            <button type="submit">Verificar</button>
+            <button type="submit" class="verification-form__button">Verificar</button>
         </form>
     </div>
 </div>
 
-<!-- Modal de éxito -->
-<div id="success-modal" class="modal success-modal">
-    <div class="modal-content">
-        <h2>Registro exitoso</h2>
-        <div class="success-icon">✓</div>
-        <p>Cuenta registrada exitosamente</p>
-        <button onclick="toggleSuccessModal()" class="modal-btn modal-btn-primary">OK</button>
+<div id="success-modal" class="modal modal--success">
+    <div class="modal__content">
+        <h2 class="modal__title">Registro exitoso</h2>
+        <div class="modal__success-icon">✓</div>
+        <p class="modal__text">Cuenta registrada exitosamente</p>
+        <button onclick="toggleSuccessModal()" class="modal__button modal__button--primary">OK</button>
     </div>
 </div>
-<footer>
-    <div class="footer-content">
-        <div class="copyright">
+
+<footer class="footer">
+    <div class="footer__content">
+        <div class="footer__section footer__section--copyright">
             <span>FusionCode © 2024. Todos los derechos reservados.</span>
         </div>
-        <div class="address">
+        <div class="footer__section footer__section--address">
             <span>Dirección</span>
             <p>Av. Ladrón de Guevara 253, Quito 170517</p>
         </div>
-        <div class="creators">
+        <div class="footer__section footer__section--creators">
             <span>Created and Designed by:</span>
             <p>Ariel Amaguaña and José Merchán</p>
         </div>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Frontend/css/main.css">
+    <link rel="stylesheet" href="Frontend/css/header.css">
+    <link rel="stylesheet" href="Frontend/css/index-body.css">
+    <link rel="stylesheet" href="Frontend/css/footer.css">
+    <title>APORTACIONES AEIS</title>
+</head>
+<body>
+<header class="header">
+    <nav class="header__nav">
+        <div class="header__start">
+            <div class="header__logo"></div>
+            <span class="header__brand">AEIS</span>
+        </div>
+        <div class="header__links">
+            <a href="Frontend/html/ingreso.html" class="header__link">Ingresar</a>
+            <a href="Frontend/html/registro.html" id="register-button" class="header__link header__link--highlight">Registrarse</a>
+        </div>
+    </nav>
+</header>
+
+<main class="main-content">
+    <section class="welcome-section">
+        <h1 class="welcome-section__title">Bienvenido al Sistema de Gestión de Aportaciones de la AEIS</h1>
+        <p class="welcome-section__description">Gestiona tus aportaciones y asignación de casilleros de manera fácil y eficiente</p>
+    </section>
+
+    <section class="plans-section">
+        <!-- Tarjeta para cada plan -->
+        <div class="card">
+            <div class="card__inner">
+                <div class="card__front">
+                    <h3 class="card__title">PANTERA JUNIOR</h3>
+                    <div class="card__price">$15</div>
+                </div>
+                <div class="card__back">
+                    <h3 class="card__title card__title--back">PANTERA JUNIOR</h3>
+                    <ul class="card__benefits">
+                        <li class="card__benefit">Acceso a casillero.</li>
+                        <li class="card__benefit">Colada Morada.</li>
+                        <li class="card__benefit">Descuento en <strong>Eventos y Cursos</strong>.</li>
+                        <li class="card__benefit">Esfero.</li>
+                        <li class="card__benefit">Funda de caramelos.</li>
+                        <li class="card__benefit">Packs de Stickers.</li>
+                        <li class="card__benefit">Toma-todo.</li>
+                        <li class="card__benefit"><strong>Descuentos: </strong>Ping-pong, billar y PS4.</li>
+                    </ul>
+                    <a href="Frontend/html/ingreso.html" class="card__action">
+                        <button class="button">APORTAR</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card__inner">
+                <div class="card__front">
+                    <h3 class="card__title">PANTERA SENIOR</h3>
+                    <div class="card__price">$26</div>
+                </div>
+                <div class="card__back">
+                    <h3 class="card__title card__title--back">PANTERA SENIOR</h3>
+                    <ul class="card__benefits">
+                        <li class="card__benefit">Plan <strong>PANTERA JUNIOR</strong></li>
+                        <li class="card__benefit">+</li>
+                        <li class="card__benefit"><strong>Hoddie</strong></li>
+                        <li class="card__benefit"><strong>Rubbery Duck Debugger</strong></li>
+                    </ul>
+                    <a href="Frontend/html/ingreso.html" class="card__action">
+                        <button class="button">APORTAR</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card__inner">
+                <div class="card__front">
+                    <h3 class="card__title">CASILLERO</h3>
+                    <div class="card__price">$8</div>
+                </div>
+                <div class="card__back">
+                    <h3 class="card__title card__title--back">CASILLERO</h3>
+                    <ul class="card__benefits">
+                        <li class="card__benefit">Acceso a <strong>CASILLERO GRANDE</strong></li>
+                    </ul>
+                    <a href="Frontend/html/ingreso.html" class="card__action">
+                        <button class="button">ALQUILAR</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="footer">
+    <div class="footer__content">
+        <div class="footer__section footer__section--copyright">
+            <span>FusionCode © 2024. Todos los derechos reservados.</span>
+        </div>
+        <div class="footer__section footer__section--address">
+            <span>Dirección</span>
+            <p>Av. Ladrón de Guevara 253, Quito 170517</p>
+        </div>
+        <div class="footer__section footer__section--creators">
+            <span>Created and Designed by:</span>
+            <p>Ariel Amaguaña and José Merchán</p>
+        </div>
+    </div>
+</footer>
+<script type="module" src="Frontend/js/imagen.js"></script>
+</body>
+</html>
