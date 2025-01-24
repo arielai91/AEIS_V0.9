@@ -1,4 +1,4 @@
-/* Estilos de Modal */
+/* Modal General Styles */
 .modal {
     display: none;
     position: fixed;
@@ -12,9 +12,9 @@
     align-items: center;
 }
 
-.modal.active {
+.modal--active {
     display: flex;
-    background-color: #3e3c3d66;
+    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
     opacity: 1;
@@ -25,89 +25,138 @@
     padding: 20px;
     width: 80%;
     max-width: 500px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-/* Modal de Verificación */
-.verification-modal h2 {
+/* Verification Modal Styles */
+.modal--verification .modal__title {
     color: var(--dark);
     margin-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
-.verification-modal p {
+.modal--verification .modal__text {
     color: var(--gray);
     margin-bottom: 2rem;
     line-height: 1.5;
+    font-size: 1rem;
 }
 
-.verification-modal a {
+.modal--verification .modal__edit-link {
     color: var(--primary);
     text-decoration: none;
-    font-weight: bold;
+    font-weight: bolder;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
-.verification-modal a:hover {
+.modal--verification .modal__edit-link:hover {
     color: var(--dark);
     text-decoration: underline;
 }
 
-.verification-modal button {
+.verification-form__input-group {
+    margin-bottom: 2rem;
+}
+
+.verification-form__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+    font-weight: bolder;
+    font-size: 1rem;
+}
+
+.verification-form__input {
+    width: 60%;
+    color: var(--primary);
+    padding: 1rem;
+    border: 2px solid var(--gray);
+    border-radius: 8px;
+    font-size: 3rem;
+    font-weight: bolder;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.verification-form__input::placeholder {
+    color: #c0bfbf;
+}
+
+.verification-form__input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 195, 123, 0.2);
+}
+
+.verification-form__error {
+    margin-top: 0.5rem;
+    color: var(--error);
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: none;
+    text-align: center;
+}
+
+.verification-form__button {
     background-color: var(--primary);
     color: white;
     padding: 1rem 2rem;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 100%;
+    width: 60%;
 }
 
-.verification-modal button:hover {
+.verification-form__button:hover {
     background-color: var(--dark);
 }
 
-/* Modal de Éxito */
-#success-modal .success-icon {
+/* Success Modal Styles */
+.modal--success .modal__title {
+    color: var(--dark);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.modal--success .modal__text {
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.modal--success .modal__success-icon {
     color: var(--primary);
     font-size: 5rem;
     margin: 1rem 0;
     animation: scaleIn 0.5s ease;
 }
 
-#success-modal h2 {
-    color: var(--dark);
-    margin-bottom: 1rem;
-}
-
-#success-modal p {
-    color: var(--gray);
-    margin-bottom: 1.5rem;
-}
-
-.modal-btn-primary {
+.modal--success .modal__button {
     background-color: var(--primary);
     color: white;
     padding: 1rem 2rem;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 120px;
+    margin: 0 auto; /* Centra el botón */
 }
 
-.modal-btn-primary:hover {
+.modal--success .modal__button:hover {
     background-color: var(--dark);
     color: var(--primary);
 }
 
+/* Animations */
 @keyframes scaleIn {
     from {
         transform: scale(0);
