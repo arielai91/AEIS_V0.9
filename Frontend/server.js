@@ -3,7 +3,8 @@ const path = require('path');
 const os = require('os');
 const app = express();
 
-app.use(express.static(path.join(__dirname))); // Sirve todos los archivos estáticos
+// Cambiar la ruta estática al directorio padre
+app.use(express.static(path.join(__dirname, '..'))); // Sirve los archivos desde una carpeta arriba
 
 const PORT = 5500;
 const HOST = '0.0.0.0'; // Escuchar en todas las interfaces de red
@@ -23,7 +24,7 @@ app.listen(PORT, HOST, () => {
 
     console.log(`Frontend disponible en las siguientes direcciones:`);
     addresses.forEach(address => {
-        console.log(`http://${address}:${PORT}/html/index.html`);
+        console.log(`http://${address}:${PORT}/index.html`); // Nueva ruta
     });
-    console.log(`También disponible en http://localhost:${PORT}/html/index.html`);
+    console.log(`También disponible en http://localhost:${PORT}/index.html`); // Nueva ruta
 });
