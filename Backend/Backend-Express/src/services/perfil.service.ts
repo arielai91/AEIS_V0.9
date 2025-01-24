@@ -12,6 +12,13 @@ class PerfilService {
      * Crear un nuevo perfil.
      */
     public async crearPerfil(data: CrearPerfilDto): Promise<IPerfil> {
+        const { email, cedula } = data;
+
+        const perfilExistente = await PerfilModel.findOne({ $or: [{ email }, { cedula }] });
+        if (perfilExistente) {
+            throw new Error('Perfil ya existe');
+        }
+
         if (!data.plan) {
             const planPorDefecto = await PlanModel.findOne({ esPorDefecto: true });
             if (planPorDefecto) {
@@ -85,8 +92,12 @@ class PerfilService {
      * Subir imagen de perfil.
      * Aquí podrías integrar un servicio de almacenamiento como S3.
      */
-    public async subirImagenPerfil(id: string, imagePath: string): Promise<void> {
-        await PerfilModel.findByIdAndUpdate(id, { imagen: imagePath }).exec();
+    public async subirImagenPerfil(cedula: string, imagePath: string): Promise<void> {
+        const perfil = await PerfilModel.findOne({ cedula }).exec();
+        if (!perfil) {
+            throw new Error('Perfil no encontrado');
+        }
+        await PerfilModel.findByIdAndUpdate(perfil._id, { imagen: imagePath }).exec();
     }
 
     /**

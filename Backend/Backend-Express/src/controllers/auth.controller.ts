@@ -51,7 +51,7 @@ class AuthController {
                 maxAge: 15 * 60 * 1000, // 15 minutos
             });
 
-            res.status(200).json({ message: 'Inicio de sesión exitoso', succes: true });
+            res.status(200).json({ message: 'Inicio de sesión exitoso', success: true });
         } catch (error) {
             logger.error('Error al iniciar sesión:', error as Error);
 
