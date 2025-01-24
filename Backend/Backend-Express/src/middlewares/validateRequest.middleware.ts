@@ -27,7 +27,8 @@ const validateRequest = <T extends object>(
       // Validar que la fuente sea válida
       if (!['body', 'query', 'params', 'headers'].includes(source)) {
         res.status(500).json({
-          message: 'Invalid validation source configuration.',
+          success: false,
+          errors: ['Configuración de fuente de validación inválida.'],
         });
         return;
       }
@@ -37,7 +38,8 @@ const validateRequest = <T extends object>(
 
       if (!dataToValidate) {
         res.status(400).json({
-          message: `Validation source ${source} is empty or missing.`,
+          success: false,
+          errors: [`La fuente de validación ${source} está vacía o falta.`],
         });
         return;
       }
@@ -53,13 +55,14 @@ const validateRequest = <T extends object>(
 
       // Si hay errores de validación, devolver una respuesta con los detalles
       if (errors.length > 0) {
+        const formattedErrors = errors.reduce((acc, error) => {
+          acc[error.property] = Object.values(error.constraints || {});
+          return acc;
+        }, {} as Record<string, string[]>);
+
         res.status(400).json({
-          message: `Validation failed in ${source}`,
-          errors: errors.map((error) => ({
-            property: error.property,
-            constraints: error.constraints,
-            value: error.value, // Mostrar el valor que falló en la validación
-          })),
+          success: false,
+          errors: formattedErrors,
         });
         return; // Detener el flujo si hay errores
       }
@@ -68,7 +71,8 @@ const validateRequest = <T extends object>(
     } catch (err) {
       logger.error('Error en el middleware de validación:', err as Error);
       res.status(500).json({
-        message: 'Internal server error during validation.',
+        success: false,
+        errors: ['Error interno del servidor durante la validación.'],
       });
     }
   };

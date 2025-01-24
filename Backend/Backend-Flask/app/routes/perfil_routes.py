@@ -15,14 +15,19 @@ def update_password_route():
     # Validar datos
     if not email or not code or not new_password:
         return jsonify({
-            'message':
-            'Email, code, and new password are required'}), 400
+            'message': 
+            'Correo electrónico, código y nueva contraseña son requeridos',
+            'success': False
+        }), 400
 
     try:
         # Llamar al servicio para actualizar la contraseña
         update_password(email, code, new_password)
-        return jsonify({'message': 'Password updated successfully'}), 200
-    except ValueError:
-        return jsonify({'message': 'Error of value'}), 400
+        return jsonify({'message': 'Contraseña actualizada correctamente',
+                        'success': True}), 200
+    except ValueError as e:
+        return jsonify({'message': str(e),
+                        'success': False}), 400
     except Exception:
-        return jsonify({'message': 'An unexpected error occurred'}), 500
+        return jsonify({'message': 'Ocurrió un error inesperado',
+                        'success': False}), 500

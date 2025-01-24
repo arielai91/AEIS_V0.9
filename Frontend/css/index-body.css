@@ -8,13 +8,12 @@
 /* Welcome Section */
 .welcome-section {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
 }
 
 .welcome-section__title {
     color: var(--dark);
     font-size: 2.5rem;
-    margin-bottom: 1rem;
 }
 
 .welcome-section__description {
@@ -39,6 +38,7 @@
     height: 400px;
     perspective: 1000px;
     position: relative;
+    margin: 2rem 0;
 }
 
 .card__inner {

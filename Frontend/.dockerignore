@@ -1,0 +1,21 @@
+# Ignorar dependencias instaladas
+node_modules/
+
+# Archivos de logs
+*.log
+
+# Archivos y carpetas relacionadas con Git
+.git/
+.gitignore
+
+# Archivos de configuración de entornos
+.env
+.env.example
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación si es aplicable
+build/
+dist/

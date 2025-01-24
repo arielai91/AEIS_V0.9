@@ -10,7 +10,7 @@ import { AuthenticatedRequest } from '@type/global';
 const csrfErrorHandler = async (err: CsrfError, req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     if (err.code === 'EBADCSRFTOKEN') {
         logger.warn('CSRF token inválido o no proporcionado.');
-        res.status(403).json({ message: 'CSRF token inválido o no proporcionado.' });
+        res.status(403).json({ success: false, message: 'CSRF token inválido o no proporcionado.' });
         return;
     }
 
@@ -20,14 +20,14 @@ const csrfErrorHandler = async (err: CsrfError, req: AuthenticatedRequest, res: 
 
     if (!csrfToken || !userId) {
         logger.warn('CSRF token o usuario no válido.');
-        res.status(403).json({ message: 'CSRF token o usuario no válido.' });
+        res.status(403).json({ success: false, message: 'CSRF token o usuario no válido.' });
         return;
     }
 
     const storedCsrfToken = await RedisService.getKey(`csrf:${userId}`);
     if (!storedCsrfToken || storedCsrfToken !== csrfToken) {
         logger.warn('CSRF token no coincide o expirado.');
-        res.status(403).json({ message: 'CSRF token no coincide o expirado.' });
+        res.status(403).json({ success: false, message: 'CSRF token no coincide o expirado.' });
         return;
     }
 
