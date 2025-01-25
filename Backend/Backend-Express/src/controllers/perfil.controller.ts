@@ -82,16 +82,23 @@ class PerfilController {
     }
   }
 
-  public async crearPerfilAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async crearPerfilAdmin(req: Request, res: Response): Promise<void> {
     try {
       const data: CrearPerfilDto = req.body;
       data.rol = 'Administrador';
       const perfil = await PerfilService.crearPerfil(data);
+      await PerfilService.subirImagenPerfil(perfil.cedula, 'Foto_Defecto.png');
       logger.info('Perfil creado exitosamente por el administrador.');
-      res.status(201).json({ message: 'Perfil creado exitosamente por el administrador.', perfil });
+      res.status(201).json({ message: 'Perfil creado exitosamente por el administrador.', success: true });
     } catch (error) {
       logger.error('Error al crear perfil por el administrador:', error as Error);
-      next(error);
+      const err = error as Error;
+
+      if (err.message === 'Perfil ya existe') {
+        res.status(409).json({ message: 'Perfil ya existe', success: false });
+      } else {
+        res.status(500).json({ message: 'Error interno del servidor', success: false });
+      }
     }
   }
 
