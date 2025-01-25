@@ -4,7 +4,7 @@ import CasilleroModel from '@models/Casillero/Casillero';
 import PlanModel from '@models/Plan/Plan';
 import { CrearSolicitudDto, ActualizarEstadoSolicitudDto, ListarSolicitudesQueryDto } from '@dtos/solicitud.dto';
 import { ISolicitud } from '@type/global';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Schema } from 'mongoose';
 
 class SolicitudService {
     /**
@@ -40,8 +40,12 @@ class SolicitudService {
             casillero: tipo === 'Casillero' ? casillero : undefined,
             imagen,
         });
+        const solicitudGuardada = await nuevaSolicitud.save();
 
-        return await nuevaSolicitud.save();
+        perfilExistente.solicitudes.push(solicitudGuardada._id as Schema.Types.ObjectId);
+        await perfilExistente.save();
+
+        return solicitudGuardada;
     }
 
     /**
@@ -83,15 +87,21 @@ class SolicitudService {
         if (!solicitud) {
             throw new Error('La solicitud especificada no existe.');
         }
+
+        const perfil = await PerfilModel.findById(solicitud.perfil).exec();
+        if (perfil) {
+            perfil.solicitudes = perfil.solicitudes.filter((s: Schema.Types.ObjectId) => s.toString() !== id);
+            await perfil.save();
+        }
     }
 
     /**
      * Actualizar el estado de una solicitud.
      */
     public async actualizarEstadoSolicitud(data: ActualizarEstadoSolicitudDto): Promise<void> {
-        const { solicitudId, estado } = data;
+        const { id, estado } = data;
 
-        const solicitud = await SolicitudModel.findById(solicitudId).exec();
+        const solicitud = await SolicitudModel.findById(id).exec();
         if (!solicitud) {
             throw new Error('La solicitud especificada no existe.');
         }
@@ -100,13 +110,28 @@ class SolicitudService {
         solicitud.fechaAprobacion = estado === 'Aprobado' ? new Date() : null;
         await solicitud.save();
 
-        // Opcional: manejar acciones según el estado
-        if (estado === 'Aprobado' && solicitud.tipo === 'Casillero') {
-            const casillero = await CasilleroModel.findById(solicitud.casillero).exec();
-            if (casillero) {
-                casillero.estado = 'ocupado';
-                casillero.perfil = solicitud.perfil;
-                await casillero.save();
+        if (estado === 'Aprobado') {
+            if (solicitud.tipo === 'Casillero') {
+                const casillero = await CasilleroModel.findById(solicitud.casillero).exec();
+                const perfil = await PerfilModel.findById(solicitud.perfil).exec();
+                if (casillero && perfil) {
+                    casillero.estado = 'ocupado';
+                    casillero.perfil = solicitud.perfil;
+                    await casillero.save();
+
+                    perfil.casilleros.push(casillero._id as Schema.Types.ObjectId);
+                    await perfil.save();
+                }
+            } else if (solicitud.tipo === 'Plan') {
+                const plan = await PlanModel.findById(solicitud.plan).exec();
+                const perfil = await PerfilModel.findById(solicitud.perfil).exec();
+                if (plan && perfil) {
+                    perfil.plan = plan._id as Schema.Types.ObjectId;
+                    await perfil.save();
+
+                    plan.usuarios.push(perfil._id);
+                    await plan.save();
+                }
             }
         }
     }

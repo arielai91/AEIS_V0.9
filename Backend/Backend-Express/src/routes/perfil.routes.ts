@@ -4,7 +4,6 @@ import authenticateJWT from '@middlewares/auth.middleware';
 import validateCsrfToken from '@middlewares/csrf.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
 import validateRole from '@middlewares/rol-auth.middleware';
-import upload from '@middlewares/multer.middleware';
 import { CrearPerfilDto, ActualizarPerfilDto, PerfilIdDto, SolicitudesQueryDto, CsrfTokenDto } from '@dtos/perfil.dto';
 
 class PerfilRoutes {
@@ -26,14 +25,14 @@ class PerfilRoutes {
     this.router.get(
       '/',
       authenticateJWT, // JWT para autenticar al usuario
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       PerfilController.obtenerPerfil
     );
 
     this.router.patch(
       '/',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       validateCsrfToken,
       validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
       validateRequest(ActualizarPerfilDto, 'body'), // Validar datos del body
@@ -43,7 +42,7 @@ class PerfilRoutes {
     this.router.delete(
       '/',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       validateCsrfToken,
       validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
       PerfilController.eliminarPerfil
@@ -93,7 +92,7 @@ class PerfilRoutes {
     this.router.get(
       '/casilleros',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       PerfilController.obtenerCasillerosAsociados
     );
 
@@ -101,39 +100,9 @@ class PerfilRoutes {
     this.router.get(
       '/solicitudes',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       validateRequest(SolicitudesQueryDto, 'query'), // Validar filtros y paginación
       PerfilController.obtenerSolicitudesAsociadas
-    );
-
-    // Gestión de Imágenes del Perfil
-    this.router.post(
-      '/imagen',
-      authenticateJWT,
-      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
-      validateCsrfToken,
-      upload.single('image'), // Multer maneja la validación del archivo
-      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
-      PerfilController.subirImagenPerfil
-    );
-
-    this.router.put(
-      '/imagen',
-      authenticateJWT,
-      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
-      validateCsrfToken,
-      upload.single('image'), // Multer maneja la validación del archivo
-      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
-      PerfilController.actualizarImagenPerfil
-    );
-
-    this.router.delete(
-      '/imagen',
-      authenticateJWT,
-      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
-      validateCsrfToken,
-      validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
-      PerfilController.eliminarImagenPerfil
     );
   }
 }

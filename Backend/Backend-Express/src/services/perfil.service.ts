@@ -5,13 +5,20 @@ import SolicitudModel from '@models/Solicitud/Solicitud';
 import PlanModel from '@models/Plan/Plan';
 import { CrearPerfilDto, ActualizarPerfilDto, SolicitudesQueryDto } from '@dtos/perfil.dto';
 import { IPerfil, ICasillero, ISolicitud } from '@type/global';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Schema } from 'mongoose';
 
 class PerfilService {
     /**
      * Crear un nuevo perfil.
      */
     public async crearPerfil(data: CrearPerfilDto): Promise<IPerfil> {
+        const { email, cedula } = data;
+
+        const perfilExistente = await PerfilModel.findOne({ $or: [{ email }, { cedula }] });
+        if (perfilExistente) {
+            throw new Error('Perfil ya existe');
+        }
+
         if (!data.plan) {
             const planPorDefecto = await PlanModel.findOne({ esPorDefecto: true });
             if (planPorDefecto) {
@@ -25,7 +32,16 @@ class PerfilService {
         data.contraseña = await bcrypt.hash(data.contraseña, salt);
 
         const nuevoPerfil = new PerfilModel(data);
-        return await nuevoPerfil.save();
+        const perfilGuardado = await nuevoPerfil.save();
+
+        // Agregar el ID del usuario al arreglo de usuarios del plan
+        const plan = await PlanModel.findById(data.plan).exec();
+        if (plan) {
+            plan.usuarios.push(perfilGuardado._id);
+            await plan.save();
+        }
+
+        return perfilGuardado;
     }
 
     /**
@@ -53,14 +69,29 @@ class PerfilService {
         await SolicitudModel.deleteMany({ perfil: id }).exec();
 
         // Eliminar el perfil
-        await PerfilModel.findByIdAndDelete(id).exec();
+        const perfil = await PerfilModel.findByIdAndDelete(id).exec();
+        if (!perfil) {
+            throw new Error('El perfil especificado no existe.');
+        }
+
+        if (perfil.plan) {
+            const plan = await PlanModel.findById(perfil.plan).exec();
+            if (plan) {
+                plan.usuarios = plan.usuarios.filter((usuarioId: Schema.Types.ObjectId) => usuarioId.toString() !== id);
+                await plan.save();
+            }
+        }
     }
 
     /**
      * Obtener los casilleros asociados a un perfil.
      */
     public async obtenerCasillerosAsociados(id: string): Promise<ICasillero[]> {
-        return await CasilleroModel.find({ perfil: id }).exec();
+        const casilleros = await CasilleroModel.find({ perfil: id }).exec();
+        if (casilleros.length === 0) {
+            throw new Error('No existen casilleros asociados a este perfil.');
+        }
+        return casilleros;
     }
 
     /**
@@ -75,18 +106,28 @@ class PerfilService {
         const filtro: FilterQuery<ISolicitud> = { perfil: id };
         if (estado) filtro.estado = estado;
 
-        return await SolicitudModel.find(filtro)
+        const solicitudes = await SolicitudModel.find(filtro)
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)
             .exec();
+
+        if (solicitudes.length === 0) {
+            throw new Error('No existen solicitudes asociadas a este perfil.');
+        }
+
+        return solicitudes;
     }
 
     /**
      * Subir imagen de perfil.
      * Aquí podrías integrar un servicio de almacenamiento como S3.
      */
-    public async subirImagenPerfil(id: string, imagePath: string): Promise<void> {
-        await PerfilModel.findByIdAndUpdate(id, { imagen: imagePath }).exec();
+    public async subirImagenPerfil(cedula: string, imagePath: string): Promise<void> {
+        const perfil = await PerfilModel.findOne({ cedula }).exec();
+        if (!perfil) {
+            throw new Error('Perfil no encontrado');
+        }
+        await PerfilModel.findByIdAndUpdate(perfil._id, { imagen: imagePath }).exec();
     }
 
     /**

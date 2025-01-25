@@ -34,7 +34,6 @@ class PlanRoutes {
       PlanController.crearPlan
     );
 
-    // Obtener todos los planes
     this.router.get(
       '/',
       authenticateJWT,

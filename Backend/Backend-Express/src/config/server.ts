@@ -26,6 +26,7 @@ import S3Routes from '@routes/S3.routes';
 import authRoutes from '@routes/auth.routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '@config/swagger';
+import solicitudesRoutes from '@routes/solicitudes.routes';
 
 // Load environment variables
 dotenv.config();
@@ -145,6 +146,7 @@ class ServerConfig {
         this.app.use(API_ROUTES.PERFILES, perfilRoutes);     // Rutas de perfiles
         this.app.use(API_ROUTES.CASILLEROS, casilleroRoutes); // Rutas de casilleros
         this.app.use(API_ROUTES.PLANES, planRoutes);         // Rutas de planes
+        this.app.use(API_ROUTES.SOLICITUDES, solicitudesRoutes); // Rutas de solicitudes
         this.app.use(API_ROUTES.S3, S3Routes);               // Rutas de S3
         this.app.use(API_ROUTES.AUTH, authRoutes);           // Rutas de autenticación
         this.app.use(API_ROUTES.DOCS, swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Rutas de documentación

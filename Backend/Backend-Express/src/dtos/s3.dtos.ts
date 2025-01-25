@@ -14,7 +14,7 @@ export class FileNameDto {
  */
 export class UploadImageDto {
     @IsString({ message: 'El tipo de contenido debe ser una cadena de texto.' })
-    @Matches(/^image\/(jpeg|png)$/, { message: 'El formato del archivo no permitido. Solo JPEG o PNG.' })
+    @Matches(/^image\/(jpeg|jpg|png)$/, { message: 'El formato del archivo no permitido. Solo JPEG, JPG o PNG.' })
     contentType!: string;
 }
 

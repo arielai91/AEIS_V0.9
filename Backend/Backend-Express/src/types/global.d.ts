@@ -55,4 +55,5 @@ interface AuthResult {
   accessToken: string;
   refreshToken: string;
   csrfToken: string;
+  rol: string | undefined;
 }
