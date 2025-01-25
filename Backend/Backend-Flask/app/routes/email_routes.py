@@ -20,8 +20,8 @@ def send_verification_email_route():
     
     if len(cedula) != 10:
         return jsonify({'message': 'Cédula debe tener 10 dígitos', 'success': False}), 400
-    
-    if password > 8:
+
+    if len(password) < 8:
         return jsonify({'message': 'Contraseña debe tener al menos 8 caracteres', 'success': False}), 400
     
     if not email.endswith('@epn.edu.ec'):
