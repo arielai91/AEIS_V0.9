@@ -6,7 +6,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 100px;
+    height: 80px;
     box-shadow: var(--shadow);
 }
 
@@ -50,7 +50,6 @@
     display: flex;
     padding: 2rem;
     gap: 2rem;
-    margin-top: 1rem;
 }
 
 /* Sidebar */
@@ -97,16 +96,26 @@
 .profile-card__change-picture {
     margin: 10px auto;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
-    background-color: var(--primary);
+    background-color: transparent;
+    border: none;
+    border-top: 1px solid var(--light);
+    border-bottom: 1px solid var(--light);
     color: var(--light);
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .profile-card__change-picture:hover {
-    background-color: var(--primary-hover);
+    color: var(--primary);
+}
+
+.profile-card {
+    display: block;
+}
+
+.profile-card__info {
+    display: inline-block;
+    margin-top: 1.5rem;
 }
 
 .profile-card__info h3,
@@ -173,6 +182,14 @@
     display: block;
 }
 
+.plan__default-message {
+    text-align: center;
+    margin-top: 2rem;
+    color: #cccaca;
+    font-weight: bolder;
+    font-size: 4rem;
+}
+
 .panel__title {
     font-size: 2rem;
     color: var(--primary);
@@ -224,14 +241,30 @@
     gap: 1.5rem;
 }
 
+.no__plan-message {
+    text-align: center;
+    margin-top: 2rem;
+    color: #cccaca;
+    font-weight: bolder;
+    font-size: 4rem;
+}
+
 .plan-card {
     background-color: white;
     border-radius: 16px;
     padding: 2rem;
     text-align: center;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+
+    /* Centrado vertical */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+    height: 100%; /* Asegura que la tarjeta ocupe toda la altura disponible */
 }
+
 
 .plan-card__title {
     font-size: 1.5rem;
@@ -240,9 +273,10 @@
 }
 
 .plan-card__price {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: var(--primary);
     margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 .plan-card__features li {
@@ -252,6 +286,12 @@
 }
 
 .plans-grid__cta {
+    font-size: 1.3rem;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem auto;
     padding: 1rem 2rem;
     background-color: var(--primary);
     color: white;
@@ -262,8 +302,8 @@
 }
 
 .plans-grid__cta:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-2px);
+    background-color: var(--dark);
+    color: var(--primary);
 }
 
 /* Locker */

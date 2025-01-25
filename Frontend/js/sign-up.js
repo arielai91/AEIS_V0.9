@@ -5,7 +5,7 @@ const DOM_ELEMENTS = {
     lastNameInput: document.getElementById("lastname"),
     userId: document.getElementById("cedula"),
     emailInput: document.getElementById("email"),
-    passwordInput: document.getElementById("passwordInput"),
+    passwordInput: document.getElementById("password"),
     passwordConfirmInput: document.getElementById("password_confirm"),
     termsCheckbox: document.getElementById("terms"),
     registerButton: document.querySelector(".registration-form__button"),
@@ -98,6 +98,7 @@ function displayValidationMessages(messages) {
     DOM_ELEMENTS.validationMessageList.style.display = "block";
 }
 
+
 // Función para manejar el registro
 function handleRegister(event) {
     event.preventDefault(); // Prevenir comportamiento predeterminado del formulario
@@ -116,6 +117,8 @@ function handleRegister(event) {
                 return;
             }
             const email = DOM_ELEMENTS.emailInput.value;
+            const contraseña = DOM_ELEMENTS.passwordInput.value;
+            const cedula = DOM_ELEMENTS.userId.value;
             const registerUrl = `${ROUTES.flaskRoute}register`;
             console.log("Ruta: ", registerUrl);
 
@@ -124,14 +127,15 @@ function handleRegister(event) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email: email }),
+                body: JSON.stringify({ email: email, contraseña: contraseña, cedula: cedula}),
             })
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
                         showVerificationModal(email);
                     } else {
-                        displayValidationMessages(data.message);
+                        const messages = Array.isArray(data.message) ? data.message : [data.message];
+                        displayValidationMessages(messages);
                     }
                 })
                 .catch((error) => {
@@ -218,10 +222,25 @@ function registerUser() {
 }
 
 function initializeEventListeners() {
-    DOM_ELEMENTS.registerButton.addEventListener("click", handleRegister);
-    DOM_ELEMENTS.verificationCodeButton.addEventListener("click", verifyCode);
-    DOM_ELEMENTS.successModalButton.addEventListener("click", redirectToLogin)
+    if (DOM_ELEMENTS.registerButton) {
+        DOM_ELEMENTS.registerButton.addEventListener("click", handleRegister);
+    } else {
+        console.error("registerButton no encontrado.");
+    }
+
+    if (DOM_ELEMENTS.verificationCodeButton) {
+        DOM_ELEMENTS.verificationCodeButton.addEventListener("click", verifyCode);
+    } else {
+        console.error("verificationCodeButton no encontrado.");
+    }
+
+    if (DOM_ELEMENTS.successModalButton) {
+        DOM_ELEMENTS.successModalButton.addEventListener("click", redirectToLogin);
+    } else {
+        console.error("successModalButton no encontrado.");
+    }
 }
+
 
 // const imageUpdater = new ImageUpdater(
 //     "https://codebyelaina.com/bucket/image/logo_aeis.png",
@@ -229,4 +248,4 @@ function initializeEventListeners() {
 // );
 // imageUpdater.updateImage();
 
-initializeEventListeners();
+document.addEventListener("DOMContentLoaded", initializeEventListeners);

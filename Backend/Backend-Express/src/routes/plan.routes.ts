@@ -34,6 +34,7 @@ class PlanRoutes {
       PlanController.crearPlan
     );
 
+    // TODO: PLANES PARA USUARIO 
     // Obtener todos los planes
     this.router.get(
       '/',
