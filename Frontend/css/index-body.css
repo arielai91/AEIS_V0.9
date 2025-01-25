@@ -1,0 +1,124 @@
+/* Main Content */
+.main-content {
+    margin-top: 100px; /* Ajuste para evitar solapamiento con el header fijo */
+    padding: 0rem;
+    background-color: var(--light);
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.welcome-section__title {
+    color: var(--dark);
+    font-size: 2.5rem;
+}
+
+.welcome-section__description {
+    color: var(--gray);
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Plans Section */
+.plans-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+}
+
+/* Card Component */
+.card {
+    width: 100%;
+    height: 400px;
+    perspective: 1000px;
+    position: relative;
+    margin: 2rem 0;
+}
+
+.card__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.3s;
+    transform-style: preserve-3d;
+}
+
+.card:hover .card__inner {
+    transform: rotateY(180deg);
+}
+
+.card__front,
+.card__back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card__front {
+    background-color: white;
+    z-index: 2;
+}
+
+.card__back {
+    background-color: var(--primary);
+    transform: rotateY(180deg);
+    overflow-y: auto;
+    z-index: 2;
+}
+
+.card__title {
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.card__title--back {
+    color: var(--dark) !important;
+}
+
+.card__price {
+    font-size: 4rem;
+    color: var(--dark);
+    font-weight: bold;
+}
+
+.card__benefits {
+    list-style: none;
+    margin: auto;
+    padding: 0;
+    color: var(--light);
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.card__action .button {
+    height: 50px;
+    font-weight: bolder;
+    margin-top: auto;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--dark);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.card__action .button:hover {
+    background-color: var(--light);
+    color: var(--dark);
+}

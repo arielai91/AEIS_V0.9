@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const editarCorreoLink = document.getElementById("editarCorreo");
     const emailInput = document.getElementById("email");
     const emailDisplay = document.getElementById("emailDisplay");
-    const passwordInput = document.getElementById("password");
+    const passwordInput = document.getElementById("passwordInput");
     const confirmPasswordInput = document.getElementById("password_confirm");
     const cedulaInput = document.getElementById("cedula");
     const termsCheckbox = document.getElementById("terms");
@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = 'index.html';
         });
     });
-
 
     registroForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -123,7 +122,7 @@ function verify_code(email, verificationCode) {
                 successModal.style.display = "flex";
                 const successButton = successModal.querySelector(".modal-btn-primary");
                 successButton.addEventListener("click", () => {
-                    window.location.href = "ingreso.html";
+                    window.location.href = "log-in.html";
                 });
             } else {
                 const invalidCodeMessage = document.querySelector(".invalid-code");
@@ -155,7 +154,7 @@ function send_code(email) {
 function registerUser() {
     const userData = {
         email: document.getElementById("email").value,
-        contraseña: document.getElementById("password").value,
+        contraseña: document.getElementById("passwordInput").value,
         cedula: document.getElementById("cedula").value,
         nombreCompleto: `${document.getElementById("name").value} ${
             document.getElementById("lastname").value

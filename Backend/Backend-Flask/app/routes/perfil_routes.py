@@ -5,7 +5,7 @@ perfil_routes = Blueprint('perfil_routes', __name__)
 
 
 # Endpoint para actualizar la contraseña
-@perfil_routes.route('/update-password', methods=['POST'])
+@perfil_routes.route('/update-passwordInput', methods=['POST'])
 def update_password_route():
     # Obtener datos de la solicitud
     email = request.json.get('email')

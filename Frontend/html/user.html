@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/user.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <title>Página de Usuario - APORTACIONES AEIS</title>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navbar__left">
+        <div class="navbar__logo"></div>
+        <span class="navbar__brand">AEIS</span>
+    </div>
+    <a href="../../index.html" class="navbar__logout">Cerrar Sesión</a>
+</nav>
+
+<main class="user-main">
+    <aside class="sidebar">
+        <div class="profile-card">
+            <div class="profile-card__container">
+                <div class="profile-card__picture">
+                    <img src="../content/logo_aeis.png" alt="Profile Picture" id="profile-image">
+                </div>
+                <button class="profile-card__change-picture">Cambiar foto</button>
+            </div>
+            <div class="profile-card__info">
+                <h3 id="profile-name"></h3>
+                <p id="profile-id"></p>
+                <p id="profile-email"></p>
+            </div>
+            <button class="profile-card__change-password" onclick="togglePasswordModal()">Cambiar Contraseña</button>
+        </div>
+        <nav class="sidebar__menu">
+            <button class="sidebar__menu-item" onclick="showPanel('current-plan')">Plan Actual</button>
+            <button class="sidebar__menu-item" onclick="showPanel('available-plans')">Planes Disponibles</button>
+            <button class="sidebar__menu-item" onclick="showPanel('locker')">Casillero</button>
+            <button class="sidebar__menu-item" onclick="showPanel('requests')">Solicitudes</button>
+        </nav>
+    </aside>
+
+    <section class="content">
+        <!-- Panel Plan Actual -->
+        <div id="current-plan" class="panel panel--active">
+            <h2 class="panel__title">Plan Actual</h2>
+            <div class="plan">
+                <div class="plan__image">
+                    <img src="../content/triste.png" alt="No plan active">
+                </div>
+                <h3 class="plan__title">No tienes un plan activo</h3>
+                <p class="plan__description">¡Únete a nuestra comunidad y disfruta de todos los beneficios que tenemos para ti!</p>
+                <button class="plan__cta" onclick="showPanel('available-plans')">VER PLANES</button>
+            </div>
+        </div>
+
+        <!-- Panel Planes Disponibles -->
+        <div id="available-plans" class="panel">
+            <h2 class="panel__title">Planes Disponibles</h2>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <h3 class="plan-card__title">Plan Básico</h3>
+                    <p class="plan-card__price">$30/mes</p>
+                    <ul class="plan-card__features">
+                        <li>Acceso básico a instalaciones</li>
+                        <li>Casillero no incluido</li>
+                        <li>Acceso a eventos regulares</li>
+                    </ul>
+                </div>
+                <div class="plan-card">
+                    <h3 class="plan-card__title">Plan Premium</h3>
+                    <p class="plan-card__price">$50/mes</p>
+                    <ul class="plan-card__features">
+                        <li>Acceso completo a instalaciones</li>
+                        <li>Casillero incluido</li>
+                        <li>Eventos exclusivos</li>
+                        <li>Descuentos especiales</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="plans-grid__actions">
+                <button class="plans-grid__cta" onclick="showPanel('requests')">APORTAR</button>
+            </div>
+        </div>
+
+        <!-- Panel Casillero -->
+        <div id="locker" class="panel">
+            <h2 class="panel__title">Tu Casillero</h2>
+            <div class="locker-info">
+                <p class="locker-info__message">Aún no tienes casilleros</p>
+            </div>
+            <div class="locker-grid">
+                <div class="locker-grid__legend">
+                    <p class="locker-grid__legend-item locker-grid__legend-item--available">Disponible</p>
+                    <p class="locker-grid__legend-item">Ocupado</p>
+                </div>
+                <div class="locker-grid__items">
+                    <div class="locker locker--available">01</div>
+                    <div class="locker">02</div>
+                    <div class="locker locker--available">03</div>
+                    <div class="locker">04</div>
+                    <!-- Agrega más casilleros según sea necesario -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Solicitudes -->
+        <div id="requests" class="panel">
+            <h2 class="panel__title">Solicitudes</h2>
+
+            <details class="request">
+                <summary class="request__summary">Solicitud de Aportación</summary>
+                <form class="request-form">
+                    <div class="request-form__group">
+                        <label for="plan-type" class="request-form__label">Tipo de Plan</label>
+                        <select id="plan-type" class="request-form__input" required>
+                            <option value="">Seleccione un plan</option>
+                            <option value="basico">Plan Básico - $30</option>
+                            <option value="premium">Plan Premium - $50</option>
+                        </select>
+                    </div>
+
+                    <div class="bank-info">
+                        <h4 class="bank-info__title">Información Bancaria</h4>
+                        <p>Banco: Pichincha</p>
+                        <p>Cuenta: 2204567890</p>
+                        <p>Tipo: Ahorros</p>
+                        <p>Beneficiario: AEIS</p>
+                        <p>Valor a transferir: <span id="transfer-amount">$0</span></p>
+                    </div>
+
+                    <div class="request-form__group">
+                        <label for="payment-proof" class="request-form__label">Comprobante de Pago</label>
+                        <input type="file" id="payment-proof" class="request-form__input" accept="image/*" required>
+                        <div class="request-form__preview" id="preview-payment"></div>
+                    </div>
+
+                    <button type="submit" class="request-form__submit">Enviar Solicitud</button>
+                </form>
+            </details>
+
+            <details class="request">
+                <summary class="request__summary">Solicitud de Casillero</summary>
+                <form class="request-form">
+                    <div class="request-form__group">
+                        <label for="locker-number" class="request-form__label">Número de Casillero</label>
+                        <input type="text" id="locker-number" class="request-form__input" readonly>
+                    </div>
+
+                    <div class="bank-info">
+                        <h4 class="bank-info__title">Información Bancaria</h4>
+                        <p>Banco: Pichincha</p>
+                        <p>Cuenta: 2204567890</p>
+                        <p>Tipo: Ahorros</p>
+                        <p>Beneficiario: AEIS</p>
+                        <p>Valor a transferir: <span>$8</span></p>
+                    </div>
+
+                    <div class="request-form__group">
+                        <label for="locker-payment-proof" class="request-form__label">Comprobante de Pago</label>
+                        <input type="file" id="locker-payment-proof" class="request-form__input" accept="image/*" required>
+                        <div class="request-form__preview" id="preview-locker"></div>
+                    </div>
+
+                    <button type="submit" class="request-form__submit">Enviar Solicitud</button>
+                </form>
+            </details>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer__content">
+        <div class="footer__section footer__section--copyright">
+            <span class="footer__title">FusionCode © 2024</span>
+            <p class="footer__text">Todos los derechos reservados.</p>
+        </div>
+        <div class="footer__section footer__section--address">
+            <span class="footer__title">Dirección</span>
+            <p class="footer__text">Av. Ladrón de Guevara 253, Quito 170517</p>
+        </div>
+        <div class="footer__section footer__section--creators">
+            <span class="footer__title">Created and Designed by:</span>
+            <p class="footer__text">Ariel Amaguaña and José Merchán</p>
+        </div>
+    </div>
+</footer>
+
+<script type="module" src="../js/usuario.js"></script>
+</body>
+</html>
