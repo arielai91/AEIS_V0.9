@@ -52,6 +52,7 @@ class AuthController {
             });
 
             res.status(200).json({ message: 'Inicio de sesión exitoso', success: true, rol: result.rol });
+
         } catch (error) {
             logger.error('Error al iniciar sesión:', error as Error);
 
