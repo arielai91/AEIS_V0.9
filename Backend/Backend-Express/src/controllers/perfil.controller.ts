@@ -82,16 +82,23 @@ class PerfilController {
     }
   }
 
-  public async crearPerfilAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async crearPerfilAdmin(req: Request, res: Response): Promise<void> {
     try {
       const data: CrearPerfilDto = req.body;
       data.rol = 'Administrador';
       const perfil = await PerfilService.crearPerfil(data);
+      await PerfilService.subirImagenPerfil(perfil.cedula, 'Foto_Defecto.png');
       logger.info('Perfil creado exitosamente por el administrador.');
-      res.status(201).json({ message: 'Perfil creado exitosamente por el administrador.', perfil });
+      res.status(201).json({ message: 'Perfil creado exitosamente por el administrador.', success: true });
     } catch (error) {
       logger.error('Error al crear perfil por el administrador:', error as Error);
-      next(error);
+      const err = error as Error;
+
+      if (err.message === 'Perfil ya existe') {
+        res.status(409).json({ message: 'Perfil ya existe', success: false });
+      } else {
+        res.status(500).json({ message: 'Error interno del servidor', success: false });
+      }
     }
   }
 
@@ -152,28 +159,34 @@ class PerfilController {
     }
   }
 
-  public async obtenerCasillerosAsociados(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  public async obtenerCasillerosAsociados(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const id = req.user?.id as string;
       if (!id) {
         logger.warn('ID de usuario no proporcionado.');
-        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
+        res.status(400).json({ message: 'ID de usuario no proporcionado.', success: false });
       }
       const casilleros = await PerfilService.obtenerCasillerosAsociados(id);
       logger.info('Casilleros asociados obtenidos exitosamente.');
       res.status(200).json(casilleros);
     } catch (error) {
       logger.error('Error al obtener casilleros asociados:', error as Error);
-      next(error);
+
+      const err = error as Error;
+      if (err.message === 'No existen casilleros asociados a este perfil.') {
+        res.status(404).json({ success: false, message: err.message });
+      } else {
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+      }
     }
   }
 
-  public async obtenerSolicitudesAsociadas(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+  public async obtenerSolicitudesAsociadas(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const id = req.user?.id as string;
       if (!id) {
         logger.warn('ID de usuario no proporcionado.');
-        res.status(400).json({ message: 'ID de usuario no proporcionado.' });
+        res.status(400).json({ message: 'ID de usuario no proporcionado.', success: false });
       }
       const query = req.query;
       const solicitudes = await PerfilService.obtenerSolicitudesAsociadas(id, query);
@@ -181,7 +194,12 @@ class PerfilController {
       res.status(200).json(solicitudes);
     } catch (error) {
       logger.error('Error al obtener solicitudes asociadas:', error as Error);
-      next(error);
+      const err = error as Error;
+      if (err.message === 'No existen solicitudes asociadas a este perfil.') {
+        res.status(404).json({ success: false, message: err.message });
+      } else {
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+      }
     }
   }
 }

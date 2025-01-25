@@ -74,10 +74,10 @@ function loginUser(event) {
                     console.log(data.rol)
                     if (data.rol === "Administrador") {
                         console.log("INICIO EXITOSO")
-                        //window.location.href = "admin.html";
+                        window.location.href = "admin.html";
                     } else {
                         console.log("INICIO EXITOSO")
-                        //window.location.href = "user.html";
+                        window.location.href = "user.html";
                     }
                 } else {
                     showInfoMessage(data.message);

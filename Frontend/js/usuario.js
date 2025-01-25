@@ -13,7 +13,8 @@ const DOM_ELEMENTS = {
 
 const ROUTES = {
     getPerfil: "http://localhost:3000/perfiles",
-    getPlans: "http://localhost:3000/planes/"
+    getPlans: "http://localhost:3000/planes/",
+    getCasilleros: "http://localhost:3000/casilleros/",
 };
 
 window.showPanel = function (panelId) {
@@ -179,6 +180,39 @@ async function getPlans() {
     }
 }
 
+function getLockers() {
+    try {
+        const response = fetch(ROUTES.getCasilleros, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const data = response.json();
+        console.log("Casilleros obtenidos:", data);
+        createLockers(data);
+    } catch (error) {
+        console.error("Error al obtener los casilleros:", error);
+    }
+}
+
+function createLockers(lockers) {
+    const lockerGridItems = document.querySelector(".locker-grid__items");
+    lockerGridItems.innerHTML = ""; // Limpiar contenido previo
+
+    lockers.forEach((locker, index) => {
+        const lockerDiv = document.createElement("div");
+        lockerDiv.classList.add("locker");
+        if (locker.estado === "disponible") {
+            lockerDiv.classList.add("locker--available");
+        }
+        lockerDiv.textContent = String(index + 1).padStart(2, '0');
+        lockerGridItems.appendChild(lockerDiv);
+    });
+}
 
 function initializeEventListeners() {
     // Llamar a getPlans cuando se muestra el panel de planes disponibles
@@ -186,8 +220,8 @@ function initializeEventListeners() {
     if (availablePlansButton) {
         availablePlansButton.addEventListener("click", getPlans);
     }
+    DOM_ELEMENTS.lockerPanel.addEventListener("click", getLockers());
 }
-
 
 // Función principal para inicializar la aplicación
 async function initializeApp() {
