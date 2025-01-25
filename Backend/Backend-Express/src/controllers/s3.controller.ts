@@ -4,6 +4,8 @@ import PerfilModel from '@models/Perfil/Perfil';
 import logger from '@logger/logger';
 import { AuthenticatedRequest } from '@type/global';
 import SolicitudModel from '@models/Solicitud/Solicitud';
+import { UploadImageDto } from '@dtos/s3.dtos';
+import { validate } from 'class-validator';
 
 class S3Controller {
   /**
@@ -66,6 +68,15 @@ class S3Controller {
         return;
       }
 
+      // Validar el tipo de contenido
+      const uploadImageDto = new UploadImageDto();
+      uploadImageDto.contentType = file.mimetype;
+      const errors = await validate(uploadImageDto);
+      if (errors.length > 0) {
+        res.status(400).json({ success: false, errors });
+        return;
+      }
+
       const folder = 'perfil';
       const fileName = `${userId}-${Date.now()}-${file.originalname}`;
 
@@ -98,6 +109,15 @@ class S3Controller {
         return;
       }
 
+      // Validar el tipo de contenido
+      const uploadImageDto = new UploadImageDto();
+      uploadImageDto.contentType = file.mimetype;
+      const errors = await validate(uploadImageDto);
+      if (errors.length > 0) {
+        res.status(400).json({ success: false, errors });
+        return;
+      }
+
       const perfil = await PerfilModel.findById(userId);
 
       if (!perfil || !perfil.imagen) {
@@ -105,7 +125,9 @@ class S3Controller {
         return;
       }
 
-      await s3Service.deleteFile('perfil', perfil.imagen);
+      if (perfil.imagen !== 'Foto_Defecto.png') {
+        await s3Service.deleteFile('perfil', perfil.imagen);
+      }
 
       const fileName = `${userId}-${Date.now()}-${file.originalname}`;
       await s3Service.uploadFile('perfil', fileName, file.buffer, file.mimetype);
@@ -138,10 +160,13 @@ class S3Controller {
         return;
       }
 
-      await s3Service.deleteFile('perfil', perfil.imagen);
-      await PerfilModel.findByIdAndUpdate(userId, { imagen: null });
+      if (perfil.imagen !== 'Foto_Defecto.png') {
+        await s3Service.deleteFile('perfil', perfil.imagen);
+      }
 
-      res.status(200).json({ success: true, message: 'Imagen eliminada con éxito.' });
+      await PerfilModel.findByIdAndUpdate(userId, { imagen: 'Foto_Defecto.png' });
+
+      res.status(200).json({ success: true, message: 'Imagen eliminada con éxito y se ha establecido la imagen por defecto.' });
     } catch (err) {
       logger.error('Error al eliminar la imagen de perfil', err as Error);
       res.status(500).json({ success: false, message: 'Error al eliminar la imagen de perfil.' });
@@ -161,6 +186,11 @@ class S3Controller {
         return;
       }
 
+      if (solicitud.imagen === 'ImagenEliminada') {
+        res.status(410).json({ success: false, message: 'La imagen de solicitud ha sido eliminada.' });
+        return;
+      }
+
       const url = await s3Service.getSignedUrl('solicitud', solicitud.imagen);
       res.redirect(url);
     } catch (err) {
@@ -175,13 +205,6 @@ class S3Controller {
   async uploadSolicitudImage(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const file = req.file;
-
-      if (!file) {
-        res.status(400).json({ success: false, message: 'Archivo no proporcionado.' });
-        return;
-      }
-
       const solicitud = await SolicitudModel.findById(id);
 
       if (!solicitud) {
@@ -189,8 +212,26 @@ class S3Controller {
         return;
       }
 
+      const file = req.file;
+
+      if (!file) {
+        res.status(400).json({ success: false, message: 'Archivo no proporcionado.' });
+        return;
+      }
+
+      // Validar el tipo de contenido
+      const uploadImageDto = new UploadImageDto();
+      uploadImageDto.contentType = file.mimetype;
+      const errors = await validate(uploadImageDto);
+      if (errors.length > 0) {
+        res.status(400).json({ success: false, errors });
+        return;
+      }
+
+      const folder = 'solicitud';
       const fileName = `${id}-${Date.now()}-${file.originalname}`;
-      await s3Service.uploadFile('solicitud', fileName, file.buffer, file.mimetype);
+
+      await s3Service.uploadFile(folder, fileName, file.buffer, file.mimetype);
 
       solicitud.imagen = fileName;
       await solicitud.save();
@@ -216,9 +257,9 @@ class S3Controller {
       }
 
       await s3Service.deleteFile('solicitud', solicitud.imagen);
-      // tendra el nombre pero no se eliminara el campo
-      //solicitud.imagen = null;
-      //await solicitud.save();
+
+      solicitud.imagen = 'ImagenEliminada';
+      await solicitud.save();
 
       res.status(200).json({ success: true, message: 'Imagen eliminada con éxito.' });
     } catch (err) {
