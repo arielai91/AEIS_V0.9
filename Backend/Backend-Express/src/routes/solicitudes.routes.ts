@@ -25,7 +25,7 @@ class SolicitudRoutes {
         this.router.post(
             '/',
             authenticateJWT,
-            validateRole(['Cliente']),
+            validateRole(['Cliente', 'Administrador']),
             validateRequest(CsrfTokenDto, 'headers'),
             validateCsrfToken,
             validateRequest(CrearSolicitudDto, 'body'),

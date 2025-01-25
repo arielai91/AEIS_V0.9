@@ -65,7 +65,7 @@ export class ListarSolicitudesQueryDto {
  */
 export class ActualizarEstadoSolicitudDto {
     @IsMongoId({ message: 'El ID de la solicitud debe ser un ObjectId válido.' })
-    solicitudId!: string;
+    id!: string;
 
     @IsString({ message: 'El estado debe ser una cadena de texto.' })
     @IsEnum(['Aprobado', 'Rechazado', 'Por verificar'], {
@@ -79,7 +79,7 @@ export class ActualizarEstadoSolicitudDto {
  */
 export class SolicitudIdDto {
     @IsMongoId({ message: 'El ID de la solicitud debe ser un ObjectId válido.' })
-    solicitudId!: string;
+    id!: string;
 }
 
 /**

@@ -67,7 +67,11 @@ class PerfilService {
      * Obtener los casilleros asociados a un perfil.
      */
     public async obtenerCasillerosAsociados(id: string): Promise<ICasillero[]> {
-        return await CasilleroModel.find({ perfil: id }).exec();
+        const casilleros = await CasilleroModel.find({ perfil: id }).exec();
+        if (casilleros.length === 0) {
+            throw new Error('No existen casilleros asociados a este perfil.');
+        }
+        return casilleros;
     }
 
     /**
@@ -82,10 +86,16 @@ class PerfilService {
         const filtro: FilterQuery<ISolicitud> = { perfil: id };
         if (estado) filtro.estado = estado;
 
-        return await SolicitudModel.find(filtro)
+        const solicitudes = await SolicitudModel.find(filtro)
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)
             .exec();
+
+        if (solicitudes.length === 0) {
+            throw new Error('No existen solicitudes asociadas a este perfil.');
+        }
+
+        return solicitudes;
     }
 
     /**

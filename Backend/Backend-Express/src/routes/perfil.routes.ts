@@ -25,14 +25,14 @@ class PerfilRoutes {
     this.router.get(
       '/',
       authenticateJWT, // JWT para autenticar al usuario
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       PerfilController.obtenerPerfil
     );
 
     this.router.patch(
       '/',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       validateCsrfToken,
       validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
       validateRequest(ActualizarPerfilDto, 'body'), // Validar datos del body
@@ -42,7 +42,7 @@ class PerfilRoutes {
     this.router.delete(
       '/',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       validateCsrfToken,
       validateRequest(CsrfTokenDto, 'headers'), // Validar CSRF Token en headers
       PerfilController.eliminarPerfil
@@ -92,7 +92,7 @@ class PerfilRoutes {
     this.router.get(
       '/casilleros',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       PerfilController.obtenerCasillerosAsociados
     );
 
@@ -100,7 +100,7 @@ class PerfilRoutes {
     this.router.get(
       '/solicitudes',
       authenticateJWT,
-      validateRole(['Cliente']), // Solo los clientes pueden acceder
+      validateRole(['Cliente', 'Administrador']), // Solo los clientes pueden acceder
       validateRequest(SolicitudesQueryDto, 'query'), // Validar filtros y paginación
       PerfilController.obtenerSolicitudesAsociadas
     );
