@@ -1,5 +1,7 @@
 import {ImageUpdater} from "../content/Image.js";
 
+let perfil = null;
+
 const DOM_ELEMENTS = {
     userName: document.getElementById("profile-name"),
     userId: document.getElementById("profile-id"),
@@ -45,10 +47,10 @@ async function getPerfil() {
 
         const data = await response.json();
         console.log("Datos obtenidos:", data); // Para depuración
-        return data; // Devuelve los datos
+        fillCurrentPlanPanel(data);
+        return data;
     } catch (error) {
         console.error("Error al obtener el perfil:", error);
-        return null; // En caso de error, devuelve null
     }
 }
 
@@ -105,17 +107,23 @@ function fillCurrentPlanPanel(data) {
 function createAndAppendPlanCards(plans, container = document.querySelector('.plans-grid')) {
     // Filtrar los planes que no son por defecto
     const filteredPlans = plans.filter(plan => !plan.esPorDefecto);
+
     const button = document.querySelector(".plans-grid__cta");
     const noPlanMessage = document.querySelector(".no__plan-message");
-    console.log(noPlanMessage);
+
     // Si no hay planes disponibles, mostrar mensaje
     if (filteredPlans.length === 0) {
         button.style.display = "none";
+        if (noPlanMessage) noPlanMessage.style.display = "block"; // Mostrar el mensaje si no hay planes
         return;
     } else {
-        noPlanMessage.style.display = "none";
+        if (noPlanMessage) noPlanMessage.style.display = "none"; // Ocultar el mensaje si hay planes
     }
-    container.innerHTML = "";
+
+    // Limpiar solo las tarjetas de planes sin borrar los mensajes predeterminados
+    const existingPlanCards = container.querySelectorAll(".plan-card");
+    existingPlanCards.forEach(card => card.remove());
+
     // Crear y añadir una tarjeta por cada plan filtrado
     filteredPlans.forEach(plan => {
         // Crear el contenedor de la tarjeta
@@ -152,6 +160,7 @@ function createAndAppendPlanCards(plans, container = document.querySelector('.pl
 }
 
 
+
 async function getPlans() {
     // Mensaje de carga
     const loadingMessage = DOM_ELEMENTS.availablePlansPanel.querySelector(".plan__default-message");
@@ -181,53 +190,106 @@ async function getPlans() {
 }
 
 function getLockers() {
-    try {
-        const response = fetch(ROUTES.getCasilleros, {
-            method: "GET",
-            credentials: "include",
-        });
+    let availableLockers = [];
+    let occupiedLockers = [];
+    let reservedLockers = [];
+    const states = ["disponible", "reservado", "ocupado"];
+    const page = 1;
+    const limit = 40;
 
-        if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.status}`);
+    states.forEach(async (state, index) => {
+        try {
+            const response = await fetch(`${ROUTES.getCasilleros}?estado=${state}&page=${page}&limit=${limit}`, {
+                method: "GET",
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error en la solicitud: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(`Casilleros ${state} obtenidos:`, data);
+
+            if (state === "disponible") {
+                availableLockers = data;
+            } else if (state === "reservado") {
+                reservedLockers = data;
+            } else if (state === "ocupado") {
+                occupiedLockers = data;
+            }
+
+        } catch (error) {
+            console.error(`Error al obtener los casilleros ${state}:`, error);
+        } finally {
+            createLockers(availableLockers, reservedLockers, occupiedLockers)
         }
-
-        const data = response.json();
-        console.log("Casilleros obtenidos:", data);
-        createLockers(data);
-    } catch (error) {
-        console.error("Error al obtener los casilleros:", error);
-    }
+    });
 }
 
-function createLockers(lockers) {
+function createLockers(availableLockers, reservedLockers, occupiedLockers) {
     const lockerGridItems = document.querySelector(".locker-grid__items");
     lockerGridItems.innerHTML = ""; // Limpiar contenido previo
 
-    lockers.forEach((locker, index) => {
+    // Unir todas las listas de lockers
+    const allLockers = [...availableLockers, ...reservedLockers, ...occupiedLockers];
+
+    // Ordenar los lockers por el número
+    allLockers.sort((a, b) => a.numero - b.numero);
+
+    // Crear los lockers
+    allLockers.forEach((locker) => {
         const lockerDiv = document.createElement("div");
         lockerDiv.classList.add("locker");
+
+        // Asignar clase según el estado del locker
         if (locker.estado === "disponible") {
             lockerDiv.classList.add("locker--available");
+        } else if (locker.estado === "reservado") {
+            lockerDiv.classList.add("locker--reserved");
+        } else if (locker.estado === "ocupado") {
+            if (locker.perfil === perfil._id) {
+                lockerDiv.classList.add("locker--purchased");
+            } else {
+                lockerDiv.classList.add("locker--occupied");
+            }
         }
-        lockerDiv.textContent = String(index + 1).padStart(2, '0');
+
+        // Asignar el número del locker
+        lockerDiv.textContent = String(locker.numero).padStart(2, '0');
+
+        // Agregar una clase basada en el _id del locker
+        if (locker._id) {
+            lockerDiv.classList.add(`locker-${locker._id}`);
+        }
+
         lockerGridItems.appendChild(lockerDiv);
     });
 }
 
+
+
+
 function initializeEventListeners() {
     // Llamar a getPlans cuando se muestra el panel de planes disponibles
+    const currentPlanButton = document.querySelector(".sidebar__menu-item.current_panel");
+    if (currentPlanButton) {
+        currentPlanButton.addEventListener("click", getPerfil);
+    }
     const availablePlansButton = document.querySelector(".sidebar__menu-item.available_panel");
     if (availablePlansButton) {
         availablePlansButton.addEventListener("click", getPlans);
     }
-    DOM_ELEMENTS.lockerPanel.addEventListener("click", getLockers());
+    const lockerButton = document.querySelector(".sidebar__menu-item.locker_panel");
+    if (lockerButton) {
+        lockerButton.addEventListener("click", getLockers);
+    }
 }
 
 // Función principal para inicializar la aplicación
 async function initializeApp() {
-    const perfil = await getPerfil(); // Obtén los datos del perfil
+    perfil = await getPerfil(); // Obtén los datos del perfil
     fillProfileCard(perfil);
-    fillCurrentPlanPanel(perfil);
     initializeEventListeners();
 }
 
