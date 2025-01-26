@@ -7,16 +7,17 @@
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <title>Página de Administrador - APORTACIONES AEIS</title>
 </head>
 
 <body>
     <nav class="navbar">
-        <div class="navbar__left">
+        <div class="navbar__left" onclick="redirectToIndex()">
             <div class="navbar__logo"></div>
             <span class="navbar__brand">AEIS</span>
         </div>
-        <a href="../../index.html" class="navbar__logout">Cerrar Sesión</a>
+        <a href="#" class="navbar__logout" onclick="logout()">Cerrar Sesión</a>
     </nav>
 
     <main class="admin-main">
@@ -27,7 +28,13 @@
                     <div class="profile-card__picture">
                         <img alt="Profile Picture" id="profile-image">
                     </div>
-                    <button class="profile-card__change-picture">Cambiar foto</button>
+                    <form id="change-picture-form" enctype="multipart/form-data">
+                        <input type="file" id="profile-picture-input" name="image" accept="image/*"
+                            style="display: none;">
+                        <button type="button" class="profile-card__change-picture" onclick="triggerFileInput()">Cambiar
+                            foto</button>
+                        <button type="submit" style="display: none;"></button>
+                    </form>
                 </div>
                 <div class="profile-card__info">
                     <h3 id="profile-name"></h3>
