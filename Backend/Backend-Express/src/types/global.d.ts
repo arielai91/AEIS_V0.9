@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 import { Request } from 'express';
 export interface IPerfil {
   rol: 'Administrador' | 'Cliente';
@@ -27,7 +27,7 @@ export interface ICasillero {
   perfil: Schema.Types.ObjectId | null;
 }
 
-export interface ISolicitud {
+export interface ISolicitud extends Document {
   perfil: Schema.Types.ObjectId;
   tipo: 'Plan' | 'Casillero';
   plan?: Schema.Types.ObjectId;
