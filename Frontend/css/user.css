@@ -386,12 +386,23 @@
 .request-button {
     padding: 1rem 2rem;
     font-size: 1.2rem;
+    border-radius: 8px 8px 0 0;
     font-weight: bolder;
     background-color: var(--primary);
     color: white;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.request-button:hover {
+    background-color: var(--dark);
+    color: var(--primary);
+}
+
+.my-requests {
+    border-top: 2px solid var(--dark);
+    padding: 1rem;
 }
 
 .request-details {
@@ -428,6 +439,10 @@
 
 .request-card__status.approved {
     color: var(--primary);
+}
+
+.request-card__status.denied {
+    color: var(--error);
 }
 
 .request-card__type {
