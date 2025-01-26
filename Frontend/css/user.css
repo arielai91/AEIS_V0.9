@@ -261,9 +261,12 @@
     /* Centrado vertical */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centrar verticalmente */
-    align-items: center; /* Centrar horizontalmente */
-    height: 100%; /* Asegura que la tarjeta ocupe toda la altura disponible */
+    justify-content: center;
+    /* Centrar verticalmente */
+    align-items: center;
+    /* Centrar horizontalmente */
+    height: 100%;
+    /* Asegura que la tarjeta ocupe toda la altura disponible */
 }
 
 
@@ -356,7 +359,8 @@
 
 .locker {
     display: grid;
-    width: 70px; /* Ajuste automático según el contenedor */
+    width: 70px;
+    /* Ajuste automático según el contenedor */
     height: 70px;
     text-align: center;
     border-radius: 8px;

@@ -4,7 +4,7 @@ import authenticateJWT from '@middlewares/auth.middleware';
 import validateCsrfToken from '@middlewares/csrf.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
 import upload from '@middlewares/multer.middleware';
-import { FileNameDto, SolicitudIdDto, CsrfTokenDto } from '@dtos/s3.dtos';
+import { FileNameDto, SolicitudIdDto, CsrfTokenDto } from '@dtos/s3.dto';
 import validateRole from '@middlewares/rol-auth.middleware';
 class S3Routes {
   public router: Router;
