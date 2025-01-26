@@ -134,6 +134,7 @@ async function getRequests() {
 
 
 function showCreateRequestPanel() {
+    DOM_ELEMENTS.submitPlanRequest.style.display = "block";
     DOM_ELEMENTS.myRequestsButton.classList.remove("active");
     DOM_ELEMENTS.createRequestButton.classList.add("active");
     DOM_ELEMENTS.myRequestsPanel.style.display = "none";
@@ -148,10 +149,7 @@ async function hasPendingRequest() {
         requests.forEach(request => {
             if (request.estado === "Por revisar" || request.estado === "Aprobado") {
                 if (request.tipo === "Plan") {
-                    DOM_ELEMENTS.createRequestPlanButton.disabled = true;
-                    DOM_ELEMENTS.createRequestPlanButton.addEventListener("click", () => {
-                        alert("No puedes crear una solicitud en este momento.");
-                    });
+                    DOM_ELEMENTS.submitPlanRequest.style.display = "none";
                 }
             }
         });
@@ -544,11 +542,19 @@ async function handleLockerRequest(event) {
         lockerNonSelected.style.display = "none"; // Ocultar mensaje de error
     }
 
-    // Paso 2: Comprobar si se subió algún archivo
+// Paso 2: Comprobar si se subió algún archivo y su formato
     if (!lockerFileInput.files || lockerFileInput.files.length === 0) {
-        lockerCommitment.style.display = "block"; // Mostrar mensaje de error
+        lockerCommitment.textContent = "* Comprobante de pago faltante"; // Mostrar mensaje de error
+        lockerCommitment.style.display = "block";
         return;
     } else {
+        const file = lockerFileInput.files[0];
+        const validFormats = ["image/png", "image/jpeg", "image/jpg"];
+        if (!validFormats.includes(file.type)) {
+            lockerCommitment.textContent = "* Formato de archivo inválido"; // Mostrar mensaje de error
+            lockerCommitment.style.display = "block";
+            return;
+        }
         lockerCommitment.style.display = "none"; // Ocultar mensaje de error
     }
 
@@ -583,7 +589,6 @@ async function postLockerRequest(selectedLockerId, file) {
     const requestBody = {
         tipo: "Casillero",
         casillero: selectedLockerId,
-        imagen: "ajsdjasd", // Puedes ajustar si necesitas enviar un archivo
     };
 
     try {
