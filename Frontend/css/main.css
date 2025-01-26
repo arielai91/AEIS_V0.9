@@ -23,5 +23,6 @@ body {
 }
 
 .main-content {
-    flex: 1; /* Expande el contenido para llenar el espacio disponible */
+    flex: 1;
+    /* Expande el contenido para llenar el espacio disponible */
 }

@@ -3,7 +3,7 @@ import AuthController from '@controllers/auth.controller';
 import authenticateJWT from '@middlewares/auth.middleware';
 import validateCsrfToken from '@middlewares/csrf.middleware';
 import validateRequest from '@middlewares/validateRequest.middleware';
-import { LoginDto } from '@dtos/auth.dtos';
+import { LoginDto } from '@dtos/auth.dto';
 
 class AuthRoutes {
     public router: Router;

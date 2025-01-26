@@ -557,26 +557,109 @@ async function handleLockerRequest(event) {
     const file = lockerFileInput.files[0]; // Obtener el archivo subido
 
     try {
-        //await postLockerRequest(selectedLockerId, file);
-        alert(`Solicitud enviada con éxito. + ${selectedLockerId} y ${file}`);
-        console.log(file)
+        await postLockerRequest(selectedLockerId, file);
+        alert(`Solicitud enviada con éxito. ${selectedLockerId} y ${file}`);
         //location.reload(); // Refrescar la página
+    } catch (error) {
+        console.error(error);
+        alert("Ocurrió un error al enviar la solicitud. Intenta de nuevo.");
+    }
+}
+
+async function postLockerRequest(selectedLockerId, file) {
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+        const [key, value] = cookie.trim().split("=");
+        acc[key] = value;
+        return acc;
+    }, {});
+
+    const csrfToken = cookies.csrfToken; // Asegúrate de que el nombre de la cookie sea correcto
+
+    if (!csrfToken) {
+        throw new Error("CSRF token no encontrado en las cookies.");
+    }
+
+    // Construye el objeto JSON
+    const requestBody = {
+        tipo: "Casillero",
+        casillero: selectedLockerId,
+        imagen: "ajsdjasd", // Puedes ajustar si necesitas enviar un archivo
+    };
+
+    try {
+        const response = await fetch(ROUTES.postRequests, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json", // Importante para enviar JSON
+                "x-csrf-token": csrfToken,         // Token CSRF
+            },
+            body: JSON.stringify(requestBody),       // Convertir objeto a JSON
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error ${response.status}: ${errorData.message}`);
+        }
+
+        const data = await response.json();
+        console.log("Solicitud enviada:", data);
+    } catch (error) {
+        console.error("Error al enviar la solicitud:", error.message);
+    }
+}
+
+
+
+
+async function handlePlanRequest(event) {
+    event.preventDefault(); // Evitar el comportamiento por defecto del formulario
+
+    // Seleccionar elementos necesarios
+    const planDropdown = document.getElementById("plan-type");
+    const planNonSelected = document.querySelector(".plan-non-selected");
+    const planCommitment = document.querySelector(".plan-commitment");
+    const planFileInput = document.getElementById("plan-proof"); // Input de archivo
+
+    // Paso 1: Comprobar si se seleccionó un plan
+    if (!planDropdown.value) {
+        planNonSelected.style.display = "block"; // Mostrar mensaje de error
+        return;
+    } else {
+        planNonSelected.style.display = "none"; // Ocultar mensaje de error
+    }
+
+    // Paso 2: Comprobar si se subió algún archivo
+    if (!planFileInput.files || planFileInput.files.length === 0) {
+        planCommitment.style.display = "block"; // Mostrar mensaje de error
+        return;
+    } else {
+        planCommitment.style.display = "none"; // Ocultar mensaje de error
+    }
+
+    // Paso 3: Si pasa las validaciones, enviar solicitud y refrescar la página
+    const selectedPlanId = planDropdown.value;
+    const file = planFileInput.files[0]; // Obtener el archivo subido
+
+    try {
+        await postPlanRequest(selectedPlanId, file);
+        alert(`Solicitud enviada con éxito. + ${selectedPlanId} y ${file}`);
+        console.log(file)
+        //location.reload();
     } catch (error) {
         console.error("Error al enviar la solicitud:", error);
         alert("Ocurrió un error al enviar la solicitud. Intenta de nuevo.");
     }
 }
 
-async function postLockerRequest(selectedLockerId, file) {
+async function postPlanRequest(selectedPlanId, file) {
     const formData = new FormData();
-    formData.append("casillero", selectedLockerId);
-    formData.append("comprobante", file);
 
     try {
-        const response = await fetch(ROUTES.getCasilleros, {
+        const response = await fetch(ROUTES.postRequests, {
             method: "POST",
             credentials: "include",
-            body: formData,
+            body: JSON.stringify({ tipo: "Plan", plan: selectedPlanId, imagen: null}),
         });
 
         if (!response.ok) {
@@ -588,11 +671,6 @@ async function postLockerRequest(selectedLockerId, file) {
     } catch (error) {
         console.error("Error al enviar la solicitud:", error);
     }
-}
-
-
-function handlePlanRequest() {
-
 }
 
 function initializeEventListeners() {

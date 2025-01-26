@@ -30,6 +30,8 @@ class SolicitudService {
             if (!casilleroExistente) {
                 throw new Error('El casillero especificado no existe.');
             }
+            casilleroExistente.estado = 'reservado';
+            await casilleroExistente.save();
         }
 
         // Crear la solicitud

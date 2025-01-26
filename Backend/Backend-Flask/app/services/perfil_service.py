@@ -2,7 +2,7 @@ from app.extensions import mongo, bcrypt
 from app.services.email_service import verify_code
 
 
-def update_password(email, code, new_password):
+def update_password(email, code, new_password, password_confirmation):
     """
     Actualiza la contraseña de un usuario en MongoDB
     """
@@ -14,9 +14,17 @@ def update_password(email, code, new_password):
     if not perfil_existe(email):
         raise ValueError('Perfil no encontrado')
 
+    # Obtener la contraseña actual
+    contraseña_actual = obtener_contraseña_actual(email)
+    if not contraseña_actual:
+        raise ValueError('No se pudo obtener la contraseña actual')
+
+    # Verificar que la confirmación de la contraseña coincida con la contraseña actual
+    if not bcrypt.check_password_hash(contraseña_actual, password_confirmation):
+        raise ValueError('La confirmación de la contraseña no coincide con la contraseña actual')
+
     # Generar el hash de la nueva contraseña
-    hashed_password = bcrypt.generate_password_hash(
-        new_password).decode('utf-8')
+    hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
 
     # Actualizar la contraseña en MongoDB
     result = mongo.db.perfiles.update_one(
@@ -33,3 +41,10 @@ def perfil_existe(email):
     """
     perfil = mongo.db.perfiles.find_one({"email": email})
     return perfil is not None 
+
+def obtener_contraseña_actual(email):
+    """
+    Obtiene la contraseña actual de un perfil en la base de datos
+    """
+    perfil = mongo.db.perfiles.find_one({"email": email}, {"contraseña": 1})
+    return perfil["contraseña"] if perfil else None

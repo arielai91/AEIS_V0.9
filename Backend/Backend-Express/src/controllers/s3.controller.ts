@@ -4,7 +4,7 @@ import PerfilModel from '@models/Perfil/Perfil';
 import logger from '@logger/logger';
 import { AuthenticatedRequest } from '@type/global';
 import SolicitudModel from '@models/Solicitud/Solicitud';
-import { UploadImageDto } from '@dtos/s3.dtos';
+import { UploadImageDto } from '@dtos/s3.dto';
 import { validate } from 'class-validator';
 
 class S3Controller {
@@ -15,7 +15,7 @@ class S3Controller {
     try {
       const { fileName } = req.params;
       const url = await s3Service.getSignedUrl('static', fileName);
-      res.redirect(url);
+      res.json({ url: url });
     } catch (err) {
       logger.error('Error al servir imagen estática', err as Error);
       res.status(404).json({ success: false, message: 'Imagen estática no encontrada.' });
@@ -42,7 +42,7 @@ class S3Controller {
       }
 
       const url = await s3Service.getSignedUrl('perfil', perfil.imagen);
-      res.redirect(url);
+      res.json({ url: url });
     } catch (err) {
       logger.error('Error al servir imagen de perfil', err as Error);
       res.status(500).json({ success: false, message: 'Error al obtener la imagen de perfil.' });
@@ -151,7 +151,7 @@ class S3Controller {
       }
 
       const url = await s3Service.getSignedUrl('solicitud', solicitud.imagen);
-      res.redirect(url);
+      res.json({ url: url });
     } catch (err) {
       logger.error('Error al servir imagen de solicitud', err as Error);
       res.status(500).json({ success: false, message: 'Error al obtener la imagen de solicitud.' });
