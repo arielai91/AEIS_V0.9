@@ -70,107 +70,66 @@
 
         <!-- Panel Casillero -->
         <div id="locker" class="panel">
-            <h2 class="panel__title">Tu Casillero</h2>
+            <h2 class="panel__title">Tus Casilleros</h2>
             <div class="locker-info">
                 <p class="locker-info__message">Aún no tienes casilleros</p>
             </div>
             <div class="locker-grid">
                 <div class="locker-grid__legend">
                     <p class="locker-grid__legend-item locker-grid__legend-item--available">Disponible</p>
+                    <p class="locker-grid__legend-item locker-grid__legend-item--reserved">Reservado</p>
+                    <p class="locker-grid__legend-item locker-grid__legend-item--purchased">Adquirido</p>
                     <p class="locker-grid__legend-item">Ocupado</p>
                 </div>
                 <div class="locker-grid__items">
-                    <div class="locker locker--available">01</div>
-                    <div class="locker">02</div>
-                    <div class="locker locker--available">03</div>
-                    <div class="locker">04</div>
                 </div>
             </div>
         </div>
-
-        <!-- Panel Solicitudes -->
         <div id="requests" class="panel">
             <h2 class="panel__title">Solicitudes</h2>
-
-            <details class="request">
-                <summary class="request__summary">Solicitud de Aportación</summary>
-                <form class="request-form">
-                    <div class="request-form__group">
-                        <label for="plan-type" class="request-form__label">Tipo de Plan</label>
-                        <select id="plan-type" class="request-form__input" required>
-                            <option value="">Seleccione un plan</option>
-                            <option value="basico">Plan Básico - $30</option>
-                            <option value="premium">Plan Premium - $50</option>
-                        </select>
+            <button class=" request-button my-requests-button">Mis solicitudes</button>
+            <button class="request-button create-request-button">Crear solicitud</button>
+            <div class="my-request">
+            <details class="request-details">
+                <summary class="request-card">
+                    <span class="request-card__status pending">Pendiente</span>
+                    <span class="request-card__type">Casillero</span>
+                    <button class="request-card__toggle">▼</button>
+                </summary>
+                <div class="request-details__content">
+                    <p><strong>ID Solicitud:</strong> 12345</p>
+                    <p><strong>Tipo de Solicitud:</strong> Casillero</p>
+                    <p><strong>Fecha de Creación:</strong> 2025-01-20</p>
+                    <p><strong>Fecha de Aprobación:</strong> N/A</p>
+                    <div class="request-details__proof">
+                        <p><strong>Comprobante:</strong></p>
+                        <img src="../content/comprobante.jpg" alt="Comprobante Pendiente">
                     </div>
-
-                    <div class="bank-info">
-                        <h4 class="bank-info__title">Información Bancaria</h4>
-                        <p>Banco: Pichincha</p>
-                        <p>Cuenta: 2204567890</p>
-                        <p>Tipo: Ahorros</p>
-                        <p>Beneficiario: AEIS</p>
-                        <p>Valor a transferir: <span id="transfer-amount">$0</span></p>
-                    </div>
-
-                    <div class="request-form__group">
-                        <label for="payment-proof" class="request-form__label">Comprobante de Pago</label>
-                        <input type="file" id="payment-proof" class="request-form__input" accept="image/*" required>
-                        <div class="request-form__preview" id="preview-payment"></div>
-                    </div>
-
-                    <button type="submit" class="request-form__submit">Enviar Solicitud</button>
-                </form>
+                </div>
             </details>
+            </div>
+            <div class="create-request">
 
-            <details class="request">
-                <summary class="request__summary">Solicitud de Casillero</summary>
-                <form class="request-form">
-                    <div class="request-form__group">
-                        <label for="locker-number" class="request-form__label">Número de Casillero</label>
-                        <input type="text" id="locker-number" class="request-form__input" readonly>
-                    </div>
-
-                    <div class="bank-info">
-                        <h4 class="bank-info__title">Información Bancaria</h4>
-                        <p>Banco: Pichincha</p>
-                        <p>Cuenta: 2204567890</p>
-                        <p>Tipo: Ahorros</p>
-                        <p>Beneficiario: AEIS</p>
-                        <p>Valor a transferir: <span>$8</span></p>
-                    </div>
-
-                    <div class="request-form__group">
-                        <label for="locker-payment-proof" class="request-form__label">Comprobante de Pago</label>
-                        <input type="file" id="locker-payment-proof" class="request-form__input" accept="image/*"
-                               required>
-                        <div class="request-form__preview" id="preview-locker"></div>
-                    </div>
-
-                    <button type="submit" class="request-form__submit">Enviar Solicitud</button>
-                </form>
-            </details>
+            </div>
         </div>
+
     </section>
 </main>
-
 <footer class="footer">
     <div class="footer__content">
         <div class="footer__section footer__section--copyright">
-            <span class="footer__title">FusionCode © 2024</span>
-            <p class="footer__text">Todos los derechos reservados.</p>
+            <span>FusionCode © 2024. Todos los derechos reservados.</span>
         </div>
         <div class="footer__section footer__section--address">
-            <span class="footer__title">Dirección</span>
-            <p class="footer__text">Av. Ladrón de Guevara 253, Quito 170517</p>
+            <span>Dirección</span>
+            <p>Av. Ladrón de Guevara 253, Quito 170517</p>
         </div>
         <div class="footer__section footer__section--creators">
-            <span class="footer__title">Created and Designed by:</span>
-            <p class="footer__text">Ariel Amaguaña and José Merchán</p>
+            <span>Created and Designed by:</span>
+            <p>Ariel Amaguaña and José Merchán</p>
         </div>
     </div>
 </footer>
-
 <script type="module" src="../js/usuario.js"></script>
 </body>
 </html>
