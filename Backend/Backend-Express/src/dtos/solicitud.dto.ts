@@ -23,8 +23,8 @@ export class CrearSolicitudDto {
     casillero?: string;
 
     @IsString({ message: 'La imagen del comprobante de pago debe ser una cadena de texto.' })
-    @IsNotEmpty({ message: 'La imagen del comprobante de pago es obligatoria.' })
-    imagen!: string;
+    @IsOptional()
+    imagen?: string;
 }
 
 /**

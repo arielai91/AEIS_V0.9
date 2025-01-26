@@ -3,6 +3,7 @@ import SolicitudService from '@services/solicitud.service';
 import logger from '@logger/logger';
 import { CrearSolicitudDto } from '@dtos/solicitud.dto';
 import { AuthenticatedRequest } from '@type/global';
+import { ISolicitud } from '@type/global';
 
 class SolicitudController {
     /**
@@ -13,9 +14,13 @@ class SolicitudController {
             const data: CrearSolicitudDto = req.body;
             const userId = req.user?.id;
             data.perfil = userId as string;
-            await SolicitudService.crearSolicitud(data);
+            const solicitudGuardada: ISolicitud = await SolicitudService.crearSolicitud(data);
 
-            res.status(201).json({ message: 'Solicitud creada exitosamente.', success: true });
+            res.status(201).json({
+                message: 'Solicitud creada exitosamente.',
+                success: true,
+                id: solicitudGuardada._id // Accede a _id después de que la promesa se resuelva
+            });
         } catch (error) {
             logger.error('Error al crear solicitud:', error as Error);
 
