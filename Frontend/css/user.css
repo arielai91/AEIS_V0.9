@@ -210,14 +210,19 @@
 
 .plan__title {
     margin: 1rem 0;
-    color: var(--dark);
-    font-size: 1.5rem;
+    color: var(--primary);
+    font-size: 2rem;
     font-weight: bold;
 }
 
 .plan__description {
     color: var(--gray);
     margin-bottom: 1.5rem;
+}
+
+.plan__benefits {
+    font-size: 1.3rem;
+    list-style: none;
 }
 
 .plan__cta {
@@ -384,10 +389,10 @@
 /* Mis Solicitudes - Detalles */
 
 .request-button {
-    padding: 1rem 2rem;
+    padding: 0 1rem;
     font-size: 1.2rem;
+    height: 40px;
     border-radius: 8px 8px 0 0;
-    font-weight: bolder;
     background-color: var(--primary);
     color: white;
     border: none;
@@ -396,6 +401,11 @@
 }
 
 .request-button:hover {
+    background-color: var(--dark);
+    color: var(--primary);
+}
+
+.request-button.active {
     background-color: var(--dark);
     color: var(--primary);
 }
@@ -426,23 +436,6 @@
 
 .request-card:hover {
     background-color: #e9e9e9;
-}
-
-.request-card__status {
-    font-weight: bold;
-    font-size: 1rem;
-}
-
-.request-card__status.pending {
-    color: #fda45b;
-}
-
-.request-card__status.approved {
-    color: var(--primary);
-}
-
-.request-card__status.denied {
-    color: var(--error);
 }
 
 .request-card__type {
@@ -487,3 +480,177 @@
     border-radius: 8px;
     box-shadow: var(--shadow);
 }
+
+.request-card__status {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.request-card__status.por-verificar {
+    color: #fda45b;
+}
+
+.request-card__status.aprobado {
+    color: var(--primary);
+}
+
+.request-card__status.rechazado {
+    color: var(--error);
+}
+
+.no-requests-message {
+    text-align: center;
+    margin-top: 2rem;
+    color: #cccaca;
+    font-weight: bolder;
+    font-size: 4rem;
+}
+
+.create-request {
+    display: none;
+    border-top: 2px solid var(--dark);
+    padding: 1rem;
+}
+
+.create-request-inner-button {
+    font-size: 1rem;
+    width: 100px;
+    height: 30px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--light-gray);
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-request-inner-button:hover {
+    background-color: var(--light-gray);
+}
+
+.create-request-inner-button.active {
+    background-color: var(--light-gray);
+}
+
+.create-locker-request {
+    display: none;
+    border-top: 1px solid var(--light-gray);
+    padding: 1rem;
+}
+
+.create-plan-request {
+    border-top: 1px solid var(--light-gray);
+    padding: 1rem;
+    display: none;
+}
+
+.create-request-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+.create-request-bank-info {
+    margin-bottom: 1.5rem;
+}
+
+.create-request-bank-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.create-request-image-link {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.create-request-image {
+    max-width: 100px;
+    max-height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.create-request-group {
+    margin-bottom: 1rem;
+}
+
+.create-request-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.create-request-dropdown {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    color: var(--dark);
+}
+
+.create-request-amount,
+.locker-request-amount
+{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.create-request-file {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    color: var(--dark);
+}
+
+.create-request-submit {
+    display: inline-block;
+    width: 20%;
+    height: 40px;
+    font-size: 1.2rem;
+    color: white;
+    background-color: var(--primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 auto; /* Centra el botón horizontalmente */
+}
+
+.create-request-submit:hover {
+    background-color: var(--dark);
+}
+.request-info {
+    color: var(--error);
+    font-weight: bold;
+}
+
+.locker-non-selected {
+    display: none;
+}
+
+.plan-non-selected {
+    display: none;
+}
+
+.plan-commitment {
+    display: none;
+}
+
+.locker-commitment {
+    display: none;
+}
+
+

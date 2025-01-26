@@ -72,7 +72,7 @@
         <div id="locker" class="panel">
             <h2 class="panel__title">Tus Casilleros</h2>
             <div class="locker-info">
-                <p class="locker-info__message">Aún no tienes casilleros</p>
+                <p class="locker-info__message"></p>
             </div>
             <div class="locker-grid">
                 <div class="locker-grid__legend">
@@ -85,66 +85,84 @@
                 </div>
             </div>
         </div>
+<!--        Panel Solicitudes-->
         <div id="requests" class="panel">
             <h2 class="panel__title">Solicitudes</h2>
             <button class=" request-button my-requests-button">Mis solicitudes</button>
             <button class="request-button create-request-button">Crear solicitud</button>
             <div class="my-requests">
-                <details class="request-details">
-                    <summary class="request-card">
-                        <span class="request-card__status pending">Pendiente</span>
-                        <span class="request-card__type">Casillero</span>
-                        <button class="request-card__toggle">▼</button>
-                    </summary>
-                    <div class="request-details__content">
-                        <p><strong>ID Solicitud:</strong> 12345</p>
-                        <p><strong>Tipo de Solicitud:</strong> Casillero</p>
-                        <p><strong>Fecha de Creación:</strong> 2025-01-20</p>
-                        <p><strong>Fecha de Aprobación:</strong> N/A</p>
-                        <div class="request-details__proof">
-                            <p><strong>Comprobante:</strong></p>
-                            <img src="../content/comprobante.jpg" alt="Comprobante Pendiente">
-                        </div>
-                    </div>
-                </details>
-                <details class="request-details">
-                    <summary class="request-card">
-                        <span class="request-card__status approved">Aprobada</span>
-                        <span class="request-card__type">Casillero</span>
-                        <button class="request-card__toggle">▼</button>
-                    </summary>
-                    <div class="request-details__content">
-                        <p><strong>ID Solicitud:</strong> 12345</p>
-                        <p><strong>Tipo de Solicitud:</strong> Casillero</p>
-                        <p><strong>Fecha de Creación:</strong> 2025-01-20</p>
-                        <p><strong>Fecha de Aprobación:</strong> N/A</p>
-                        <div class="request-details__proof">
-                            <p><strong>Comprobante:</strong></p>
-                            <img src="../content/comprobante.jpg" alt="Comprobante Pendiente">
-                        </div>
-                    </div>
-                </details>
-                <details class="request-details">
-                    <summary class="request-card">
-                        <span class="request-card__status denied">Rechazada</span>
-                        <span class="request-card__type">Casillero</span>
-                        <button class="request-card__toggle">▼</button>
-                    </summary>
-                    <div class="request-details__content">
-                        <p><strong>ID Solicitud:</strong> 12345</p>
-                        <p><strong>Tipo de Solicitud:</strong> Casillero</p>
-                        <p><strong>Fecha de Creación:</strong> 2025-01-20</p>
-                        <p><strong>Fecha de Aprobación:</strong> N/A</p>
-                        <div class="request-details__proof">
-                            <p><strong>Comprobante:</strong></p>
-                            <img src="../content/comprobante.jpg" alt="Comprobante Pendiente">
-                        </div>
-                    </div>
-                </details>
             </div>
             <div class="create-request">
+                <button class="create-request-inner-button locker-button">Casilleros</button>
+                <button class="create-request-inner-button plan-button">Planes</button>
+                <!-- Solicitud de Casillero -->
+                <div class="create-locker-request">
+                    <h3 class="create-request-title">Solicitud de Casillero</h3>
+                    <div class="create-request-bank-info">
+                        <h4 class="create-request-bank-title">Información Bancaria</h4>
+                        <a href="../content/banco_guayaquil.png" target="_blank">
+                            <img src="../content/banco_guayaquil.png" alt="Información Bancaria" class="create-request-image">
+                        </a>
+                        <a href="../content/banco_pichincha.png" target="_blank">
+                            <img src="../content/banco_pichincha.png" alt="Información Bancaria" class="create-request-image">
+                        </a>
+                        <a href="../content/produbanco.png" target="_blank">
+                            <img src="../content/produbanco.png" alt="Información Bancaria" class="create-request-image">
+                        </a>
+                    </div>
+                    <div class="create-request-group">
+                        <label for="locker-number" class="create-request-label">Número de Casillero</label>
+                        <select id="locker-number" class="create-request-dropdown">
+                            <option value="">Seleccione un casillero</option>
+                        </select>
+                        <p class="request-info locker-non-selected">* Seleccione un casillero</p>
+                    </div>
+                    <div class="create-request-group">
+                        <label class="create-request-label">Cantidad a Transferir</label>
+                        <span class="locker-request-amount">$8.00</span>
+                    </div>
+                    <div class="create-request-group">
+                        <label for="locker-proof" class="create-request-label">Subir Comprobante (png, jpg, jpeg)</label>
+                        <input type="file" id="locker-proof" class="create-request-file">
+                        <p class="request-info locker-commitment">* Comprobante de pago faltante</p>
+                    </div>
+                    <button class="create-request-submit" id="create-locker-request">Enviar Solicitud</button>
+                </div>
 
+                <!-- Solicitud de Plan -->
+                <div class="create-plan-request">
+                    <h3 class="create-request-title">Solicitud de Plan</h3>
+                    <div class="create-request-bank-info">
+                        <h4 class="create-request-bank-title">Información Bancaria</h4>
+                        <a href="../content/banco_guayaquil.png" target="_blank">
+                            <img src="../content/banco_guayaquil.png" alt="Información Bancaria" class="create-request-image">
+                        </a>
+                        <a href="../content/banco_pichincha.png" target="_blank">
+                            <img src="../content/banco_pichincha.png" alt="Información Bancaria" class="create-request-image">
+                        </a>
+                        <a href="../content/produbanco.png" target="_blank">
+                            <img src="../content/produbanco.png" alt="Información Bancaria" class="create-request-image">
+                        </a>
+                    </div>
+                    <div class="create-request-group">
+                        <label for="plan-type" class="create-request-label">Tipo de Plan</label>
+                        <select id="plan-type" class="create-request-dropdown">
+                            <option value="">Seleccione un plan</option>
+                        </select>
+                        <p class="request-info plan-non-selected">* Seleccione un plan</p>
+                    </div>
+                    <div class="create-request-group create-request-group--ammount">
+                        <label class="create-request-label">Cantidad a Transferir</label>
+                    </div>
+                    <div class="create-request-group">
+                        <label for="plan-proof" class="create-request-label">Subir Comprobante (png, jpg, jpeg)</label>
+                        <input type="file" id="plan-proof" class="create-request-file">
+                        <p class="request-info plan-commitment">* Comprobante de pago faltante</p>
+                    </div>
+                    <button class="create-request-submit" id="create-plan-request">Enviar Solicitud</button>
+                </div>
             </div>
+
         </div>
 
     </section>

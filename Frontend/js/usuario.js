@@ -1,6 +1,9 @@
 import {ImageUpdater} from "../content/Image.js";
 
 let perfil = null;
+let availableLockers = [];
+let occupiedLockers = [];
+let reservedLockers = [];
 
 const DOM_ELEMENTS = {
     userName: document.getElementById("profile-name"),
@@ -11,13 +14,229 @@ const DOM_ELEMENTS = {
     availablePlansPanel: document.getElementById("available-plans"),
     lockerPanel: document.getElementById("locker"),
     requestPanel: document.getElementById("requests"),
+    myRequestsButton: document.querySelector(".my-requests-button"),
+    createRequestButton: document.querySelector(".create-request-button"),
+    myRequestsPanel: document.querySelector(".my-requests"),
+    createRequestPanel: document.querySelector(".create-request"),
+    createRequestLockerButton: document.querySelector(".locker-button"),
+    createRequestPlanButton: document.querySelector(".plan-button"),
+    createRequestLockerPanel: document.querySelector(".create-locker-request"),
+    createRequestPlanPanel: document.querySelector(".create-plan-request"),
+    submitLockerRequest: document.getElementById("create-locker-request"),
+    submitPlanRequest: document.getElementById("create-plan-request"),
 };
 
 const ROUTES = {
     getPerfil: "http://localhost:3000/perfiles",
     getPlans: "http://localhost:3000/planes/",
     getCasilleros: "http://localhost:3000/casilleros/",
+    getRequests: "http://localhost:3000/perfiles/solicitudes/",
+    postRequests: "http://localhost:3000/solicitudes/",
 };
+
+
+function showMyRequestsPanel() {
+    DOM_ELEMENTS.myRequestsButton.classList.add("active");
+    DOM_ELEMENTS.createRequestButton.classList.remove("active");
+
+    DOM_ELEMENTS.myRequestsPanel.style.display = "block";
+    DOM_ELEMENTS.createRequestPanel.style.display = "none";
+
+    // Llamar a la función asíncrona para llenar el panel
+    fillMyRequestsPanel();
+}
+
+async function fillMyRequestsPanel() {
+    const myRequestsPanel = DOM_ELEMENTS.myRequestsPanel;
+    myRequestsPanel.innerHTML = "";
+
+    // Esperar a que se obtengan las solicitudes
+    const requests = await getRequests();
+
+    if (requests.length !== 0) {
+        console.log("Hay solicitudes.");
+        requests.forEach(request => {
+            const requestStatusClass = request.estado.toLowerCase().replace(" ", "-");
+            const requestType = request.tipo;
+            const requestId = request._id;
+            const requestCreationDate = request.fechaEnvio;
+            const requestApprovalDate = request.fechaAprobacion || "N/A";
+            const requestProofImage = request.imagen;
+
+            const requestDetails = document.createElement("details");
+            requestDetails.classList.add("request-details");
+
+            const requestSummary = document.createElement("summary");
+            requestSummary.classList.add("request-card");
+
+            const requestStatus = document.createElement("span");
+            requestStatus.classList.add("request-card__status", requestStatusClass);
+            requestStatus.textContent = request.estado;
+
+            const requestTypeSpan = document.createElement("span");
+            requestTypeSpan.classList.add("request-card__type");
+            requestTypeSpan.textContent = requestType;
+
+            const requestToggleButton = document.createElement("button");
+            requestToggleButton.classList.add("request-card__toggle");
+            requestToggleButton.textContent = "▼";
+
+            requestSummary.appendChild(requestStatus);
+            requestSummary.appendChild(requestTypeSpan);
+            requestSummary.appendChild(requestToggleButton);
+
+            const requestDetailsContent = document.createElement("div");
+            requestDetailsContent.classList.add("request-details__content");
+
+            requestDetailsContent.innerHTML = `
+            <p><strong>ID Solicitud:</strong> ${requestId}</p>
+            <p><strong>Tipo de Solicitud:</strong> ${requestType}</p>
+            <p><strong>Fecha de Creación:</strong> ${requestCreationDate}</p>
+            <p><strong>Fecha de Aprobación:</strong> ${requestApprovalDate}</p>
+            <div class="request-details__proof">
+                <p><strong>Comprobante:</strong></p>
+                <a href="${requestProofImage}" target="_blank">
+                    <img src="${requestProofImage}" alt="Comprobante ${request.estado}">
+                </a>
+            </div>
+        `;
+
+            requestDetails.appendChild(requestSummary);
+            requestDetails.appendChild(requestDetailsContent);
+
+            myRequestsPanel.appendChild(requestDetails);
+        });
+    } else {
+        console.log("No hay solicitudes.");
+        myRequestsPanel.innerHTML = `<p class="no-requests-message">No tienes solicitudes.</p>`;
+    }
+}
+
+
+async function getRequests() {
+    try {
+        const response = await fetch(ROUTES.getRequests, {
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Solicitudes obtenidas:", data);
+        return data; // Devolver los datos obtenidos
+    } catch (error) {
+        console.error("Error al obtener las solicitudes:", error);
+        return []; // Devolver un array vacío si ocurre un error
+    }
+}
+
+
+function showCreateRequestPanel() {
+    DOM_ELEMENTS.myRequestsButton.classList.remove("active");
+    DOM_ELEMENTS.createRequestButton.classList.add("active");
+    DOM_ELEMENTS.myRequestsPanel.style.display = "none";
+    DOM_ELEMENTS.createRequestPanel.style.display = "block";
+
+    hasPendingRequest();
+}
+
+async function hasPendingRequest() {
+    const requests = await getRequests();
+    if (requests.length !== 0) {
+        requests.forEach(request => {
+            if (request.estado === "Por revisar" || request.estado === "Aprobado") {
+                if (request.tipo === "Plan") {
+                    DOM_ELEMENTS.createRequestPlanButton.disabled = true;
+                    DOM_ELEMENTS.createRequestPlanButton.addEventListener("click", () => {
+                        alert("No puedes crear una solicitud en este momento.");
+                    });
+                }
+            }
+        });
+    }
+}
+
+function showLockerPanelRequest() {
+    DOM_ELEMENTS.createRequestLockerButton.classList.add("active");
+    DOM_ELEMENTS.createRequestPlanButton.classList.remove("active");
+    DOM_ELEMENTS.createRequestLockerPanel.style.display = "block";
+    DOM_ELEMENTS.createRequestPlanPanel.style.display = "none";
+
+    fillLockerPanelRequest();
+}
+
+async function fillLockerPanelRequest() {
+    const lockers = await getAvailableLockers();
+    const lockerDropdown = document.getElementById("locker-number");
+    lockerDropdown.innerHTML = '<option value="">Seleccione un casillero</option>';
+    console.log(lockers);
+    lockers.forEach(locker => {
+        const option = document.createElement("option");
+        option.value = locker._id;
+        option.textContent = `Casillero ${locker.numero}`;
+        lockerDropdown.appendChild(option);
+    });
+}
+
+function showPlanPanelRequest() {
+    DOM_ELEMENTS.createRequestLockerButton.classList.remove("active");
+    DOM_ELEMENTS.createRequestPlanButton.classList.add("active");
+    DOM_ELEMENTS.createRequestLockerPanel.style.display = "none";
+    DOM_ELEMENTS.createRequestPlanPanel.style.display = "block";
+
+    fillPlanPanelRequest();
+}
+
+async function fillPlanPanelRequest() {
+    const plans = await getPlans(); // Obtiene los planes desde el servidor
+    const planDropdown = document.getElementById("plan-type");
+
+    // Limpiar el dropdown antes de llenarlo
+    planDropdown.innerHTML = '<option value="">Seleccione un plan</option>';
+
+    plans.forEach(plan => {
+        if (!plan.esPorDefecto) {
+            const option = document.createElement("option");
+            option.value = plan._id;
+            option.textContent = `${plan.nombre} - $${plan.precio}`;
+            option.setAttribute("data-price", plan.precio); // Agregar el precio como atributo
+            planDropdown.appendChild(option);
+        }
+    });
+
+    // Agregar el evento para crear y mostrar el elemento dinámico
+    planDropdown.addEventListener("change", (event) => {
+        const selectedOption = event.target.selectedOptions[0]; // La opción seleccionada
+        const price = selectedOption ? selectedOption.dataset.price : null;
+
+        // Verificar si el precio es válido
+        if (price) {
+            // Crear el elemento dinámico para mostrar el precio
+            const amountContainer = document.querySelector(".create-request-group.create-request-group--ammount");
+
+            // Remover cualquier elemento de precio existente
+            const existingAmountSpan = document.querySelector(".create-request-amount");
+            if (existingAmountSpan) {
+                existingAmountSpan.remove();
+            }
+
+            // Crear el nuevo elemento <span>
+            const amountSpan = document.createElement("span");
+            amountSpan.classList.add("create-request-amount");
+            amountSpan.textContent = `$${price}`;
+
+            // Añadir el nuevo <span> al contenedor
+            amountContainer.appendChild(amountSpan);
+
+            console.log("Precio seleccionado:", price); // Verificar el precio en consola
+        }
+    });
+}
+
+
+
 
 window.showPanel = function (panelId) {
     // Ocultar todos los paneles
@@ -88,7 +307,7 @@ function fillCurrentPlanPanel(data) {
         ctaButton.style.display = "inline-block"; // Mostrar el botón de acción
     } else {
         // Si hay un plan activo
-        planTitle.textContent = `Tu Plan: ${data.plan.nombre}`;
+        planTitle.textContent = data.plan.nombre.toUpperCase();
         // Crear lista de beneficios dinámicamente
         const benefitsList = document.createElement("ul");
         benefitsList.classList.add("plan__benefits");
@@ -104,7 +323,10 @@ function fillCurrentPlanPanel(data) {
     }
 }
 
-function createAndAppendPlanCards(plans, container = document.querySelector('.plans-grid')) {
+async function createAndAppendPlanCards() {
+    const container = document.querySelector('.plans-grid');
+    const plans = await getPlans();
+
     // Filtrar los planes que no son por defecto
     const filteredPlans = plans.filter(plan => !plan.esPorDefecto);
 
@@ -176,23 +398,43 @@ async function getPlans() {
 
         const data = await response.json();
         console.log("Planes obtenidos:", data);
-
-        // Ocultar el mensaje de "Cargando..."
         if (loadingMessage) {
             loadingMessage.style.display = "none";
         }
-
-        // Llenar las tarjetas de planes
-        createAndAppendPlanCards(data);
+        return data;
     } catch (error) {
         console.error("Error al obtener los planes:", error);
     }
 }
 
-function getLockers() {
-    let availableLockers = [];
-    let occupiedLockers = [];
-    let reservedLockers = [];
+async function getAvailableLockers() {
+    const state = "disponible";
+    const page = 1;
+    const limit = 40;
+
+    try {
+        const response = await fetch(`${ROUTES.getCasilleros}?estado=${state}&page=${page}&limit=${limit}`, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(`Casilleros ${state} obtenidos:`, data);
+
+        return data;
+
+    } catch (error) {
+        console.error(`Error al obtener los casilleros ${state}:`, error);
+    } finally {
+        createLockers(availableLockers, reservedLockers, occupiedLockers);
+    }
+}
+
+function getAllLockers() {
     const states = ["disponible", "reservado", "ocupado"];
     const page = 1;
     const limit = 40;
@@ -227,7 +469,25 @@ function getLockers() {
     });
 }
 
-function createLockers(availableLockers, reservedLockers, occupiedLockers) {
+async function createLockers(availableLockers, reservedLockers, occupiedLockers) {
+
+    let perfil = await getPerfil();
+    const casilleros = perfil.casilleros;
+
+    const lockerMessage = document.querySelector(".locker-info__message");
+    const lockerNumbers = [];
+
+    if (casilleros.length > 0) {
+        casilleros.forEach(casilleros => {
+            lockerNumbers.push(casilleros.numero);
+        });
+        console.log("Casilleros: ", lockerNumbers);
+        lockerMessage.textContent = lockerNumbers.join(", ");
+    } else {
+        console.log("No exsiten casilleros")
+        lockerMessage.textContent = "Aún no tienes casilleros.";
+    }
+
     const lockerGridItems = document.querySelector(".locker-grid__items");
     lockerGridItems.innerHTML = ""; // Limpiar contenido previo
 
@@ -267,8 +527,73 @@ function createLockers(availableLockers, reservedLockers, occupiedLockers) {
     });
 }
 
+async function handleLockerRequest(event) {
+    event.preventDefault(); // Evitar el comportamiento por defecto del formulario
+
+    // Seleccionar elementos necesarios
+    const lockerDropdown = document.getElementById("locker-number");
+    const lockerNonSelected = document.querySelector(".locker-non-selected");
+    const lockerCommitment = document.querySelector(".locker-commitment");
+    const lockerFileInput = document.getElementById("locker-proof"); // Input de archivo
+
+    // Paso 1: Comprobar si se seleccionó un casillero
+    if (!lockerDropdown.value) {
+        lockerNonSelected.style.display = "block"; // Mostrar mensaje de error
+        return;
+    } else {
+        lockerNonSelected.style.display = "none"; // Ocultar mensaje de error
+    }
+
+    // Paso 2: Comprobar si se subió algún archivo
+    if (!lockerFileInput.files || lockerFileInput.files.length === 0) {
+        lockerCommitment.style.display = "block"; // Mostrar mensaje de error
+        return;
+    } else {
+        lockerCommitment.style.display = "none"; // Ocultar mensaje de error
+    }
+
+    // Paso 3: Si pasa las validaciones, enviar solicitud y refrescar la página
+    const selectedLockerId = lockerDropdown.value;
+    const file = lockerFileInput.files[0]; // Obtener el archivo subido
+
+    try {
+        //await postLockerRequest(selectedLockerId, file);
+        alert(`Solicitud enviada con éxito. + ${selectedLockerId} y ${file}`);
+        console.log(file)
+        //location.reload(); // Refrescar la página
+    } catch (error) {
+        console.error("Error al enviar la solicitud:", error);
+        alert("Ocurrió un error al enviar la solicitud. Intenta de nuevo.");
+    }
+}
+
+async function postLockerRequest(selectedLockerId, file) {
+    const formData = new FormData();
+    formData.append("casillero", selectedLockerId);
+    formData.append("comprobante", file);
+
+    try {
+        const response = await fetch(ROUTES.getCasilleros, {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Solicitud enviada:", data);
+    } catch (error) {
+        console.error("Error al enviar la solicitud:", error);
+    }
+}
 
 
+function handlePlanRequest() {
+
+}
 
 function initializeEventListeners() {
     // Llamar a getPlans cuando se muestra el panel de planes disponibles
@@ -278,11 +603,36 @@ function initializeEventListeners() {
     }
     const availablePlansButton = document.querySelector(".sidebar__menu-item.available_panel");
     if (availablePlansButton) {
-        availablePlansButton.addEventListener("click", getPlans);
+        availablePlansButton.addEventListener("click", createAndAppendPlanCards);
     }
     const lockerButton = document.querySelector(".sidebar__menu-item.locker_panel");
     if (lockerButton) {
-        lockerButton.addEventListener("click", getLockers);
+        lockerButton.addEventListener("click", getAllLockers);
+    }
+
+    const requestsButton = document.querySelector(".sidebar__menu-item.request_panel");
+    if (requestsButton) {
+        requestsButton.addEventListener("click", showMyRequestsPanel);
+    }
+
+    if (DOM_ELEMENTS.myRequestsButton) {
+        DOM_ELEMENTS.myRequestsButton.addEventListener("click", showMyRequestsPanel);
+    }
+    if (DOM_ELEMENTS.createRequestButton) {
+        DOM_ELEMENTS.createRequestButton.addEventListener("click", showCreateRequestPanel);
+        DOM_ELEMENTS.createRequestButton.addEventListener("click", showLockerPanelRequest);
+    }
+    if (DOM_ELEMENTS.createRequestLockerButton) {
+        DOM_ELEMENTS.createRequestLockerButton.addEventListener("click", showLockerPanelRequest);
+    }
+    if (DOM_ELEMENTS.createRequestPlanButton) {
+        DOM_ELEMENTS.createRequestPlanButton.addEventListener("click", showPlanPanelRequest);
+    }
+    if (DOM_ELEMENTS.submitLockerRequest) {
+        DOM_ELEMENTS.submitLockerRequest.addEventListener("click", handleLockerRequest);
+    }
+    if (DOM_ELEMENTS.submitPlanRequest) {
+        DOM_ELEMENTS.submitPlanRequest.addEventListener("click", handlePlanRequest);
     }
 }
 
