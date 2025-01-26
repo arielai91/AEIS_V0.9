@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsMongoId, IsNumber, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsMongoId, IsNumber, Min, IsOptional } from 'class-validator';
 
 /**
  * DTO para crear un casillero
@@ -58,14 +58,17 @@ export class FiltroCasillerosQueryDto {
     @IsEnum(['disponible', 'ocupado', 'reservado', 'mantenimiento'], {
         message: 'El estado debe ser uno de los siguientes: disponible, ocupado, reservado, mantenimiento.',
     })
+    @IsOptional()
     estado?: string;
 
     @IsNumber({}, { message: 'La página debe ser un número.' })
     @Min(1, { message: 'La página debe ser mayor o igual a 1.' })
+    @IsOptional()
     page?: number;
 
     @IsNumber({}, { message: 'El límite debe ser un número.' })
     @Min(1, { message: 'El límite debe ser mayor o igual a 1.' })
+    @IsOptional()
     limit?: number;
 }
 

@@ -3,7 +3,7 @@ import string
 import pytz
 from datetime import datetime, timedelta, timezone
 from flask_mail import Message
-from app.extensions import mail, db
+from app.extensions import mail, db, mongo
 from app.model.models import VerificationCode
 from app.utils import validate_email_address
 
@@ -117,3 +117,67 @@ def clean_expired_code(app):
             print('Expired verification codes cleaned up')
         except Exception as e:
             print(f'Error cleaning expired verification codes: {e}')
+
+
+def send_notification_email(email, tipo):
+    """
+    Envía un correo de notificación a la dirección de correo electrónico proporcionada.
+    """
+    if not validate_email_address(email):
+        raise ValueError('Dirección de correo electrónico no válida')
+
+    if tipo == 'Administrador':
+        # Enviar correo al email proporcionado
+        subject = "Revisión de Solicitud Completada"
+        body = (
+            f"Estimado usuario,\n\n"
+            f"Nos complace informarle que su solicitud ha sido revisada por uno de nuestros administradores.\n\n"
+            f"Si tiene alguna pregunta o necesita más información, no dude en ponerse en contacto con nuestro equipo de soporte.\n\n"
+            f"Saludos cordiales,\n"
+            f"El equipo de soporte."
+        )
+        send_email(email, subject, body)
+    elif tipo == 'Cliente':
+        # Buscar todos los administradores en la base de datos y enviarles el correo
+        admins = get_admin_emails()
+        subject = "Nueva Solicitud de Revisión"
+        body = (
+            f"Estimado administrador,\n\n"
+            f"Se ha recibido una nueva solicitud que requiere su revisión.\n\n"
+            f"Por favor, inicie sesión en el sistema para revisar y procesar la solicitud lo antes posible.\n\n"
+            f"Gracias por su atención y colaboración.\n\n"
+            f"Saludos cordiales,\n"
+            f"El equipo de soporte."
+        )
+        for admin_email in admins:
+            send_email(admin_email, subject, body)
+    else:
+        raise ValueError('Tipo de usuario no válido')
+
+def get_admin_emails():
+    """
+    Obtiene los correos electrónicos de todos los administradores en la base de datos.
+    """
+    admins = mongo.db.perfiles.find({"rol": "Administrador"})
+    return [admin['email'] for admin in admins]
+
+def send_email(to_email, subject, body):
+    """
+    Función auxiliar para enviar un correo electrónico.
+    """
+    from_email = "tu_correo@example.com"
+
+    # Crear el mensaje
+    msg = Message(
+        subject=subject,
+        recipients=[to_email],
+        body=body,
+        sender=from_email
+    )
+
+    try:
+        # Enviar el correo
+        mail.send(msg)
+        print(f"Correo enviado a {to_email}")
+    except Exception as e:
+        print(f"Error al enviar el correo: {e}")

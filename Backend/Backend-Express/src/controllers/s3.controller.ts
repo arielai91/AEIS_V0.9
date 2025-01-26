@@ -50,47 +50,6 @@ class S3Controller {
   }
 
   /**
-   * Subir imagen de perfil
-   */
-  async uploadPerfilImage(req: AuthenticatedRequest, res: Response): Promise<void> {
-    try {
-      const userId = req.user?.id;
-
-      if (!userId) {
-        res.status(401).json({ success: false, message: 'No autorizado.' });
-        return;
-      }
-
-      const file = req.file;
-
-      if (!file) {
-        res.status(400).json({ success: false, message: 'Archivo no proporcionado.' });
-        return;
-      }
-
-      // Validar el tipo de contenido
-      const uploadImageDto = new UploadImageDto();
-      uploadImageDto.contentType = file.mimetype;
-      const errors = await validate(uploadImageDto);
-      if (errors.length > 0) {
-        res.status(400).json({ success: false, errors });
-        return;
-      }
-
-      const folder = 'perfil';
-      const fileName = `${userId}-${Date.now()}-${file.originalname}`;
-
-      await s3Service.uploadFile(folder, fileName, file.buffer, file.mimetype);
-      await PerfilModel.findByIdAndUpdate(userId, { imagen: fileName });
-
-      res.status(200).json({ success: true, message: 'Imagen subida con éxito.', fileName });
-    } catch (err) {
-      logger.error('Error al subir la imagen de perfil', err as Error);
-      res.status(500).json({ success: false, message: 'Error al subir la imagen de perfil.' });
-    }
-  }
-
-  /**
    * Actualizar imagen de perfil
    */
   async updatePerfilImage(req: AuthenticatedRequest, res: Response): Promise<void> {

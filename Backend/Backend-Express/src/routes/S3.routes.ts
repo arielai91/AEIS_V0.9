@@ -31,22 +31,12 @@ class S3Routes {
       S3Controller.servePerfilImage
     );
 
-    this.router.post(
-      '/perfil',
-      authenticateJWT,
-      validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
-      validateCsrfToken,
-      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
-      upload.single('image'), // Usa el middleware personalizado para manejar la imagen
-      S3Controller.uploadPerfilImage
-    );
-
     this.router.put(
       '/perfil',
       authenticateJWT,
       validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
-      validateCsrfToken,
       validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      validateCsrfToken,
       upload.single('image'), // Usa el middleware personalizado para manejar la imagen
       S3Controller.updatePerfilImage
     );
@@ -55,8 +45,8 @@ class S3Routes {
       '/perfil',
       authenticateJWT,
       validateRole(['Cliente', 'Administrador']), // Solo los clientes y administradores pueden acceder
-      validateCsrfToken,
       validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
+      validateCsrfToken,
       S3Controller.deletePerfilImage
     );
 
@@ -64,7 +54,7 @@ class S3Routes {
     this.router.get(
       '/solicitud/:id',
       authenticateJWT,
-      validateRole(['Administrador']),
+      validateRole(['Administrador', 'Cliente']), // Solo los clientes y administradores pueden acceder
       validateRequest(SolicitudIdDto, 'params'), // Validación del ID de la solicitud
       S3Controller.serveSolicitudImage
     );
@@ -84,9 +74,9 @@ class S3Routes {
       '/solicitud/:id',
       authenticateJWT,
       validateRole(['Administrador']),
+      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
       validateCsrfToken,
       validateRequest(SolicitudIdDto, 'params'), // Validación del ID de la solicitud
-      validateRequest(CsrfTokenDto, 'headers'), // Validación del CSRF Token
       S3Controller.deleteSolicitudImage
     );
   }

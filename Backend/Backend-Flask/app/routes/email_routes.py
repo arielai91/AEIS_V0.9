@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services import send_verification_email, verify_code, perfil_existe
+from app.services import send_verification_email, verify_code, perfil_existe, send_notification_email
 
 email_routes = Blueprint('email_routes', __name__)
 
@@ -70,3 +70,20 @@ def request_password_reset():
         return jsonify({'message': 'Correo de cambio de contraseña enviado correctamente', 'success': True}), 200
     except Exception:
         return jsonify({'message': 'No se pudo enviar el correo de verificación', 'success': False}), 500
+
+@email_routes.route('/notificar', methods=['POST'])
+def notificar():
+    data = request.get_json()
+    email = data.get('email')
+    tipo = data.get('tipo')
+
+    if not email or not tipo:
+        return jsonify({'message': 'Correo electrónico y tipo son requeridos', 'success': False}), 400
+
+    try:
+        send_notification_email(email, tipo)
+        return jsonify({'message': 'Correo de notificación enviado correctamente', 'success': True}), 200
+    except ValueError as e:
+        return jsonify({'message': str(e), 'success': False}), 400
+    except Exception:
+        return jsonify({'message': 'Ocurrió un error al enviar el correo de notificación', 'success': False}), 500
