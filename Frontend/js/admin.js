@@ -585,7 +585,6 @@ window.logout = async function() {
         window.location.href = "../../index.html";
     } catch (error) {
         console.error("Error al cerrar sesión:", error);
-        alert("Hubo un problema al cerrar la sesión. Por favor, inténtalo de nuevo.");
     }
 }
 

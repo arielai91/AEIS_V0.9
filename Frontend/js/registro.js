@@ -1,5 +1,3 @@
-import {ImageUpdater} from "../content/Image.js";
-
 document.addEventListener("DOMContentLoaded", function () {
     const registroForm = document.getElementById("registroForm");
     const verificacionModal = document.getElementById("verificacionModal");
@@ -209,9 +207,3 @@ function showNotification(message, type) {
     // Aquí puedes implementar la lógica para mostrar notificaciones en tu UI
     alert(message); // O reemplazar por una notificación en pantalla
 }
-
-const imageUpdater = new ImageUpdater(
-    "https://codebyelaina.com/bucket/image/logo_aeis.png",
-    ".logo_aeis"
-);
-imageUpdater.updateImage();

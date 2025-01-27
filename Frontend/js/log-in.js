@@ -103,6 +103,9 @@ function initializeEventListeners() {
         console.error("El botón de login no está definido.");
     }
 }
+window.redirectToIndex = function() {
+    window.location.href = "../../index.html";
+}
 
 // Inicia los event listeners después de que el DOM esté cargado
 document.addEventListener("DOMContentLoaded", initializeEventListeners);

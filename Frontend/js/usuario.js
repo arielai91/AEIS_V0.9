@@ -1,4 +1,3 @@
-import {ImageUpdater} from "../content/Image.js";
 
 let perfil = null;
 let availableLockers = [];
@@ -32,6 +31,7 @@ const ROUTES = {
     getCasilleros: "http://localhost:3000/casilleros/",
     getRequests: "http://localhost:3000/perfiles/solicitudes/",
     postRequests: "http://localhost:3000/solicitudes/",
+    postImage: "http://localhost:3000/bucket/solicitud/",
 };
 
 
@@ -55,13 +55,16 @@ async function fillMyRequestsPanel() {
 
     if (requests.length !== 0) {
         console.log("Hay solicitudes.");
-        requests.forEach(request => {
+
+        for (const request of requests) {
+            const imageUrl = await getImage(request._id);
+            console.log(imageUrl);
+
             const requestStatusClass = request.estado.toLowerCase().replace(" ", "-");
             const requestType = request.tipo;
             const requestId = request._id;
             const requestCreationDate = request.fechaEnvio;
             const requestApprovalDate = request.fechaAprobacion || "N/A";
-            const requestProofImage = request.imagen;
 
             const requestDetails = document.createElement("details");
             requestDetails.classList.add("request-details");
@@ -95,8 +98,8 @@ async function fillMyRequestsPanel() {
             <p><strong>Fecha de Aprobación:</strong> ${requestApprovalDate}</p>
             <div class="request-details__proof">
                 <p><strong>Comprobante:</strong></p>
-                <a href="${requestProofImage}" target="_blank">
-                    <img src="${requestProofImage}" alt="Comprobante ${request.estado}">
+                <a href="${imageUrl}" target="_blank">
+                    <img src="${imageUrl}" alt="Comprobante ${request.estado}">
                 </a>
             </div>
         `;
@@ -105,12 +108,13 @@ async function fillMyRequestsPanel() {
             requestDetails.appendChild(requestDetailsContent);
 
             myRequestsPanel.appendChild(requestDetails);
-        });
+        }
     } else {
         console.log("No hay solicitudes.");
         myRequestsPanel.innerHTML = `<p class="no-requests-message">No tienes solicitudes.</p>`;
     }
 }
+
 
 
 async function getRequests() {
@@ -133,28 +137,48 @@ async function getRequests() {
 }
 
 
-function showCreateRequestPanel() {
+async function showCreateRequestPanel() {
     DOM_ELEMENTS.submitPlanRequest.style.display = "block";
     DOM_ELEMENTS.myRequestsButton.classList.remove("active");
     DOM_ELEMENTS.createRequestButton.classList.add("active");
     DOM_ELEMENTS.myRequestsPanel.style.display = "none";
     DOM_ELEMENTS.createRequestPanel.style.display = "block";
-
-    hasPendingRequest();
 }
 
 async function hasPendingRequest() {
-    const requests = await getRequests();
-    if (requests.length !== 0) {
+    console.log("entre a hasPendingRequest");
+    const requests = await getRequests(); // Llama a la función para obtener las solicitudes
+    const requestInfo = document.querySelector(".has-requests");
+    requestInfo.style.display = "none";
+    // Verifica que existan solicitudes
+    if (requests && requests.length > 0) {
+        let hasPendingPlan = false; // Bandera para saber si hay solicitudes pendientes de tipo Plan
+        console.log("-------------------------------")
+        console.log(requests[0].estado);
+        // Itera sobre las solicitudes
         requests.forEach(request => {
-            if (request.estado === "Por revisar" || request.estado === "Aprobado") {
-                if (request.tipo === "Plan") {
-                    DOM_ELEMENTS.submitPlanRequest.style.display = "none";
-                }
+            // Normaliza el estado y verifica la condición
+            const estado = request.estado?.toLowerCase();
+            console.log(estado);
+            if ((estado === "por verificar" || estado === "aprobado") && request.tipo === "Plan") {
+                hasPendingPlan = true;
             }
         });
+
+        if (hasPendingPlan) {
+            console.log("Tienes una solicitud de plan pendiente.");
+            if (DOM_ELEMENTS.submitPlanRequest) {
+                requestInfo.style.display = "block";
+                DOM_ELEMENTS.submitPlanRequest.style.display = "none";
+            } else {
+                console.error("El elemento submitPlanRequest no está definido.");
+            }
+        }
+    } else {
+        console.log("No hay solicitudes pendientes.");
     }
 }
+
 
 function showLockerPanelRequest() {
     DOM_ELEMENTS.createRequestLockerButton.classList.add("active");
@@ -188,6 +212,7 @@ function showPlanPanelRequest() {
 }
 
 async function fillPlanPanelRequest() {
+    hasPendingRequest();
     const plans = await getPlans(); // Obtiene los planes desde el servidor
     const planDropdown = document.getElementById("plan-type");
 
@@ -561,15 +586,9 @@ async function handleLockerRequest(event) {
     // Paso 3: Si pasa las validaciones, enviar solicitud y refrescar la página
     const selectedLockerId = lockerDropdown.value;
     const file = lockerFileInput.files[0]; // Obtener el archivo subido
-
-    try {
-        await postLockerRequest(selectedLockerId, file);
-        alert(`Solicitud enviada con éxito. ${selectedLockerId} y ${file}`);
-        //location.reload(); // Refrescar la página
-    } catch (error) {
-        console.error(error);
-        alert("Ocurrió un error al enviar la solicitud. Intenta de nuevo.");
-    }
+    await postLockerRequest(selectedLockerId, file);
+    alert(`Solicitud enviada con éxito. ${selectedLockerId} y ${file}`);
+    //location.reload();
 }
 
 async function postLockerRequest(selectedLockerId, file) {
@@ -608,13 +627,12 @@ async function postLockerRequest(selectedLockerId, file) {
         }
 
         const data = await response.json();
+        postImage(data.id, file);
         console.log("Solicitud enviada:", data);
     } catch (error) {
         console.error("Error al enviar la solicitud:", error.message);
     }
 }
-
-
 
 
 async function handlePlanRequest(event) {
@@ -634,52 +652,151 @@ async function handlePlanRequest(event) {
         planNonSelected.style.display = "none"; // Ocultar mensaje de error
     }
 
-    // Paso 2: Comprobar si se subió algún archivo
+    // Paso 2: Comprobar si se subió algún archivo y su formato
     if (!planFileInput.files || planFileInput.files.length === 0) {
-        planCommitment.style.display = "block"; // Mostrar mensaje de error
+        planCommitment.textContent = "* Comprobante de pago faltante"; // Mostrar mensaje de error
+        planCommitment.style.display = "block";
         return;
     } else {
+        const file = planFileInput.files[0];
+        const validFormats = ["image/png", "image/jpeg", "image/jpg"];
+        if (!validFormats.includes(file.type)) {
+            planCommitment.textContent = "* Formato de archivo inválido"; // Mostrar mensaje de error
+            planCommitment.style.display = "block";
+            return;
+        }
         planCommitment.style.display = "none"; // Ocultar mensaje de error
     }
 
     // Paso 3: Si pasa las validaciones, enviar solicitud y refrescar la página
     const selectedPlanId = planDropdown.value;
     const file = planFileInput.files[0]; // Obtener el archivo subido
-
-    try {
-        await postPlanRequest(selectedPlanId, file);
-        alert(`Solicitud enviada con éxito. + ${selectedPlanId} y ${file}`);
-        console.log(file)
-        //location.reload();
-    } catch (error) {
-        console.error("Error al enviar la solicitud:", error);
-        alert("Ocurrió un error al enviar la solicitud. Intenta de nuevo.");
-    }
+    await postPlanRequest(selectedPlanId, file);
+    alert(`Solicitud enviada con éxito. ${selectedPlanId} y ${file}`);
+   //location.reload();
 }
 
 async function postPlanRequest(selectedPlanId, file) {
-    const formData = new FormData();
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+        const [key, value] = cookie.trim().split("=");
+        acc[key] = value;
+        return acc;
+    }, {});
+
+    const csrfToken = cookies.csrfToken; // Asegúrate de que el nombre de la cookie sea correcto
+
+    if (!csrfToken) {
+        throw new Error("CSRF token no encontrado en las cookies.");
+    }
+
+    // Construye el objeto JSON
+    const requestBody = {
+        tipo: "Plan",
+        plan: selectedPlanId,
+    };
 
     try {
         const response = await fetch(ROUTES.postRequests, {
             method: "POST",
             credentials: "include",
-            body: JSON.stringify({ tipo: "Plan", plan: selectedPlanId, imagen: null}),
+            headers: {
+                "Content-Type": "application/json", // Importante para enviar JSON
+                "x-csrf-token": csrfToken,         // Token CSRF
+            },
+            body: JSON.stringify(requestBody),       // Convertir objeto a JSON
         });
 
         if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.status}`);
+            const errorData = await response.json();
+            throw new Error(`Error ${response.status}: ${errorData.message}`);
         }
 
         const data = await response.json();
+        postImage(data.id, file);
         console.log("Solicitud enviada:", data);
     } catch (error) {
-        console.error("Error al enviar la solicitud:", error);
+        console.error("Error al enviar la solicitud:", error.message);
+    }
+}
+
+async function postImage(id, file) {
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+        const [key, value] = cookie.trim().split("=");
+        acc[key] = value;
+        return acc;
+    }, {});
+
+    const csrfToken = cookies.csrfToken; // Asegúrate de que el nombre de la cookie sea correcto
+
+    if (!csrfToken) {
+        throw new Error("CSRF token no encontrado en las cookies.");
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+        const url = `${ROUTES.postImage}${id}`;
+        console.log(url)
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "x-csrf-token": csrfToken, // Token CSRF
+            },
+            body: formData, // Enviar FormData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error ${response.status}: ${errorData.message}`);
+        }
+
+        const data = await response.json();
+        console.log("Imagen enviada:", data);
+    } catch (error) {
+        console.error("Error al enviar la imagen:", error.message);
+    }
+}
+
+async function getImage(id) {
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+        const [key, value] = cookie.trim().split("=");
+        acc[key] = value;
+        return acc;
+    }, {});
+
+    const csrfToken = cookies.csrfToken; // Asegúrate de que el nombre de la cookie sea correcto
+
+    if (!csrfToken) {
+        throw new Error("CSRF token no encontrado en las cookies.");
+    }
+
+    try {
+        const url = `${ROUTES.postImage}${id}`;
+        console.log(url);
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "x-csrf-token": csrfToken, // Token CSRF
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error ${response.status}: ${errorData.message}`);
+        }
+
+        const data = await response.json();
+        console.log("Imagen obtenida:", data);
+        return data.url;
+    } catch (error) {
+        console.error("Error al obtener la imagen:", error.message);
     }
 }
 
 function initializeEventListeners() {
-    // Llamar a getPlans cuando se muestra el panel de planes disponibles
     const currentPlanButton = document.querySelector(".sidebar__menu-item.current_panel");
     if (currentPlanButton) {
         currentPlanButton.addEventListener("click", getPerfil);
@@ -719,6 +836,36 @@ function initializeEventListeners() {
     }
 }
 
+async function loadNavbarLogo() {
+    const logoElement = document.querySelector(".navbar__logo");
+    const logoFilename = "logo_aeis.png"; // Nombre del archivo de la imagen
+
+    try {
+        // Solicitar la URL firmada al backend
+        const response = await fetch(`http://localhost:3000/bucket/static/${logoFilename}`, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener la URL firmada del logo.");
+        }
+
+        const data = await response.json();
+        const logoUrl = data.url;
+
+        // Establecer la imagen como fondo del logo
+        if (logoElement) {
+            logoElement.style.backgroundImage = `url('${logoUrl}')`;
+            logoElement.style.backgroundSize = "cover";
+            logoElement.style.backgroundPosition = "center";
+        }
+    } catch (error) {
+        console.error("Error al cargar el logo del navbar:", error);
+        alert("No se pudo cargar el logo del sistema.");
+    }
+}
+
+
 // Función principal para inicializar la aplicación
 async function initializeApp() {
     perfil = await getPerfil(); // Obtén los datos del perfil
@@ -726,6 +873,44 @@ async function initializeApp() {
     initializeEventListeners();
 }
 
+window.redirectToIndex = function() {
+    window.location.href = "../../index.html";
+}
+
+window.logout = async function() {
+    try {
+        // Obtener el CSRF token de las cookies
+        const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+            const [key, value] = cookie.trim().split("=");
+            acc[key] = value;
+            return acc;
+        }, {});
+
+        const csrfToken = cookies.csrfToken;
+        if (!csrfToken) throw new Error("CSRF token no encontrado.");
+
+        // Realizar la petición de logout
+        const response = await fetch("http://localhost:3000/auth/logout", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "x-csrf-token": csrfToken,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al cerrar sesión.");
+        }
+
+        clearTokenExpiration();
+        localStorage.clear();
+        window.location.href = "../../index.html";
+    } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    loadNavbarLogo();
     initializeApp(); // Asegúrate de que esta función se ejecute después de cargar el DOM
 });

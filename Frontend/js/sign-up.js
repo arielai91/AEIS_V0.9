@@ -1,4 +1,3 @@
-import { ImageUpdater } from "../content/Image.js";
 
 const DOM_ELEMENTS = {
     nameInput: document.getElementById("name"),
@@ -240,12 +239,9 @@ function initializeEventListeners() {
         console.error("successModalButton no encontrado.");
     }
 }
+window.redirectToIndex = function() {
+    window.location.href = "../../index.html";
+}
 
-
-// const imageUpdater = new ImageUpdater(
-//     "https://codebyelaina.com/bucket/image/logo_aeis.png",
-//     ".logo_aeis"
-// );
-// imageUpdater.updateImage();
 
 document.addEventListener("DOMContentLoaded", initializeEventListeners);

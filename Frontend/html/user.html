@@ -10,11 +10,11 @@
 </head>
 <body>
 <nav class="navbar">
-    <div class="navbar__left">
+    <div class="navbar__left" onclick="redirectToIndex(), logout()">
         <div class="navbar__logo"></div>
         <span class="navbar__brand">AEIS</span>
     </div>
-    <a href="../../index.html" class="navbar__logout">Cerrar Sesión</a>
+    <a href="#" class="navbar__logout" onclick="logout()">Cerrar Sesión</a>
 </nav>
 
 <main class="user-main">
@@ -159,6 +159,7 @@
                         <input type="file" id="plan-proof" class="create-request-file">
                         <p class="request-info plan-commitment">* Comprobante de pago faltante</p>
                     </div>
+                    <p class="request-info has-requests">* No puedes solicitar un plan en este momento. *</p>
                     <button class="create-request-submit" id="create-plan-request">Enviar Solicitud</button>
                 </div>
             </div>
