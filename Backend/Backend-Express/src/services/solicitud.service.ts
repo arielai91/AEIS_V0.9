@@ -135,6 +135,13 @@ class SolicitudService {
                     await plan.save();
                 }
             }
+        } else if (estado === 'Rechazado' && solicitud.tipo === 'Casillero') {
+            const casillero = await CasilleroModel.findById(solicitud.casillero).exec();
+            if (casillero) {
+                casillero.estado = 'disponible';
+                casillero.perfil = null;
+                await casillero.save();
+            }
         }
     }
 }

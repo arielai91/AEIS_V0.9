@@ -13,7 +13,16 @@
 .navbar__left {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar__left:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
 }
 
 .navbar__logo {
@@ -21,7 +30,15 @@
     height: 50px;
     background-size: cover;
     background-position: center;
-    border-radius: 12px;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar__logo:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.4);
 }
 
 .navbar__brand {
@@ -44,7 +61,6 @@
     background-color: var(--dark);
     color: var(--primary);
 }
-
 /* Main Layout */
 .user-main {
     display: flex;
@@ -210,14 +226,19 @@
 
 .plan__title {
     margin: 1rem 0;
-    color: var(--dark);
-    font-size: 1.5rem;
+    color: var(--primary);
+    font-size: 2rem;
     font-weight: bold;
 }
 
 .plan__description {
     color: var(--gray);
     margin-bottom: 1.5rem;
+}
+
+.plan__benefits {
+    font-size: 1.3rem;
+    list-style: none;
 }
 
 .plan__cta {
@@ -261,12 +282,9 @@
     /* Centrado vertical */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* Centrar verticalmente */
-    align-items: center;
-    /* Centrar horizontalmente */
-    height: 100%;
-    /* Asegura que la tarjeta ocupe toda la altura disponible */
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+    height: 100%; /* Asegura que la tarjeta ocupe toda la altura disponible */
 }
 
 
@@ -359,8 +377,7 @@
 
 .locker {
     display: grid;
-    width: 70px;
-    /* Ajuste automático según el contenedor */
+    width: 70px; /* Ajuste automático según el contenedor */
     height: 70px;
     text-align: center;
     border-radius: 8px;
@@ -388,10 +405,10 @@
 /* Mis Solicitudes - Detalles */
 
 .request-button {
-    padding: 1rem 2rem;
+    padding: 0 1rem;
     font-size: 1.2rem;
+    height: 40px;
     border-radius: 8px 8px 0 0;
-    font-weight: bolder;
     background-color: var(--primary);
     color: white;
     border: none;
@@ -400,6 +417,11 @@
 }
 
 .request-button:hover {
+    background-color: var(--dark);
+    color: var(--primary);
+}
+
+.request-button.active {
     background-color: var(--dark);
     color: var(--primary);
 }
@@ -430,23 +452,6 @@
 
 .request-card:hover {
     background-color: #e9e9e9;
-}
-
-.request-card__status {
-    font-weight: bold;
-    font-size: 1rem;
-}
-
-.request-card__status.pending {
-    color: #fda45b;
-}
-
-.request-card__status.approved {
-    color: var(--primary);
-}
-
-.request-card__status.denied {
-    color: var(--error);
 }
 
 .request-card__type {
@@ -491,3 +496,183 @@
     border-radius: 8px;
     box-shadow: var(--shadow);
 }
+
+.request-card__status {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.request-card__status.por-verificar {
+    color: #fda45b;
+}
+
+.request-card__status.aprobado {
+    color: var(--primary);
+}
+
+.request-card__status.rechazado {
+    color: var(--error);
+}
+
+.no-requests-message {
+    text-align: center;
+    margin-top: 2rem;
+    color: #cccaca;
+    font-weight: bolder;
+    font-size: 4rem;
+}
+
+.create-request {
+    display: none;
+    border-top: 2px solid var(--dark);
+    padding: 1rem;
+}
+
+.create-request-inner-button {
+    font-size: 1rem;
+    width: 100px;
+    height: 30px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--light-gray);
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-request-inner-button:hover {
+    background-color: var(--light-gray);
+}
+
+.create-request-inner-button.active {
+    background-color: var(--light-gray);
+}
+
+.create-locker-request {
+    display: none;
+    border-top: 1px solid var(--light-gray);
+    padding: 1rem;
+}
+
+.create-plan-request {
+    border-top: 1px solid var(--light-gray);
+    padding: 1rem;
+    display: none;
+}
+
+.create-request-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+.create-request-bank-info {
+    margin-bottom: 1.5rem;
+}
+
+.create-request-bank-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.create-request-image-link {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.create-request-image {
+    max-width: 100px;
+    max-height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.create-request-group {
+    margin-bottom: 1rem;
+}
+
+.create-request-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.create-request-dropdown {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    color: var(--dark);
+}
+
+.create-request-amount,
+.locker-request-amount
+{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.create-request-file {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    color: var(--dark);
+}
+
+.create-request-submit {
+    display: block;
+    width: 20%;
+    height: 40px;
+    font-size: 1.2rem;
+    color: white;
+    background-color: var(--primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 auto; /* Centra el botón horizontalmente */
+}
+
+.create-request-submit:hover {
+    background-color: var(--dark);
+}
+.request-info {
+    color: var(--error);
+    font-weight: bold;
+}
+
+.locker-non-selected {
+    display: none;
+}
+
+.plan-non-selected {
+    display: none;
+}
+
+.plan-commitment {
+    display: none;
+}
+
+.locker-commitment {
+    display: none;
+}
+
+.has-requests {
+    margin: 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+
