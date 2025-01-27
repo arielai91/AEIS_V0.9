@@ -584,6 +584,7 @@ window.logout = async function() {
         localStorage.clear();
         window.location.href = "../../index.html";
     } catch (error) {
+        redirectToIndex()
         console.error("Error al cerrar sesión:", error);
     }
 }

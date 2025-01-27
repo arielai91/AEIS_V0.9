@@ -18,8 +18,9 @@ async function loadNavbarLogo() {
 
         const data = await response.json();
         const logoUrl = data.url;
-
+        console.log(logoUrl);
         if (logoElement) {
+            console.log("Si hay logo")
             logoElement.style.backgroundImage = `url('${logoUrl}')`;
             logoElement.style.backgroundSize = "cover";
             logoElement.style.backgroundPosition = "center";
