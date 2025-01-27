@@ -32,7 +32,18 @@ const ROUTES = {
     getRequests: "http://localhost:3000/perfiles/solicitudes/",
     postRequests: "http://localhost:3000/solicitudes/",
     postImage: "http://localhost:3000/bucket/solicitud/",
+    sendNotification: "http://localhost:5000/email/notificar",
 };
+
+async function sendNotification() {
+    fetch(ROUTES.sendNotification, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: "admin@epn.edu.ec", tipo: "Cliente" })
+    });
+}
 
 
 function showMyRequestsPanel() {
@@ -587,8 +598,6 @@ async function handleLockerRequest(event) {
     const selectedLockerId = lockerDropdown.value;
     const file = lockerFileInput.files[0]; // Obtener el archivo subido
     await postLockerRequest(selectedLockerId, file);
-    alert(`Solicitud enviada con éxito. ${selectedLockerId} y ${file}`);
-    //location.reload();
 }
 
 async function postLockerRequest(selectedLockerId, file) {
@@ -672,8 +681,6 @@ async function handlePlanRequest(event) {
     const selectedPlanId = planDropdown.value;
     const file = planFileInput.files[0]; // Obtener el archivo subido
     await postPlanRequest(selectedPlanId, file);
-    alert(`Solicitud enviada con éxito. ${selectedPlanId} y ${file}`);
-   //location.reload();
 }
 
 async function postPlanRequest(selectedPlanId, file) {
@@ -737,7 +744,7 @@ async function postImage(id, file) {
 
     try {
         const url = `${ROUTES.postImage}${id}`;
-        console.log(url)
+        console.log(url);
         const response = await fetch(url, {
             method: "POST",
             credentials: "include",
@@ -754,10 +761,19 @@ async function postImage(id, file) {
 
         const data = await response.json();
         console.log("Imagen enviada:", data);
+
+        // Enviar notificación y esperar a que termine
+        await sendNotification();
+
+        // Recargar la página después de completar todas las acciones
+        setTimeout(() => {
+            location.reload();
+        }, 6000);
     } catch (error) {
         console.error("Error al enviar la imagen:", error.message);
     }
 }
+
 
 async function getImage(id) {
     const cookies = document.cookie.split(";").reduce((acc, cookie) => {
