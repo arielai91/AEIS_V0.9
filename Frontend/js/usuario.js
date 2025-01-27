@@ -770,7 +770,7 @@ async function postImage(id, file) {
         // Recargar la página después de completar todas las acciones
         setTimeout(() => {
             location.reload();
-        }, 6000);
+        }, 8000);
     } catch (error) {
         console.error("Error al enviar la imagen:", error.message);
     }
