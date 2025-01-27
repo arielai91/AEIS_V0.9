@@ -89,6 +89,22 @@ async function generarSolicitudes(solicitudes, containerId, opciones) {
         solicitudElement.classList.add("solicitud-details");
         solicitudElement.setAttribute("data-id", solicitud._id);
 
+        // Contenido dinámico según el tipo de solicitud
+        let detalleHtml = "";
+        if (solicitud.tipo === "Plan" && solicitud.plan) {
+            detalleHtml = `
+                <p><span>Plan:</span> ${solicitud.plan.nombre}</p>
+                <p><span>Precio:</span> $${solicitud.plan.precio}</p>
+            `;
+        } else if (solicitud.tipo === "Casillero" && solicitud.casillero) {
+            detalleHtml = `
+                <p><span>Casillero ID:</span>${solicitud.casillero.numero}</p>
+                <p><span>Precio:</span>8$</p>
+            `;
+        } else {
+            detalleHtml = `<p><span>Detalle:</span> Información no disponible</p>`;
+        }
+
         solicitudElement.innerHTML = `
             <summary>
                 <span class="solicitud-type">${solicitud.tipo}</span> - 
@@ -96,8 +112,7 @@ async function generarSolicitudes(solicitudes, containerId, opciones) {
                 ${opciones.estadoAdicional ? `<span class="estado-adicional">${opciones.estadoAdicional(solicitud)}</span>` : ""}
             </summary>
             <div class="solicitud-content">
-                <p><span>Detalle:</span> ${solicitud.plan.nombre}</p>
-                <p><span>Precio:</span> $${solicitud.plan.precio}</p>
+                ${detalleHtml}
                 <p><span>Correo:</span> ${solicitud.perfil.email}</p>
                 <p><span>Fecha de envío:</span> ${new Date(solicitud.fechaEnvio).toLocaleString()}</p>
                 <p><span>Estado:</span> ${solicitud.estado}</p>
