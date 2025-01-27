@@ -562,6 +562,7 @@ async function createLockers(availableLockers, reservedLockers, occupiedLockers)
 }
 
 async function handleLockerRequest(event) {
+    DOM_ELEMENTS.submitLockerRequest.textContent = "Enviando..."; // Cambiar el texto del botón
     event.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
     // Seleccionar elementos necesarios
@@ -645,6 +646,7 @@ async function postLockerRequest(selectedLockerId, file) {
 
 
 async function handlePlanRequest(event) {
+    DOM_ELEMENTS.submitPlanRequest.textContent = "Enviando..."; // Cambiar el texto del botón
     event.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
     // Seleccionar elementos necesarios
