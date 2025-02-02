@@ -496,13 +496,11 @@ window.submitPasswordUpdate = async function() {
 
     if (!email || !verificationCode || !currentPassword || !newPassword || !confirmNewPassword) {
         alert("Por favor, complete todos los campos.");
-        showPanel("solicitudes-pendientes"); // Redirigir al panel de pendientes en caso de error
         return;
     }
 
     if (newPassword !== confirmNewPassword) {
         alert("La nueva contraseña y su confirmación no coinciden.");
-        showPanel("solicitudes-pendientes"); // Redirigir al panel de pendientes en caso de error
         return;
     }
 

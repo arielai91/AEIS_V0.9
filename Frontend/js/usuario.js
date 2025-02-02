@@ -917,8 +917,150 @@ async function initializeApp() {
     perfil = await getPerfil(); // Obtén los datos del perfil
     fillProfileCard(perfil);
     initializeEventListeners();
-    setupProfilePictureChange();
 }
+
+window.submitChangePassword = async function(event) {
+    event.preventDefault();
+
+    const newPassword = document.getElementById("new-password").value.trim();
+    const confirmNewPassword = document.getElementById("confirm-new-password").value.trim();
+
+    if (newPassword !== confirmNewPassword) {
+        alert("La nueva contraseña y su confirmación no coinciden.");
+        showPanel("current-plan"); // Redirigir al panel de pendientes
+        return;
+    }
+
+    // Evitar múltiples envíos deshabilitando el botón
+    const submitButton = event.target.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+
+    try {
+        // Obtener el email del usuario desde la variable global `window.usuarioCorreo`
+        const email = DOM_ELEMENTS.userEmail.textContent;
+
+        // Validar que el email esté disponible
+        if (!email) {
+            throw new Error("No se pudo obtener el correo del usuario.");
+        }
+
+        // Realizar la petición POST para enviar el email y solicitar el código
+        const response = await fetch("http://localhost:5000/email/reset_password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al solicitar el código de verificación.");
+        }
+
+        alert("Código de verificación enviado al correo.");
+        showResetPasswordModal(); // Mostrar la ventana modal
+    } catch (error) {
+        console.error("Error al solicitar el cambio de contraseña:", error);
+        alert("Hubo un error al intentar cambiar la contraseña. Por favor, intenta de nuevo.");
+        showPanel("current-plan");
+    } finally {
+        submitButton.disabled = false;
+    }
+};
+
+
+function showResetPasswordModal() {
+    const modalHtml = `
+        <div id="reset-password-modal" class="modal show">
+            <div class="modal-content">
+                <h2>Ingrese el Código de Verificación</h2>
+                <p>Introduce el código que se envió a tu correo electrónico.</p>
+                <input 
+                    type="text" 
+                    id="verification-code" 
+                    placeholder="Código de verificación" 
+                    required 
+                    style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #ccc;"
+                />
+                <div class="modal-buttons">
+                    <button 
+                        class="modal-btn modal-btn-primary" 
+                        onclick="submitPasswordUpdate()"
+                    >
+                        Enviar
+                    </button>
+                    <button 
+                        class="modal-btn modal-btn-secondary" 
+                        onclick="closeModalAndRedirect()"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    // Insertar el modal en el DOM
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+}
+
+window.closeModalAndRedirect = function() {
+    closeModal();
+    showPanel("current-plan"); // Redirigir al panel de pendientes
+}
+
+function closeModal() {
+    const modal = document.getElementById("reset-password-modal");
+    if (modal) {
+        modal.remove();
+    }
+}
+
+window.submitPasswordUpdate = async function() {
+    const email = DOM_ELEMENTS.userEmail.textContent;
+    const verificationCode = document.getElementById("verification-code").value.trim();
+    const currentPassword = document.getElementById("current-password").value.trim();
+    const newPassword = document.getElementById("new-password").value.trim();
+    const confirmNewPassword = document.getElementById("confirm-new-password").value.trim();
+
+    if (!email || !verificationCode || !currentPassword || !newPassword || !confirmNewPassword) {
+        alert("Por favor, complete todos los campos.");
+        return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        alert("La nueva contraseña y su confirmación no coinciden.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/perfil/update-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email,
+                code: verificationCode,
+                nueva_contraseña: newPassword,
+                confirmar_contraseña: currentPassword,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al actualizar la contraseña: ${errorData.message || response.statusText}`);
+        }
+
+        alert("Contraseña actualizada con éxito.");
+        closeModal(); // Cerrar la ventana modal
+        showPanel("current-plan"); // Redirigir al panel principal
+    } catch (error) {
+        console.error("Error al actualizar la contraseña:", error);
+        alert("Hubo un error al actualizar la contraseña. Por favor, intenta de nuevo.");
+        showPanel("current-plan"); // Redirigir al panel de pendientes en caso de error
+        closeModal(); // Cerrar la ventana modal
+    }
+};
 
 
 function setupProfilePictureChange() {

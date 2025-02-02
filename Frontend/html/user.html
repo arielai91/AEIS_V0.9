@@ -33,7 +33,7 @@
                     <p id="profile-id"></p>
                     <p id="profile-email"></p>
                 </div>
-                <button class="profile-card__change-password" onclick="togglePasswordModal()">Cambiar
+                <button class="profile-card__change-password" onclick="showPanel('cambiar-password')">Cambiar
                     Contraseña</button>
             </div>
             <nav class="sidebar__menu">
@@ -71,6 +71,29 @@
                 <div class="plans-grid__actions">
                     <button class="plans-grid__cta" onclick="showPanel('requests')">APORTAR</button>
                 </div>
+            </div>
+
+            <div id="cambiar-password" class="panel">
+                <h2 class="panel__title">Cambiar Contraseña</h2>
+                <form class="change-password-form" onsubmit="submitChangePassword(event)">
+                    <div class="change-password-group">
+                        <label for="current-password">Contraseña Actual</label>
+                        <input type="password" id="current-password" required>
+                    </div>
+                    <div class="change-password-group">
+                        <label for="new-password">Nueva Contraseña</label>
+                        <input type="password" id="new-password" required>
+                    </div>
+                    <div class="change-password-group">
+                        <label for="confirm-new-password">Confirmar Nueva Contraseña</label>
+                        <input type="password" id="confirm-new-password" required>
+                    </div>
+                    <div class="change-password-buttons">
+                        <button type="submit" class="change-password-btn change-password-btn-primary">Cambiar</button>
+                        <button type="button" onclick="showPanel('current-plan')"
+                            class="change-password-btn change-password-btn-secondary">Cancelar</button>
+                    </div>
+                </form>
             </div>
 
             <!-- Panel Casillero -->
