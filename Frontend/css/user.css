@@ -61,6 +61,7 @@
     background-color: var(--dark);
     color: var(--primary);
 }
+
 /* Main Layout */
 .user-main {
     display: flex;
@@ -93,20 +94,21 @@
 }
 
 .profile-card__picture {
-    width: 100%;
-    height: 100%;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     overflow: hidden;
-    border: 4px solid var(--primary);
-    position: relative;
+    border: 4px solid #00ff99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
 }
 
 .profile-card__picture img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    display: block;
-    margin: 0 auto;
 }
 
 .profile-card__change-picture {
@@ -282,9 +284,12 @@
     /* Centrado vertical */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centrar verticalmente */
-    align-items: center; /* Centrar horizontalmente */
-    height: 100%; /* Asegura que la tarjeta ocupe toda la altura disponible */
+    justify-content: center;
+    /* Centrar verticalmente */
+    align-items: center;
+    /* Centrar horizontalmente */
+    height: 100%;
+    /* Asegura que la tarjeta ocupe toda la altura disponible */
 }
 
 
@@ -377,7 +382,8 @@
 
 .locker {
     display: grid;
-    width: 70px; /* Ajuste automático según el contenedor */
+    width: 70px;
+    /* Ajuste automático según el contenedor */
     height: 70px;
     text-align: center;
     border-radius: 8px;
@@ -614,8 +620,7 @@
 }
 
 .create-request-amount,
-.locker-request-amount
-{
+.locker-request-amount {
     font-size: 1.2rem;
     font-weight: bold;
     color: var(--primary);
@@ -642,12 +647,14 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin: 0 auto; /* Centra el botón horizontalmente */
+    margin: 0 auto;
+    /* Centra el botón horizontalmente */
 }
 
 .create-request-submit:hover {
     background-color: var(--dark);
 }
+
 .request-info {
     color: var(--error);
     font-weight: bold;
@@ -674,5 +681,3 @@
     text-align: center;
     font-size: 1.5rem;
 }
-
-

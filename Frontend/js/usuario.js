@@ -33,6 +33,7 @@ const ROUTES = {
     postRequests: "http://localhost:3000/solicitudes/",
     postImage: "http://localhost:3000/bucket/solicitud/",
     sendNotification: "http://localhost:5000/email/notificar",
+    postImagePerfil: "http://localhost:3000/bucket/perfil/",
 };
 
 async function sendNotification() {
@@ -317,6 +318,33 @@ function fillProfileCard(data) {
     DOM_ELEMENTS.userName.textContent = data.nombreCompleto || "No disponible";
     DOM_ELEMENTS.userId.textContent = data.cedula || "No disponible";
     DOM_ELEMENTS.userEmail.textContent = data.email || "No disponible";
+
+    // Obtener la imagen de perfil y establecerla en el DOM
+    obtenerImagenPerfil().then((url) => {
+        const profileImage = document.getElementById("profile-image");
+        profileImage.src = url;
+        profileImage.alt = "Imagen de perfil";
+    });
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+async function obtenerImagenPerfil() {
+    try {
+        const csrfToken = getCookie('csrfToken');
+        const respuesta = await fetch(ROUTES.postImagePerfil, { method: "GET", credentials: "include", headers: { "x-csrf-token": csrfToken } });
+        if (!respuesta.ok) throw new Error("Error al obtener la imagen del perfil.");
+
+        const data = await respuesta.json();
+        return data.url;
+    } catch (error) {
+        console.error("Error al obtener la imagen del perfil:", error);
+        return "../content/default-image.png";
+    }
 }
 
 function fillCurrentPlanPanel(data) {
