@@ -917,6 +917,43 @@ async function initializeApp() {
     perfil = await getPerfil(); // Obtén los datos del perfil
     fillProfileCard(perfil);
     initializeEventListeners();
+    setupProfilePictureChange();
+}
+
+
+function setupProfilePictureChange() {
+    const changePictureButton = document.querySelector(".profile-card__change-picture");
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.display = "none";
+
+    const csrfToken = getCookie("csrfToken");
+
+    changePictureButton.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", async function () {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const respuesta = await fetch(ROUTES.postImagePerfil, {
+                method: "PUT",
+                body: formData,
+                credentials: "include",
+                headers: { "x-csrf-token": csrfToken },
+            });
+            if (!respuesta.ok) throw new Error("Error al subir la imagen de perfil.");
+
+            alert("Imagen actualizada con éxito.");
+            location.reload();
+        } catch (error) {
+            console.error("Error al subir la imagen:", error);
+            alert("Hubo un error al subir la imagen.");
+        }
+    });
 }
 
 window.redirectToIndex = function() {

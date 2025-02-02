@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,181 +9,194 @@
     <link rel="stylesheet" href="../css/footer.css">
     <title>Página de Usuario - APORTACIONES AEIS</title>
 </head>
+
 <body>
-<nav class="navbar">
-    <div class="navbar__left" onclick="redirectToIndex(), logout()">
-        <div class="navbar__logo"></div>
-        <span class="navbar__brand">AEIS</span>
-    </div>
-    <a href="#" class="navbar__logout" onclick="logout()">Cerrar Sesión</a>
-</nav>
-
-<main class="user-main">
-    <aside class="sidebar">
-        <div class="profile-card">
-            <div class="profile-card__container">
-                <div class="profile-card__picture">
-                    <img src="../content/logo_aeis.png" alt="Profile Picture" id="profile-image">
-                </div>
-                <button class="profile-card__change-picture">Cambiar foto</button>
-            </div>
-            <div class="profile-card__info">
-                <h3 id="profile-name"></h3>
-                <p id="profile-id"></p>
-                <p id="profile-email"></p>
-            </div>
-            <button class="profile-card__change-password" onclick="togglePasswordModal()">Cambiar Contraseña</button>
+    <nav class="navbar">
+        <div class="navbar__left" onclick="redirectToIndex(), logout()">
+            <div class="navbar__logo"></div>
+            <span class="navbar__brand">AEIS</span>
         </div>
-        <nav class="sidebar__menu">
-            <button class="sidebar__menu-item current_panel" onclick="showPanel('current-plan')">Plan Actual</button>
-            <button class="sidebar__menu-item available_panel" onclick="showPanel('available-plans')">Planes Disponibles</button>
-            <button class="sidebar__menu-item locker_panel" onclick="showPanel('locker')">Casillero</button>
-            <button class="sidebar__menu-item request_panel" onclick="showPanel('requests')">Solicitudes</button>
-        </nav>
-    </aside>
+        <a href="#" class="navbar__logout" onclick="logout()">Cerrar Sesión</a>
+    </nav>
 
-    <section class="content">
-        <!-- Panel Plan Actual -->
-        <div id="current-plan" class="panel panel--active">
-            <h2 class="panel__title">Plan Actual</h2>
-            <div class="plan">
-                <div class="plan__image">
-                    <img src="../content/confundido.png" alt="No plan active">
+    <main class="user-main">
+        <aside class="sidebar">
+            <div class="profile-card">
+                <div class="profile-card__container">
+                    <div class="profile-card__picture">
+                        <img alt="Profile Picture" id="profile-image">
+                    </div>
+                    <button class="profile-card__change-picture">Cambiar foto</button>
                 </div>
-                <p class="plan__default-message">Cargando...</p>
-                <h3 class="plan__title"></h3>
-                <div class="plan__description-container"></div>
-                <button class="plan__cta" onclick="showPanel('available-plans')">VER PLANES</button>
+                <div class="profile-card__info">
+                    <h3 id="profile-name"></h3>
+                    <p id="profile-id"></p>
+                    <p id="profile-email"></p>
+                </div>
+                <button class="profile-card__change-password" onclick="togglePasswordModal()">Cambiar
+                    Contraseña</button>
             </div>
-        </div>
+            <nav class="sidebar__menu">
+                <button class="sidebar__menu-item current_panel" onclick="showPanel('current-plan')">Plan
+                    Actual</button>
+                <button class="sidebar__menu-item available_panel" onclick="showPanel('available-plans')">Planes
+                    Disponibles</button>
+                <button class="sidebar__menu-item locker_panel" onclick="showPanel('locker')">Casillero</button>
+                <button class="sidebar__menu-item request_panel" onclick="showPanel('requests')">Solicitudes</button>
+            </nav>
+        </aside>
 
-        <!-- Panel Planes Disponibles -->
-        <div id="available-plans" class="panel">
-            <h2 class="panel__title">Planes Disponibles</h2>
-            <div class="plans-grid">
-                <p class="plan__default-message">Cargando...</p>
-                <p class="plan__default-message no__plan-message">No existen planes disponibles</p>
-            </div>
-            <div class="plans-grid__actions">
-                <button class="plans-grid__cta" onclick="showPanel('requests')">APORTAR</button>
-            </div>
-        </div>
-
-        <!-- Panel Casillero -->
-        <div id="locker" class="panel">
-            <h2 class="panel__title">Tus Casilleros</h2>
-            <div class="locker-info">
-                <p class="locker-info__message"></p>
-            </div>
-            <div class="locker-grid">
-                <div class="locker-grid__legend">
-                    <p class="locker-grid__legend-item locker-grid__legend-item--available">Disponible</p>
-                    <p class="locker-grid__legend-item locker-grid__legend-item--reserved">Reservado</p>
-                    <p class="locker-grid__legend-item locker-grid__legend-item--purchased">Adquirido</p>
-                    <p class="locker-grid__legend-item">Ocupado</p>
-                </div>
-                <div class="locker-grid__items">
-                </div>
-            </div>
-        </div>
-<!--        Panel Solicitudes-->
-        <div id="requests" class="panel">
-            <h2 class="panel__title">Solicitudes</h2>
-            <button class=" request-button my-requests-button">Mis solicitudes</button>
-            <button class="request-button create-request-button">Crear solicitud</button>
-            <div class="my-requests">
-            </div>
-            <div class="create-request">
-                <button class="create-request-inner-button locker-button">Casilleros</button>
-                <button class="create-request-inner-button plan-button">Planes</button>
-                <!-- Solicitud de Casillero -->
-                <div class="create-locker-request">
-                    <h3 class="create-request-title">Solicitud de Casillero</h3>
-                    <div class="create-request-bank-info">
-                        <h4 class="create-request-bank-title">Información Bancaria</h4>
-                        <a href="../content/banco_guayaquil.png" target="_blank">
-                            <img src="../content/banco_guayaquil.png" alt="Información Bancaria" class="create-request-image">
-                        </a>
-                        <a href="../content/banco_pichincha.png" target="_blank">
-                            <img src="../content/banco_pichincha.png" alt="Información Bancaria" class="create-request-image">
-                        </a>
-                        <a href="../content/produbanco.png" target="_blank">
-                            <img src="../content/produbanco.png" alt="Información Bancaria" class="create-request-image">
-                        </a>
+        <section class="content">
+            <!-- Panel Plan Actual -->
+            <div id="current-plan" class="panel panel--active">
+                <h2 class="panel__title">Plan Actual</h2>
+                <div class="plan">
+                    <div class="plan__image">
+                        <img src="../content/confundido.png" alt="No plan active">
                     </div>
-                    <div class="create-request-group">
-                        <label for="locker-number" class="create-request-label">Número de Casillero</label>
-                        <select id="locker-number" class="create-request-dropdown">
-                            <option value="">Seleccione un casillero</option>
-                        </select>
-                        <p class="request-info locker-non-selected">* Seleccione un casillero</p>
-                    </div>
-                    <div class="create-request-group">
-                        <label class="create-request-label">Cantidad a Transferir</label>
-                        <span class="locker-request-amount">$8.00</span>
-                    </div>
-                    <div class="create-request-group">
-                        <label for="locker-proof" class="create-request-label">Subir Comprobante (png, jpg, jpeg)</label>
-                        <input type="file" id="locker-proof" class="create-request-file">
-                        <p class="request-info locker-commitment">* Comprobante de pago faltante</p>
-                    </div>
-                    <button class="create-request-submit" id="create-locker-request">Enviar Solicitud</button>
-                </div>
-
-                <!-- Solicitud de Plan -->
-                <div class="create-plan-request">
-                    <h3 class="create-request-title">Solicitud de Plan</h3>
-                    <div class="create-request-bank-info">
-                        <h4 class="create-request-bank-title">Información Bancaria</h4>
-                        <a href="../content/banco_guayaquil.png" target="_blank">
-                            <img src="../content/banco_guayaquil.png" alt="Información Bancaria" class="create-request-image">
-                        </a>
-                        <a href="../content/banco_pichincha.png" target="_blank">
-                            <img src="../content/banco_pichincha.png" alt="Información Bancaria" class="create-request-image">
-                        </a>
-                        <a href="../content/produbanco.png" target="_blank">
-                            <img src="../content/produbanco.png" alt="Información Bancaria" class="create-request-image">
-                        </a>
-                    </div>
-                    <div class="create-request-group">
-                        <label for="plan-type" class="create-request-label">Tipo de Plan</label>
-                        <select id="plan-type" class="create-request-dropdown">
-                            <option value="">Seleccione un plan</option>
-                        </select>
-                        <p class="request-info plan-non-selected">* Seleccione un plan</p>
-                    </div>
-                    <div class="create-request-group create-request-group--ammount">
-                        <label class="create-request-label">Cantidad a Transferir</label>
-                    </div>
-                    <div class="create-request-group">
-                        <label for="plan-proof" class="create-request-label">Subir Comprobante (png, jpg, jpeg)</label>
-                        <input type="file" id="plan-proof" class="create-request-file">
-                        <p class="request-info plan-commitment">* Comprobante de pago faltante</p>
-                    </div>
-                    <p class="request-info has-requests">* No puedes solicitar un plan en este momento. *</p>
-                    <button class="create-request-submit" id="create-plan-request">Enviar Solicitud</button>
+                    <p class="plan__default-message">Cargando...</p>
+                    <h3 class="plan__title"></h3>
+                    <div class="plan__description-container"></div>
+                    <button class="plan__cta" onclick="showPanel('available-plans')">VER PLANES</button>
                 </div>
             </div>
 
-        </div>
+            <!-- Panel Planes Disponibles -->
+            <div id="available-plans" class="panel">
+                <h2 class="panel__title">Planes Disponibles</h2>
+                <div class="plans-grid">
+                    <p class="plan__default-message">Cargando...</p>
+                    <p class="plan__default-message no__plan-message">No existen planes disponibles</p>
+                </div>
+                <div class="plans-grid__actions">
+                    <button class="plans-grid__cta" onclick="showPanel('requests')">APORTAR</button>
+                </div>
+            </div>
 
-    </section>
-</main>
-<footer class="footer">
-    <div class="footer__content">
-        <div class="footer__section footer__section--copyright">
-            <span>FusionCode © 2024. Todos los derechos reservados.</span>
+            <!-- Panel Casillero -->
+            <div id="locker" class="panel">
+                <h2 class="panel__title">Tus Casilleros</h2>
+                <div class="locker-info">
+                    <p class="locker-info__message"></p>
+                </div>
+                <div class="locker-grid">
+                    <div class="locker-grid__legend">
+                        <p class="locker-grid__legend-item locker-grid__legend-item--available">Disponible</p>
+                        <p class="locker-grid__legend-item locker-grid__legend-item--reserved">Reservado</p>
+                        <p class="locker-grid__legend-item locker-grid__legend-item--purchased">Adquirido</p>
+                        <p class="locker-grid__legend-item">Ocupado</p>
+                    </div>
+                    <div class="locker-grid__items">
+                    </div>
+                </div>
+            </div>
+            <!--        Panel Solicitudes-->
+            <div id="requests" class="panel">
+                <h2 class="panel__title">Solicitudes</h2>
+                <button class=" request-button my-requests-button">Mis solicitudes</button>
+                <button class="request-button create-request-button">Crear solicitud</button>
+                <div class="my-requests">
+                </div>
+                <div class="create-request">
+                    <button class="create-request-inner-button locker-button">Casilleros</button>
+                    <button class="create-request-inner-button plan-button">Planes</button>
+                    <!-- Solicitud de Casillero -->
+                    <div class="create-locker-request">
+                        <h3 class="create-request-title">Solicitud de Casillero</h3>
+                        <div class="create-request-bank-info">
+                            <h4 class="create-request-bank-title">Información Bancaria</h4>
+                            <a href="../content/banco_guayaquil.png" target="_blank">
+                                <img src="../content/banco_guayaquil.png" alt="Información Bancaria"
+                                    class="create-request-image">
+                            </a>
+                            <a href="../content/banco_pichincha.png" target="_blank">
+                                <img src="../content/banco_pichincha.png" alt="Información Bancaria"
+                                    class="create-request-image">
+                            </a>
+                            <a href="../content/produbanco.png" target="_blank">
+                                <img src="../content/produbanco.png" alt="Información Bancaria"
+                                    class="create-request-image">
+                            </a>
+                        </div>
+                        <div class="create-request-group">
+                            <label for="locker-number" class="create-request-label">Número de Casillero</label>
+                            <select id="locker-number" class="create-request-dropdown">
+                                <option value="">Seleccione un casillero</option>
+                            </select>
+                            <p class="request-info locker-non-selected">* Seleccione un casillero</p>
+                        </div>
+                        <div class="create-request-group">
+                            <label class="create-request-label">Cantidad a Transferir</label>
+                            <span class="locker-request-amount">$8.00</span>
+                        </div>
+                        <div class="create-request-group">
+                            <label for="locker-proof" class="create-request-label">Subir Comprobante (png, jpg,
+                                jpeg)</label>
+                            <input type="file" id="locker-proof" class="create-request-file">
+                            <p class="request-info locker-commitment">* Comprobante de pago faltante</p>
+                        </div>
+                        <button class="create-request-submit" id="create-locker-request">Enviar Solicitud</button>
+                    </div>
+
+                    <!-- Solicitud de Plan -->
+                    <div class="create-plan-request">
+                        <h3 class="create-request-title">Solicitud de Plan</h3>
+                        <div class="create-request-bank-info">
+                            <h4 class="create-request-bank-title">Información Bancaria</h4>
+                            <a href="../content/banco_guayaquil.png" target="_blank">
+                                <img src="../content/banco_guayaquil.png" alt="Información Bancaria"
+                                    class="create-request-image">
+                            </a>
+                            <a href="../content/banco_pichincha.png" target="_blank">
+                                <img src="../content/banco_pichincha.png" alt="Información Bancaria"
+                                    class="create-request-image">
+                            </a>
+                            <a href="../content/produbanco.png" target="_blank">
+                                <img src="../content/produbanco.png" alt="Información Bancaria"
+                                    class="create-request-image">
+                            </a>
+                        </div>
+                        <div class="create-request-group">
+                            <label for="plan-type" class="create-request-label">Tipo de Plan</label>
+                            <select id="plan-type" class="create-request-dropdown">
+                                <option value="">Seleccione un plan</option>
+                            </select>
+                            <p class="request-info plan-non-selected">* Seleccione un plan</p>
+                        </div>
+                        <div class="create-request-group create-request-group--ammount">
+                            <label class="create-request-label">Cantidad a Transferir</label>
+                        </div>
+                        <div class="create-request-group">
+                            <label for="plan-proof" class="create-request-label">Subir Comprobante (png, jpg,
+                                jpeg)</label>
+                            <input type="file" id="plan-proof" class="create-request-file">
+                            <p class="request-info plan-commitment">* Comprobante de pago faltante</p>
+                        </div>
+                        <p class="request-info has-requests">* No puedes solicitar un plan en este momento. *</p>
+                        <button class="create-request-submit" id="create-plan-request">Enviar Solicitud</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="footer__content">
+            <div class="footer__section footer__section--copyright">
+                <span>FusionCode © 2024. Todos los derechos reservados.</span>
+            </div>
+            <div class="footer__section footer__section--address">
+                <span>Dirección</span>
+                <p>Av. Ladrón de Guevara 253, Quito 170517</p>
+            </div>
+            <div class="footer__section footer__section--creators">
+                <span>Created and Designed by:</span>
+                <p>Ariel Amaguaña and José Merchán</p>
+            </div>
         </div>
-        <div class="footer__section footer__section--address">
-            <span>Dirección</span>
-            <p>Av. Ladrón de Guevara 253, Quito 170517</p>
-        </div>
-        <div class="footer__section footer__section--creators">
-            <span>Created and Designed by:</span>
-            <p>Ariel Amaguaña and José Merchán</p>
-        </div>
-    </div>
-</footer>
-<script type="module" src="../js/usuario.js"></script>
+    </footer>
+    <script type="module" src="../js/usuario.js"></script>
 </body>
+
 </html>
