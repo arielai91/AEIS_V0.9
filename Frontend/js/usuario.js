@@ -3,6 +3,8 @@ let perfil = null;
 let availableLockers = [];
 let occupiedLockers = [];
 let reservedLockers = [];
+let csrfExpirationTime = null;
+let sessionCheckIntervalId = null;
 
 const DOM_ELEMENTS = {
     userName: document.getElementById("profile-name"),
@@ -917,6 +919,8 @@ async function initializeApp() {
     perfil = await getPerfil(); // Obtén los datos del perfil
     fillProfileCard(perfil);
     initializeEventListeners();
+    setTokenExpiration();
+    startSessionCheck();
 }
 
 window.submitChangePassword = async function(event) {
@@ -1135,6 +1139,151 @@ window.logout = async function() {
         console.error("Error al cerrar sesión:", error);
     }
 }
+
+function getCookieValue(cookieName) {
+    const cookies = document.cookie.split("; ");
+    const cookie = cookies.find(row => row.startsWith(`${cookieName}=`));
+    if (!cookie) {
+        console.warn(`La cookie '${cookieName}' no está disponible.`);
+        return null;
+    }
+    return decodeURIComponent(cookie.split("=")[1]);
+}
+
+function setTokenExpiration() {
+    const csrfCookie = getCookieValue("csrfToken");
+    if (!csrfCookie) {
+        console.warn("No se encontró la cookie 'csrfToken'. Asegúrate de que el backend la envíe correctamente.");
+        return;
+    }
+
+    // Recuperar la expiración directamente desde localStorage si existe
+    const storedExpiration = localStorage.getItem("csrfExpirationTime");
+    if (storedExpiration) {
+        csrfExpirationTime = parseInt(storedExpiration, 10);
+        console.log("Tiempo de expiración cargado desde localStorage:", new Date(csrfExpirationTime).toLocaleString());
+        return;
+    }
+
+    // Establecer un nuevo tiempo si no existe en localStorage
+    csrfExpirationTime = Date.now() + 15 * 60 * 1000; // 15 minutos desde ahora
+    localStorage.setItem("csrfExpirationTime", csrfExpirationTime);
+    console.log("Tiempo de expiración establecido:", new Date(csrfExpirationTime).toLocaleString());
+}
+
+function getTokenRemainingTime() {
+    if (!csrfExpirationTime) {
+        console.warn("El tiempo de expiración no está establecido. Asegúrate de llamar a 'setTokenExpiration()' primero.");
+        return null;
+    }
+
+    const now = Date.now();
+    const remainingTime = (csrfExpirationTime - now) / 1000; // Convertir a segundos
+    if (remainingTime <= 0) {
+        console.warn("El token ya ha expirado.");
+        return 0;
+    }
+    console.log("Tiempo restante (s):", remainingTime);
+    return remainingTime;
+}
+
+function clearTokenExpiration() {
+    localStorage.removeItem("csrfExpirationTime");
+    csrfExpirationTime = null;
+}
+
+function showSessionExtensionModal() {
+    const modalHtml = `
+        <div id="session-extension-modal" class="modal">
+            <div class="modal-content">
+                <h2>Extender Sesión</h2>
+                <p>Tu sesión está a punto de expirar. ¿Deseas extenderla?</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-primary" onclick="extendSession()">Extender Sesión</button>
+                    <button class="modal-btn modal-btn-secondary" onclick="logoutAndRedirect()">Salir</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+}
+
+function closeSessionExtensionModal() {
+    const modal = document.getElementById("session-extension-modal");
+    if (modal) modal.remove();
+}
+
+window.logoutAndRedirect = function () {
+    closeSessionExtensionModal();
+    logout();
+    clearTokenExpiration();
+    window.location.href = "../../index.html";
+};
+
+window.extendSession = async function () {
+    try {
+        const response = await fetch("http://localhost:3000/auth/refresh", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) throw new Error("Error al extender la sesión.");
+
+        closeSessionExtensionModal();
+        alert("Sesión extendida con éxito.");
+
+        // Actualizar el tiempo de expiración basado en la nueva sesión
+        csrfExpirationTime = Date.now() + 15 * 60 * 1000; // 15 minutos más
+        localStorage.setItem("csrfExpirationTime", csrfExpirationTime);
+
+        // Detener cualquier verificación previa y reiniciar
+        if (sessionCheckIntervalId) clearInterval(sessionCheckIntervalId);
+        startSessionCheck();
+    } catch (error) {
+        console.error("Error al extender la sesión:", error);
+        alert("No se pudo extender la sesión. Serás redirigido al inicio.");
+        logoutAndRedirect();
+    }
+};
+
+function startSessionCheck() {
+    const checkInterval = 1000; // Verificar cada segundo
+    const warningTime = 60; // Tiempo restante en segundos para mostrar el modal
+    const autoCloseTime = 10; // Tiempo antes de la expiración para cerrar el modal
+    let modalShown = false; // Estado para saber si el modal ya fue mostrado
+
+    // Detener cualquier intervalo previo
+    if (sessionCheckIntervalId) clearInterval(sessionCheckIntervalId);
+
+    sessionCheckIntervalId = setInterval(() => {
+        const remainingTime = getTokenRemainingTime();
+        if (remainingTime === null) {
+            clearInterval(sessionCheckIntervalId);
+            console.warn("No se pudo obtener el tiempo restante del token.");
+            return;
+        }
+
+        // Mostrar el modal si está dentro del rango de advertencia
+        if (remainingTime <= warningTime && remainingTime > autoCloseTime && !modalShown) {
+            modalShown = true; // Marcar que el modal fue mostrado
+            showSessionExtensionModal(); // Mostrar el modal
+        }
+        // Cerrar el modal automáticamente antes de la expiración y redirigir
+        else if (remainingTime <= autoCloseTime && modalShown) {
+            clearInterval(sessionCheckIntervalId); // Detener el intervalo
+            closeSessionExtensionModal(); // Cerrar el modal
+            logoutAndRedirect(); // Redirigir al usuario al inicio de sesión o página principal
+        }
+        // Redirigir al usuario si el token ha expirado
+        else if (remainingTime <= 0) {
+            clearInterval(sessionCheckIntervalId);
+            console.warn("El token ha expirado.");
+            logoutAndRedirect(); // Redirigir al usuario al inicio de sesión o página principal
+        }
+    }, checkInterval);
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     loadNavbarLogo();
