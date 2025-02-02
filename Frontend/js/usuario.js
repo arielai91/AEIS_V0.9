@@ -919,6 +919,7 @@ async function initializeApp() {
     perfil = await getPerfil(); // Obtén los datos del perfil
     fillProfileCard(perfil);
     initializeEventListeners();
+    setupProfilePictureChange();
     setTokenExpiration();
     startSessionCheck();
 }
