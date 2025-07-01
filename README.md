@@ -1,6 +1,6 @@
-# AEIS_V0.9 - Proyecto Full Stack con Flask, Express y Angular
+# AEIS_V0.9 - Proyecto Full Stack con Flask, Express y HTML/CSS/JavaScript
 
-Este proyecto es una aplicación web diseñada con una arquitectura full stack. Se compone de un backend dividido en dos partes principales y un frontend basado en Angular.
+Este proyecto es una aplicación web diseñada con una arquitectura full stack. Se compone de un backend dividido en dos partes principales y un frontend basado en HTML/CSS/JavaScript.
 
 ## Estructura del Proyecto
 
@@ -9,7 +9,7 @@ Este proyecto es una aplicación web diseñada con una arquitectura full stack. 
   - **Backend-Flask**: Implementado para manejar la lógica del bot y procesar las solicitudes relacionadas.
 
 - **Frontend**
-  - **Frontend-Angular**: Desarrollado con Angular para proporcionar una interfaz de usuario interactiva y moderna.
+  - **Frontend-HTML/CSS/JavaScript**: Desarrollado con HTML/CSS/JavaScript para proporcionar una interfaz de usuario interactiva y moderna.
 
 ## Tecnologías Utilizadas
 
@@ -18,6 +18,7 @@ Este proyecto es una aplicación web diseñada con una arquitectura full stack. 
 1. **Express con Node.js**:
    - Gestiona la conexión con la base de datos MongoDB.
    - Proporciona las APIs necesarias para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en la base de datos.
+   - Middleware para validación y control de acceso.
 
 2. **Flask con Python**:
    - Encargado de manejar la lógica del bot.
@@ -25,9 +26,10 @@ Este proyecto es una aplicación web diseñada con una arquitectura full stack. 
 
 ### Frontend
 
-1. **Angular**:
-   - Framework utilizado para construir la interfaz de usuario.
-   - Proporciona una experiencia fluida y dinámica para los usuarios de la aplicación.
+1. **HTML/CSS/JAVASCRIPT**
+  - Diseño responsivo y minimalista.
+  - Componentes reutilizables para facilitar la escalabilidad.
+  - Comunicación eficiente con ambos backends.
 
 ## Contribución
 
